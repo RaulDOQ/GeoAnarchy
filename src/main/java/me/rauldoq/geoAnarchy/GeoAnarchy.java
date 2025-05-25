@@ -3,6 +3,7 @@ package me.rauldoq.geoAnarchy;
 import com.earth2me.essentials.Essentials;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.leangen.geantyref.TypeToken;
 import me.rauldoq.geoAnarchy.Classes.VIP;
 import me.rauldoq.geoAnarchy.Discord.CommandManager;
@@ -38,6 +39,8 @@ public final class GeoAnarchy extends JavaPlugin implements Listener {
     public static Economy econ = null;
     public static JDA jda;
     private static Essentials essentials;
+    Dotenv dotenv = Dotenv.load();
+    String TOKEN = dotenv.get("TOKEN");
     @Override
     public void onEnable() {
 
@@ -130,7 +133,7 @@ public final class GeoAnarchy extends JavaPlugin implements Listener {
 
         // -------- DISCORD SECTION ------- //
 
-        jda = JDABuilder.createDefault("nothing")
+        jda = JDABuilder.createDefault(TOKEN)
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .enableIntents(GatewayIntent.DIRECT_MESSAGES)
                 .enableIntents(GatewayIntent.DIRECT_MESSAGE_TYPING)
