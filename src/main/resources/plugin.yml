@@ -1,0 +1,37 @@
+name: GeoAnarchy
+version: '1.0'
+main: me.rauldoq.geoAnarchy.GeoAnarchy
+api-version: '1.20'
+commands:
+  discord:
+    description: Discord command
+    usage: /discord <subcommand>
+  mapa:
+    description: Mapa
+    usage: /mapa
+  comprar:
+    description: Comprar itens
+    usage: /comprar <subcommand>
+  vanishcomaura:
+    description: farm de aura intenso
+    usage: /vanishcomaura
+  vaura:
+    description: farm de aura intenso
+    usage: /vaura
+  ranks:
+    description: ranks
+    usage: /ranks
+  darvip:
+    description: da o vip
+    usage: /darvip <usuario> <duracao>
+tab-complete:
+  discord:
+    - servidor
+    - vincular
+permissions:
+  geoanarchy.vanishcomaura:
+    description: comando de aura
+    default: op
+  geoanarchy.darvip:
+    description: darvip
+    default: op
