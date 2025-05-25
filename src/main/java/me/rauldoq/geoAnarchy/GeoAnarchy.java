@@ -130,7 +130,7 @@ public final class GeoAnarchy extends JavaPlugin implements Listener {
 
         // -------- DISCORD SECTION ------- //
 
-        jda = JDABuilder.createDefault("")
+        jda = JDABuilder.createDefault("nothing")
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .enableIntents(GatewayIntent.DIRECT_MESSAGES)
                 .enableIntents(GatewayIntent.DIRECT_MESSAGE_TYPING)
