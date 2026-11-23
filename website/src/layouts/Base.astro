@@ -14,9 +14,11 @@ import { pt } from '../content/pt';
 interface Props {
   title: string;
   description: string;
+  /** The header tab to highlight (an id from content/pt.ts `common.nav`). */
+  page?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, page } = Astro.props;
 const c = pt.common;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 ---
@@ -38,6 +40,10 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="pt_BR" />
+    <meta property="og:image" content={new URL('/og.png', site.url).href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     {/* Runs before the page paints: the `js` class turns the entrance animations on. */}
@@ -46,7 +52,7 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
   <body>
     <a class="skip-link" href="#main">{c.skip}</a>
     {site.inDevelopment && <div class="dev-banner" role="note">{c.devBanner}</div>}
-    <Nav />
+    <Nav page={page} />
     <main id="main">
       <slot />
     </main>

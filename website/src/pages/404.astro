@@ -1,0 +1,27 @@
+---
+// Shown for any address that does not exist (Cloudflare serves this file as the 404).
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import Wordmark from '../components/Wordmark.astro';
+import { site } from '../config/site';
+import { pt } from '../content/pt';
+
+const c = pt.notFound;
+---
+
+<Base title={c.meta.title} description={c.meta.description}>
+  <PageHead chapter={c.chapter} title={c.title} lead={c.lead}>
+    <a class="btn-solid" href="/">{c.back}<Icon name="arrowRight" class="arrow" /></a>
+  </PageHead>
+  <div class="container mark">
+    <Wordmark width={220} alt={site.name} />
+  </div>
+</Base>
+
+<style>
+  .mark {
+    padding-top: 4.5rem;
+    display: flex;
+  }
+</style>

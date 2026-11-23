@@ -1,31 +1,33 @@
 ---
-import Logo from './Logo.astro';
+import Wordmark from './Wordmark.astro';
 import { site } from '../config/site';
 import { pt } from '../content/pt';
 
-const { common, footer: f, join, world, faq } = pt;
+const { common, footer: f, join, faq } = pt;
 const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
   <div class="container footer-grid">
     <div class="footer-brand">
-      <a class="brand" href="#inicio">
-        <Logo height={52} />
-        <span>{site.name}</span>
+      <a class="brand" href="/" aria-label={site.name}>
+        <Wordmark width={132} />
       </a>
       <p>{f.tagline}</p>
     </div>
+    <nav class="footer-col" aria-label={f.siteTitle}>
+      <p class="footer-title">{f.siteTitle}</p>
+      {common.nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
     <nav class="footer-col" aria-label={f.serverTitle}>
       <p class="footer-title">{f.serverTitle}</p>
-      <a href="#entrar">{join.chapter}</a>
-      <a href="#mapa">{world.chapter}</a>
-      <a href="#duvidas">{faq.chapter}</a>
+      <a href="/#entrar">{join.chapter}</a>
+      <a href="/#duvidas">{faq.chapter}</a>
+      <a href={site.map.url} target="_blank" rel="noopener">{f.liveMap}</a>
     </nav>
     <nav class="footer-col" aria-label={f.communityTitle}>
       <p class="footer-title">{f.communityTitle}</p>
       <a href={site.discordUrl} target="_blank" rel="noopener">{common.discord}</a>
-      <a href={site.map.url} target="_blank" rel="noopener">{f.liveMap}</a>
     </nav>
   </div>
   <div class="container footer-meta">
@@ -44,16 +46,15 @@ const year = new Date().getFullYear();
   }
   .footer-grid {
     gap: var(--space-6);
-    grid-template-columns: minmax(0, 2.4fr) repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 2.2fr) repeat(3, minmax(0, 1fr));
     display: grid;
   }
   .brand {
-    letter-spacing: -.04em;
-    align-items: center;
-    gap: .6rem;
-    font-size: 1.125rem;
-    font-weight: 700;
+    transition: transform .5s var(--spring-smooth);
     display: inline-flex;
+  }
+  .brand:hover {
+    transform: translateY(-2px) rotate(-1.5deg);
   }
   .footer-brand p {
     max-width: 22rem;
@@ -114,7 +115,7 @@ const year = new Date().getFullYear();
   }
   @media (width <= 760px) {
     .footer-grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
     .footer-brand {
       grid-column: 1/-1;

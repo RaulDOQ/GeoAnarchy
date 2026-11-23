@@ -1,0 +1,109 @@
+---
+// The top of a page other than the home page: the page's name in a chip, a two-line
+// title and a lead. Anything placed inside (buttons, a note) goes under the lead.
+interface Props {
+  chapter: string;
+  title: readonly string[];
+  lead: string;
+}
+
+const { chapter, title, lead } = Astro.props;
+---
+
+<header class="page-top">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="page-light" aria-hidden="true"></div>
+  <div class="page-head container">
+    <p class="page-chip" data-in="settle"><i></i>{chapter}</p>
+    <h1 class="page-title" data-in="lines" style="--d: 80ms">
+      <span class="line"><span class="grad">{title[0]}</span></span>
+      {title[1] && <span class="line"><span class="grad-earth">{title[1]}</span></span>}
+    </h1>
+    <p class="page-lead" data-in="settle" style="--d: 240ms">{lead}</p>
+    <div class="page-actions" data-in="settle" style="--d: 320ms"><slot /></div>
+  </div>
+</header>
+
+<style>
+  .page-top {
+    position: relative;
+    overflow-x: clip;
+  }
+  /* The same faint chart grid and light as the home page's hero. */
+  .page-bg {
+    pointer-events: none;
+    background-image: radial-gradient(#0a1b2e1f 1px, #0000 1.2px);
+    background-position: 50% 0;
+    background-size: 26px 26px;
+    position: absolute;
+    inset: -6rem 0 -4rem;
+    -webkit-mask-image: radial-gradient(52rem 26rem at 30% 40%, #000, #0000 78%);
+    mask-image: radial-gradient(52rem 26rem at 30% 40%, #000, #0000 78%);
+  }
+  .page-light {
+    pointer-events: none;
+    background:
+      radial-gradient(closest-side at 30% 45%, #1766e01f, #0000),
+      radial-gradient(closest-side at 62% 60%, #12a05c1a, #0000);
+    position: absolute;
+    inset: -4rem 0 -6rem 30%;
+  }
+  .page-head {
+    padding-block: clamp(4rem, 2rem + 6vw, 7rem) 1rem;
+    position: relative;
+  }
+  .page-chip {
+    height: 2rem;
+    box-shadow: var(--edge), 0 2px 6px -3px #0a1b2e2e;
+    color: var(--color-text-soft);
+    background: var(--color-surface);
+    border-radius: 999px;
+    align-items: center;
+    gap: .55rem;
+    padding: 0 .85rem 0 .7rem;
+    font-size: .84375rem;
+    font-weight: 500;
+    display: inline-flex;
+  }
+  .page-chip i {
+    background: var(--color-blue);
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+  }
+  .page-title {
+    letter-spacing: -.045em;
+    margin-top: 1.6rem;
+    font-size: clamp(2.9rem, 1.3rem + 4vw, 4.4rem);
+    font-weight: 600;
+    line-height: 1;
+  }
+  .page-lead {
+    color: var(--color-text-muted);
+    letter-spacing: -.012em;
+    max-width: 36rem;
+    margin-top: 1.5rem;
+    font-size: 1.15rem;
+    line-height: 1.55;
+  }
+  .page-actions {
+    flex-wrap: wrap;
+    gap: .625rem;
+    margin-top: 2rem;
+    display: flex;
+  }
+  .page-actions:empty {
+    display: none;
+  }
+  .page-actions > :global(*) {
+    min-height: 2.875rem;
+  }
+  @media (width <= 720px) {
+    .page-title {
+      font-size: clamp(2.4rem, 1.5rem + 5.4vw, 3.2rem);
+    }
+    .page-lead {
+      font-size: 1.05rem;
+    }
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+// "Loja": not open yet. The page says so, points to Discord for news and repeats that
+// the economy inside the game belongs to the players.
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import Icon from '../../components/Icon.astro';
+import Closing from '../../components/home/Closing.astro';
+import { site } from '../../config/site';
+import { pt } from '../../content/pt';
+
+const c = pt.store;
+---
+
+<Base title={c.meta.title} description={c.meta.description} page="store">
+  <PageHead chapter={c.chapter} title={c.title} lead={c.lead}>
+    <a class="btn-solid" href={site.discordUrl} target="_blank" rel="noopener">{c.cta}<Icon name="arrowUpRight" class="arrow" /></a>
+  </PageHead>
+
+  <section class="container store">
+    <div class="note card" data-in="settle" style="--d: 100ms">
+      <h2>{c.note.title}</h2>
+      <p>{c.note.body}</p>
+    </div>
+  </section>
+
+  <Closing />
+</Base>
+
+<style>
+  .store {
+    padding-top: 3.5rem;
+  }
+  .note {
+    gap: .45rem;
+    max-width: 44rem;
+    padding: 1.5rem 1.6rem;
+    display: grid;
+  }
+  h2 {
+    letter-spacing: -.025em;
+    font-size: 1.25rem;
+  }
+  p {
+    color: var(--color-text-muted);
+    font-size: .9375rem;
+    line-height: 1.55;
+  }
+</style>

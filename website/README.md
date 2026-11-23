@@ -1,9 +1,22 @@
 # GeoAnarchy website
 
-The public site for the GeoAnarchy Minecraft server: one page in Brazilian Portuguese
-with the pitch, a live map of the server, how to join and common questions. It is a
+The public site for the GeoAnarchy Minecraft server, in Brazilian Portuguese. It is a
 static [Astro](https://astro.build) site, so the build output is plain HTML, CSS and
 JavaScript that any static host can serve.
+
+## Pages
+
+| Address | File | What it is |
+|---|---|---|
+| `/` | `src/pages/index.astro` | Home: the pitch, the live map, the server's ideas, how to join, questions |
+| `/sobre/` | `src/pages/sobre/index.astro` | Sobre nós. The server's story and team are still to be written. |
+| `/loja/` | `src/pages/loja/index.astro` | Loja. Not open yet; the page says so. |
+| `/wiki/` | `src/pages/wiki/index.astro` | GeoWiki: how to join, the world, how the server works |
+| any other | `src/pages/404.astro` | Page not found |
+
+The header tabs are the list `common.nav` in `src/content/pt.ts`: add a page there and it
+appears in the header and the footer. Each page passes its id to the layout
+(`<Base page="wiki">`) so its tab is highlighted.
 
 ## Commands
 
@@ -24,11 +37,12 @@ Run these inside `website/` (Node 22.12 or newer):
 | `src/config/site.ts` | Server addresses, the map address and its parameters, the Discord invite, world size. Change a value here and every page follows. |
 | `src/content/pt.ts` | Every text on the site. |
 | `src/styles/tokens.css` | Colours, type, spacing and motion values (white, blue and green theme). |
-| `src/components/Logo.astro` | The logo, shown in the header, the footer and the closing section. |
-| `src/components/home/` | The page sections: hero and live map window, anarchy, the block map sheet, realism and its journey map, how to join, questions, closing. |
+| `src/components/Logo.astro`, `Wordmark.astro` | The logo with the block Earth (header) and the name on its own (hero, closing section, footer, 404 page). |
+| `src/components/PageHead.astro`, `Editions.astro` | The top of every page other than the home page, and the Java and Bedrock join cards (home page and GeoWiki). |
+| `src/components/home/` | The home page's sections: hero and live map window, anarchy, the block map sheet, realism and its journey map, how to join, questions. `Closing.astro` ends every page. |
 | `src/scripts/` | Browser scripts: live map loading and pointer guard, window tilt, scroll entrances, copy buttons. |
 | `src/assets/earth.png` | The block world map (144 x 72 pixels, one per 2.5 degrees), shown enlarged with sharp edges. |
-| `src/assets/logo.webp`, `logo-small.webp`, `wordmark.webp` | The logo artwork, trimmed: the full logo in two sizes and the name alone. `public/favicon.png` and `public/apple-touch-icon.png` come from the same artwork. |
+| `src/assets/logo.webp`, `logo-small.webp`, `wordmark.webp` | The logo artwork, trimmed: the full logo in two sizes and the name alone. `public/favicon.png`, `public/apple-touch-icon.png` and `public/og.png` (the picture shown when the site's link is shared) come from the same artwork. |
 | `scripts/make-pixel-earth.mjs` | Draws `earth.png` from Natural Earth land data. Its header explains the options. |
 
 ## The block map

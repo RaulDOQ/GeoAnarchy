@@ -1,0 +1,126 @@
+---
+// "Sobre nós": what the server is, in the home page's own words, with a link to each
+// part of it. The server's story and team are still to be written.
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import Icon from '../../components/Icon.astro';
+import Closing from '../../components/home/Closing.astro';
+import { pt } from '../../content/pt';
+
+const c = pt.about;
+---
+
+<Base title={c.meta.title} description={c.meta.description} page="about">
+  <PageHead chapter={c.chapter} title={c.title} lead={c.lead} />
+
+  <section class="container about">
+    <ul class="pillars">
+      {
+        c.pillars.map((p, i) => (
+          <li class="pillar card" data-in="settle" style={`--d: ${80 + i * 70}ms`}>
+            <span class="num">0{i + 1}</span>
+            <h2>{p.title}</h2>
+            <p>{p.body}</p>
+            <a class="learn" href={p.href}>{c.more}<Icon name="arrowRight" /></a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="soon card" data-in="settle" style="--d: 120ms">
+      <span class="soon-tag">{pt.common.soon}</span>
+      <div>
+        <h2>{c.soon.title}</h2>
+        <p>{c.soon.body}</p>
+      </div>
+    </div>
+  </section>
+
+  <Closing />
+</Base>
+
+<style>
+  .about {
+    gap: 1rem;
+    padding-top: 3.5rem;
+    display: grid;
+  }
+  .pillars {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    list-style: none;
+    display: grid;
+  }
+  .pillar {
+    align-content: start;
+    gap: .7rem;
+    padding: 1.6rem 1.6rem 1.7rem;
+    transition: box-shadow .3s ease-out, transform .5s var(--spring-smooth);
+    display: grid;
+  }
+  .pillar:hover {
+    box-shadow: var(--edge-strong), var(--shadow-lift);
+    transform: translateY(-3px);
+  }
+  .num {
+    width: 2rem;
+    height: 1.5rem;
+    box-shadow: inset 0 0 0 1px var(--color-blue-ring);
+    color: var(--color-blue-strong);
+    font: 500 .6875rem/1 var(--font-mono);
+    background: var(--color-blue-soft);
+    border-radius: .4rem;
+    place-items: center;
+    display: grid;
+  }
+  h2 {
+    letter-spacing: -.025em;
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+  .pillar h2 {
+    margin-top: .5rem;
+  }
+  .pillar p,
+  .soon p {
+    color: var(--color-text-muted);
+    font-size: .9375rem;
+    line-height: 1.55;
+  }
+  .pillar .learn {
+    margin-top: .4rem;
+    font-size: .875rem;
+  }
+  .soon {
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem 1.6rem;
+    display: flex;
+  }
+  .soon div {
+    gap: .35rem;
+    display: grid;
+  }
+  .soon-tag {
+    box-shadow: inset 0 0 0 1px var(--color-green-ring);
+    color: var(--color-green-strong);
+    white-space: nowrap;
+    background: var(--color-green-soft);
+    border-radius: 999px;
+    flex: none;
+    padding: .35rem .7rem;
+    font-size: .75rem;
+    font-weight: 600;
+  }
+  @media (width <= 900px) {
+    .pillars {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (width <= 560px) {
+    .soon {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
