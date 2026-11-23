@@ -103,9 +103,11 @@ const tiles = drawableTiles(view);
   .axis-x,
   .axis-z {
     color: var(--color-text-faint);
-    font: 500 .6875rem/1 var(--font-mono);
-    letter-spacing: .02em;
+    font-variant-numeric: tabular-nums;
     justify-content: space-between;
+    font-size: .6875rem;
+    font-weight: 500;
+    line-height: 1;
     display: flex;
     position: relative;
   }
@@ -375,7 +377,6 @@ const tiles = drawableTiles(view);
   }
   .livemap-noscript a {
     color: var(--color-blue-strong);
-    font-family: var(--font-mono);
     text-decoration: underline;
   }
 
@@ -392,8 +393,11 @@ const tiles = drawableTiles(view);
     display: grid;
   }
   .facts strong {
-    font: 500 clamp(1.5rem, .95rem + 1.5vw, 2.25rem)/1.05 var(--font-mono);
-    letter-spacing: -.045em;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.04em;
+    font-size: clamp(1.6rem, 1rem + 1.6vw, 2.4rem);
+    font-weight: 600;
+    line-height: 1.05;
     color: #0000;
     white-space: nowrap;
     background: var(--grad-earth);

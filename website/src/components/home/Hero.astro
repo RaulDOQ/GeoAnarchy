@@ -230,9 +230,10 @@ const c = pt.hero;
   }
   .hero-meta {
     color: var(--color-text-faint);
-    font: 500 .75rem/1.5 var(--font-mono);
-    letter-spacing: .02em;
     flex-wrap: wrap;
+    font-size: .8125rem;
+    font-weight: 500;
+    line-height: 1.5;
     gap: 0 .5em;
     margin-top: 1.9rem;
     display: flex;
@@ -267,8 +268,11 @@ const c = pt.hero;
     height: 1.25rem;
     box-shadow: inset 0 0 0 1px var(--color-blue-ring);
     color: var(--color-blue-strong);
-    font: 500 .65625rem/1 var(--font-mono);
+    font-variant-numeric: tabular-nums;
     background: var(--color-blue-soft);
+    font-size: .6875rem;
+    font-weight: 600;
+    line-height: 1;
     border-radius: .35rem;
     place-items: center;
     display: inline-grid;
