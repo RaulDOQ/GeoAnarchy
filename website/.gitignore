@@ -4,3 +4,5 @@ dist/
 .wrangler/
 .env*
 .dev.vars*
+# Written by scripts/detect-map.mjs before each build.
+src/generated/

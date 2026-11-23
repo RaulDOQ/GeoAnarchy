@@ -25,8 +25,8 @@ export const site = {
     /** The public Dynmap site. */
     url: 'https://mapa.geoanarchy.net/',
     host: 'mapa.geoanarchy.net',
-    /** Dynmap URL parameters for the map embedded in the home page (a clean view:
-        no side panel, chat or controls; the full map opens in its own tab). */
+    /** Dynmap URL parameters for the map embedded in the home page: the layer, and no
+        side panel, chat, compass or controls. Only the map itself is shown. */
     embedParams: {
       worldname: 'earth',
       mapname: 'flat',
@@ -53,8 +53,26 @@ export const site = {
   },
 } as const;
 
-/** The embedded map's address, with its parameters. */
-export function mapEmbedUrl(): string {
-  const query = new URLSearchParams(site.map.embedParams).toString();
-  return query ? `${site.map.url}?${query}` : site.map.url;
+/** How the map is framed so the world exactly fills the map card (scripts/detect-map.mjs). */
+export interface MapView {
+  /** Dynmap zoom level. */
+  zoom: number;
+  /** Size of the world at that zoom level, in pixels. */
+  width: number;
+  height: number;
+  /** The block at the centre. */
+  x: number;
+  z: number;
+}
+
+/** The embedded map's address: the layer, no controls, and the given framing. */
+export function mapEmbedUrl(view: MapView): string {
+  const query = new URLSearchParams({
+    ...site.map.embedParams,
+    zoom: String(view.zoom),
+    x: String(view.x),
+    y: '64',
+    z: String(view.z),
+  }).toString();
+  return `${site.map.url}?${query}`;
 }

@@ -1,57 +1,51 @@
 ---
-// The live map window (the hero's centrepiece): the server's Dynmap site inside a
-// floating app window. scripts/live-map.ts decides when it loads and when it takes the
-// pointer; scripts/tilt.ts makes the window drift.
+// The live map card (the hero's centrepiece): the name above, the map in a plain card,
+// and one line under it saying whether the map is live. scripts/live-map.ts decides
+// what is shown and lets the visitor zoom in; scripts/tilt.ts makes the card drift.
 import Icon from '../Icon.astro';
+import Wordmark from '../Wordmark.astro';
+import view from '../../generated/map-view.json';
 import { mapEmbedUrl, site } from '../../config/site';
 import { pt } from '../../content/pt';
 
 const c = pt.liveMap;
-const src = mapEmbedUrl();
 ---
 
-<figure class="livemap" data-livemap>
-  <figcaption class="livemap-caption">
-    <i class="pulse" aria-hidden="true"></i>
-    {c.caption}
-  </figcaption>
+<figure
+  class="livemap"
+  data-livemap
+  data-width={view.width}
+  data-height={view.height}
+  data-probe={`${site.map.url}images/blank.png`}
+  data-snapshot-info="/api/map-snapshot.json"
+  data-offline-text={c.offline}
+  style={`--map-w: ${view.width}; --map-h: ${view.height}`}
+>
+  <div class="livemap-logo"><Wordmark width={140} alt={site.name} /></div>
+
   <div class="livemap-stage">
     <span class="livemap-shadow" aria-hidden="true"></span>
-    <div class="livemap-window">
-      <div class="livemap-bar">
-        <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span class="addr"><Icon name="lock" />{site.map.host}</span>
-        <a class="open" href={site.map.url} target="_blank" rel="noopener">
-          <span>{c.open}</span>
-          <Icon name="expand" />
-        </a>
+    <div class="livemap-card">
+      {/* The map at its real size; the script scales and moves this whole layer. */}
+      <div class="livemap-world" data-world style={`width: ${view.width}px; height: ${view.height}px`}>
+        <img class="livemap-snapshot" data-snapshot alt="" decoding="async" />
+        <iframe data-src={mapEmbedUrl(view)} title={c.label} tabindex="-1" aria-hidden="true" scrolling="no" referrerpolicy="strict-origin-when-cross-origin"></iframe>
       </div>
-      <div class="livemap-viewport">
-        <div class="livemap-poster" aria-hidden="true">
-          <span class="grid"></span>
-          <span class="spinner"></span>
-          <span class="loading">{c.loading}</span>
-        </div>
-        <iframe data-src={src} title={c.label} referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
-        <p class="livemap-failed">
-          {c.failed}
-          <a href={site.map.url} target="_blank" rel="noopener">{site.map.host}</a>
-        </p>
-        <button class="livemap-guard" type="button">
-          <span class="guard-pill">
-            <Icon name="pointer" />
-            <span class="for-mouse">{c.activate}</span>
-            <span class="for-touch">{c.activateTouch}</span>
-          </span>
-        </button>
-        <p class="livemap-hint" aria-hidden="true">{c.hint}</p>
-      </div>
-      <div class="livemap-foot">
-        <span>{c.foot}</span>
-        <span class="live"><i aria-hidden="true"></i>{c.live}</span>
+      <p class="livemap-note" aria-live="polite"><span class="spinner" aria-hidden="true"></span><span data-note-text>{c.loading}</span></p>
+      {/* The pad takes every pointer and key, so the map inside is never touched. */}
+      <div class="livemap-pad" data-pad tabindex="0" role="application" aria-label={c.label}>
+        <span class="pad-pill idle"><Icon name="pointer" />{c.activate}</span>
+        <span class="pad-pill busy for-mouse">{c.hint}</span>
+        <span class="pad-pill busy for-touch">{c.touchHint}</span>
       </div>
     </div>
   </div>
+
+  <figcaption class="livemap-caption" data-caption data-live={c.caption} data-snapshot={c.snapshotCaption} data-offline={c.offlineCaption}>
+    <i class="dot" aria-hidden="true"></i>
+    <span data-caption-text>{c.caption}</span>
+  </figcaption>
+
   <noscript>
     <p class="livemap-noscript"><a href={site.map.url}>{site.map.host}</a></p>
   </noscript>
@@ -65,35 +59,231 @@ const src = mapEmbedUrl();
 <style>
   .livemap {
     justify-items: center;
-    gap: 1.6rem;
+    gap: 1.15rem;
     width: 100%;
-    margin: 0;
     display: grid;
     position: relative;
   }
+  .livemap-logo {
+    display: flex;
+  }
+  .livemap-stage {
+    perspective: 1500px;
+    width: 100%;
+    position: relative;
+  }
+  .livemap-shadow {
+    filter: blur(26px);
+    opacity: .5;
+    background: radial-gradient(closest-side, #0a2a5c66, #0a2a5c00);
+    height: 3.5rem;
+    transform: translate(var(--sx, 0px), var(--sy, 0px));
+    position: absolute;
+    inset: auto 6% -1.6rem;
+  }
+  /* The card: nothing but the map. */
+  .livemap-card {
+    aspect-ratio: var(--map-w) / var(--map-h);
+    background: #dbe7f6;
+    border-radius: .9rem;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--ty, 0px));
+    will-change: transform;
+    transition: box-shadow .3s ease-out;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px #0a1b2e1f,
+      0 40px 80px -36px #0a2a5c66,
+      0 18px 36px -22px #0a1b2e47;
+  }
+  .livemap:global(.is-active) .livemap-card {
+    box-shadow:
+      0 0 0 1px var(--color-blue),
+      0 0 0 4px var(--color-blue-ring),
+      0 40px 80px -36px #0a2a5c66;
+  }
+  .livemap-world {
+    transform-origin: 0 0;
+    opacity: 0;
+    will-change: transform;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .livemap:global(.is-ready) .livemap-world {
+    opacity: 1;
+  }
+  .livemap-snapshot,
+  iframe {
+    opacity: 0;
+    border: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    transition: opacity .6s ease-out;
+    display: block;
+    position: absolute;
+    inset: 0;
+  }
+  iframe {
+    pointer-events: none;
+  }
+  .livemap:global(.has-snapshot) .livemap-snapshot,
+  .livemap:global(.is-live) iframe {
+    opacity: 1;
+  }
+  /* Shown only while there is nothing to show yet, or nothing at all. */
+  .livemap-note {
+    color: var(--color-text-muted);
+    align-items: center;
+    gap: .7rem;
+    font-size: .875rem;
+    font-weight: 500;
+    transition: opacity .4s ease-out;
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .livemap:global(.is-live) .livemap-note,
+  .livemap:global(.has-snapshot) .livemap-note {
+    opacity: 0;
+  }
+  .spinner {
+    border: 2px solid #1766e033;
+    border-top-color: var(--color-blue);
+    border-radius: 50%;
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    animation: spin .9s linear infinite;
+  }
+  .livemap:global(.is-offline) .spinner {
+    display: none;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .livemap-pad {
+    cursor: pointer;
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+    place-items: end center;
+    padding-bottom: .9rem;
+    display: grid;
+    position: absolute;
+    inset: 0;
+  }
+  .livemap-pad:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -4px;
+    border-radius: .9rem;
+  }
+  .livemap:global(.is-active) .livemap-pad {
+    cursor: zoom-in;
+  }
+  .livemap:global(.is-active.is-zoomed) .livemap-pad {
+    cursor: grab;
+  }
+  .livemap:global(.is-dragging) .livemap-pad {
+    cursor: grabbing;
+  }
+  /* One small hint at the bottom of the map, only while the pointer is over it. */
+  .pad-pill {
+    grid-area: 1 / 1;
+    pointer-events: none;
+    color: #fff;
+    opacity: 0;
+    white-space: nowrap;
+    background: #0a1b2ee6;
+    border-radius: 999px;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem .85rem;
+    font-size: .78125rem;
+    font-weight: 600;
+    transition: opacity .25s ease-out, transform .45s var(--spring-snappy);
+    display: inline-flex;
+    transform: translateY(6px);
+    box-shadow: 0 10px 24px -10px #0a1b2e99;
+  }
+  .pad-pill :global(svg) {
+    width: .85rem;
+    height: .85rem;
+  }
+  .for-touch {
+    display: none;
+  }
+  @media (hover: hover) {
+    .livemap:not(:global(.is-active)) .livemap-pad:hover .idle,
+    .livemap:not(:global(.is-active)) .livemap-pad:focus-visible .idle {
+      opacity: 1;
+      transform: none;
+    }
+    .livemap:global(.is-active) .busy.for-mouse {
+      animation: hint 3.4s ease-out both;
+    }
+  }
+  @media (hover: none) {
+    .for-mouse {
+      display: none;
+    }
+    .for-touch {
+      display: inline-flex;
+    }
+    .livemap:global(.is-active) .busy.for-touch {
+      animation: hint 2.4s ease-out both;
+    }
+  }
+  @keyframes hint {
+    0%,
+    70% {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: none;
+    }
+  }
+  /* The line under the map: grey until the live map answers, green while it is live. */
   .livemap-caption {
-    box-shadow: inset 0 0 0 1px var(--color-green-ring);
-    color: var(--color-green-strong);
+    box-shadow: var(--edge);
+    color: var(--color-text-muted);
     letter-spacing: -.005em;
-    background: #f1fbf5;
+    text-align: center;
+    background: var(--color-surface);
     border-radius: 999px;
     align-items: center;
     gap: .6rem;
     padding: .45rem .9rem .45rem .8rem;
-    font-size: .875rem;
+    font-size: .84375rem;
     font-weight: 600;
+    transition: color .3s, background-color .3s, box-shadow .3s;
     display: inline-flex;
   }
-  .pulse,
-  .live i {
-    background: var(--color-green);
+  .dot {
+    background: var(--color-text-faint);
     border-radius: 50%;
     flex: none;
     width: 7px;
     height: 7px;
+    transition: background-color .3s;
     position: relative;
   }
-  .pulse:after {
+  .livemap:global(.is-live) .livemap-caption {
+    box-shadow: inset 0 0 0 1px var(--color-green-ring);
+    color: var(--color-green-strong);
+    background: #f1fbf5;
+  }
+  .livemap:global(.is-live) .dot {
+    background: var(--color-green);
+  }
+  .livemap:global(.is-live) .dot:after {
     content: "";
     border: 1.5px solid var(--color-green);
     border-radius: 50%;
@@ -112,329 +302,25 @@ const src = mapEmbedUrl();
       transform: scale(3.2);
     }
   }
-  .livemap-stage {
-    perspective: 1500px;
-    width: 100%;
-    position: relative;
-  }
-  .livemap-shadow {
-    filter: blur(26px);
-    opacity: .5;
-    background: radial-gradient(closest-side, #0a2a5c66, #0a2a5c00);
-    height: 3.5rem;
-    transform: translate(var(--sx, 0px), var(--sy, 0px));
-    position: absolute;
-    inset: auto 6% -1.6rem;
-  }
-  .livemap-window {
-    background: var(--color-surface);
-    box-shadow: var(--shadow-window);
-    transform-style: flat;
-    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--ty, 0px));
-    will-change: transform;
-    border-radius: 14px;
-    position: relative;
-    overflow: hidden;
-  }
-  .livemap-bar {
-    background: linear-gradient(#fbfdff, #f1f5fa);
-    border-bottom: 1px solid var(--color-hairline);
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: .75rem;
-    height: 2.5rem;
-    padding: 0 .6rem 0 .85rem;
-    display: grid;
-  }
-  .dots {
-    gap: .4rem;
-    display: flex;
-  }
-  .dots i {
-    background: #0a1b2e21;
-    border-radius: 50%;
-    width: 9px;
-    height: 9px;
-  }
-  .addr {
-    box-shadow: var(--edge);
-    color: var(--color-text-muted);
-    font: 500 .71875rem/1 var(--font-mono);
-    letter-spacing: -.01em;
-    white-space: nowrap;
-    background: #fff;
-    border-radius: 999px;
-    align-items: center;
-    gap: .4rem;
-    height: 1.55rem;
-    padding: 0 .75rem 0 .6rem;
-    display: inline-flex;
-  }
-  .addr :global(svg) {
-    color: var(--color-green-strong);
-    width: .72rem;
-    height: .72rem;
-  }
-  .open {
-    color: var(--color-text-muted);
-    white-space: nowrap;
-    border-radius: .45rem;
-    justify-self: end;
-    align-items: center;
-    gap: .4rem;
-    height: 1.75rem;
-    padding: 0 .5rem;
-    font-size: .78125rem;
-    font-weight: 500;
-    transition: color .2s, background-color .2s;
-    display: inline-flex;
-  }
-  .open:hover {
-    color: var(--color-blue-strong);
-    background: var(--color-blue-soft);
-  }
-  .open :global(svg) {
-    flex: none;
-    width: .8rem;
-    height: .8rem;
-  }
-  @media (width <= 480px) {
-    .livemap-bar {
-      grid-template-columns: auto 1fr auto;
-    }
-    .addr {
-      justify-self: center;
-    }
-    .open span {
-      clip-path: inset(50%);
-      white-space: nowrap;
-      width: 1px;
-      height: 1px;
-      position: absolute;
-      overflow: hidden;
-    }
-  }
-  .livemap-viewport {
-    aspect-ratio: 4 / 3;
-    background: #dbe9f6;
-    position: relative;
-    overflow: hidden;
-  }
-  iframe {
-    opacity: 0;
-    border: 0;
-    width: 100%;
-    height: 100%;
-    transition: opacity .6s ease-out;
-    display: block;
-    position: absolute;
-    inset: 0;
-  }
-  .livemap:global(.is-loaded) iframe {
-    opacity: 1;
-  }
-  /* Before the map answers: a quiet chart-paper placeholder. */
-  .livemap-poster {
-    color: var(--color-text-muted);
-    background: linear-gradient(160deg, #e6f0fa, #dcebf3 55%, #dff1e6);
-    place-content: center;
-    place-items: center;
-    gap: .8rem;
-    font-size: .875rem;
-    font-weight: 500;
-    transition: opacity .5s ease-out;
-    display: grid;
-    position: absolute;
-    inset: 0;
-  }
-  .livemap-poster .grid {
-    background-image:
-      linear-gradient(#0a1b2e12 1px, #0000 1px),
-      linear-gradient(90deg, #0a1b2e12 1px, #0000 1px);
-    background-position: 50%;
-    background-size: 12.5% 16.667%;
-    position: absolute;
-    inset: 0;
-    -webkit-mask-image: radial-gradient(closest-side, #000 20%, #0000);
-    mask-image: radial-gradient(closest-side, #000 20%, #0000);
-  }
-  .spinner {
-    border: 2px solid #1766e033;
-    border-top-color: var(--color-blue);
-    border-radius: 50%;
-    width: 1.5rem;
-    height: 1.5rem;
-    animation: spin .9s linear infinite;
-    position: relative;
-  }
-  .loading {
-    position: relative;
-  }
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  .livemap:global(.is-loaded) .livemap-poster {
-    opacity: 0;
-    pointer-events: none;
-  }
-  .livemap:global(.is-failed) .livemap-poster .spinner,
-  .livemap:global(.is-failed) .livemap-poster .loading {
-    display: none;
-  }
-  .livemap-failed {
-    text-align: center;
-    color: var(--color-text-soft);
-    z-index: 3;
-    max-width: 18rem;
-    font-size: .9rem;
-    font-weight: 500;
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .livemap-failed a {
-    color: var(--color-blue-strong);
-    font-family: var(--font-mono);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    display: block;
-  }
-  .livemap:global(.is-failed) .livemap-failed {
-    display: block;
-  }
-  /* The guard keeps the pointer with the page until the visitor asks for the map. */
-  .livemap-guard {
-    cursor: pointer;
-    z-index: 2;
-    background: #0000;
-    border: 0;
-    place-items: end center;
-    width: 100%;
-    padding: 0 0 1rem;
-    display: grid;
-    position: absolute;
-    inset: 0;
-  }
-  .livemap-guard:focus-visible {
-    outline-offset: -4px;
-  }
-  .guard-pill {
-    color: #fff;
-    background: #0a1b2ee6;
-    border-radius: 999px;
-    align-items: center;
-    gap: .5rem;
-    padding: .5rem .9rem .5rem .75rem;
-    font-size: .8125rem;
-    font-weight: 600;
-    transition: opacity .25s ease-out, transform .45s var(--spring-snappy);
-    display: inline-flex;
-    box-shadow: 0 10px 24px -10px #0a1b2e99;
-  }
-  .guard-pill :global(svg) {
-    width: .85rem;
-    height: .85rem;
-  }
-  .for-touch {
-    display: none;
-  }
-  @media (hover: none) {
-    .for-mouse {
-      display: none;
-    }
-    .for-touch {
-      display: inline;
-    }
-  }
-  @media (hover: hover) {
-    .guard-pill {
-      opacity: 0;
-      transform: translateY(6px);
-    }
-    .livemap-guard:hover .guard-pill,
-    .livemap-guard:focus-visible .guard-pill {
-      opacity: 1;
-      transform: none;
-    }
-  }
-  .livemap:not(:global(.is-loaded)) .guard-pill,
-  .livemap:global(.is-failed) .livemap-guard {
-    display: none;
-  }
-  .livemap:global(.is-active) .livemap-guard {
-    pointer-events: none;
-    visibility: hidden;
-  }
-  .livemap-hint {
-    z-index: 2;
-    pointer-events: none;
-    color: #fff;
-    opacity: 0;
-    white-space: nowrap;
-    background: #0a1b2ed9;
-    border-radius: 999px;
-    padding: .4rem .8rem;
-    font-size: .75rem;
-    font-weight: 500;
-    position: absolute;
-    bottom: 1rem;
-    left: 50%;
-    transform: translate(-50%);
-  }
-  .livemap:global(.is-active) .livemap-hint {
-    animation: hint 3.2s ease-out both;
-  }
-  @keyframes hint {
-    0%,
-    70% {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-  .livemap:global(.is-active) .livemap-window {
-    box-shadow:
-      0 0 0 1px var(--color-blue),
-      0 0 0 4px var(--color-blue-ring),
-      0 40px 80px -36px #0a2a5c66;
-  }
-  .livemap-foot {
-    border-top: 1px solid var(--color-hairline);
-    color: var(--color-text-faint);
-    font: 500 .6875rem/1 var(--font-mono);
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    justify-content: space-between;
-    align-items: center;
-    height: 2.1rem;
-    padding: 0 .9rem;
-    display: flex;
-  }
-  .live {
-    color: var(--color-green-strong);
-    align-items: center;
-    gap: .45rem;
-    display: inline-flex;
-  }
-  .livemap:global(.is-failed) .live {
-    visibility: hidden;
-  }
   .livemap-noscript a {
     color: var(--color-blue-strong);
     font-family: var(--font-mono);
     text-decoration: underline;
   }
+  @media (width <= 720px) {
+    .livemap-logo :global(img) {
+      width: 120px;
+    }
+    .livemap-caption {
+      font-size: .8125rem;
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
-    .pulse:after {
+    .livemap:global(.is-live) .dot:after {
       display: none;
     }
-    .livemap:global(.is-active) .livemap-hint {
-      animation-duration: 3.2s !important;
+    .livemap:global(.is-active) .busy {
+      animation-duration: 3.4s !important;
     }
   }
 </style>

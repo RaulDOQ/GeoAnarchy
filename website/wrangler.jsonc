@@ -1,16 +1,34 @@
-// Cloudflare Workers config for the GeoAnarchy website. The site is fully static:
-// `npm run build` writes it to dist/ and Cloudflare serves those files as they are.
-// There is no server code and there are no secrets.
+// Cloudflare Workers config for the GeoAnarchy website.
+//
+// The site is static: `npm run build` writes it to dist/ and Cloudflare serves those
+// files without running any code. The small Worker in worker/ only looks after the
+// live map's fallback picture: every 20 minutes it takes a snapshot of the map with
+// Cloudflare's hosted browser and keeps the newest few in KV.
+//
+// Nothing here needs setting up by hand: the KV namespace is created on the first
+// deploy, and there are no secrets.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "geoanarchy-website",
+  "main": "./worker/index.ts",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",
+    // Lets the Worker hand unknown addresses back to the static files.
+    "binding": "ASSETS",
     // Unknown addresses get the site's 404 page; /pagina and /pagina/ both work.
     "not_found_handling": "404-page",
     "html_handling": "auto-trailing-slash"
   },
+  // The hosted browser that takes the map snapshots (worker/capture.ts).
+  "browser": { "binding": "BROWSER" },
+  // Where the snapshots are kept (worker/snapshots.ts). No id: Cloudflare creates the
+  // namespace on the first deploy and remembers it.
+  "kv_namespaces": [{ "binding": "SNAPSHOTS" }],
+  // A snapshot every 20 minutes.
+  "triggers": { "crons": ["*/20 * * * *"] },
+  // Keeps the Worker's log lines (for example "map snapshot saved") in the dashboard.
+  "observability": { "enabled": true },
   // Cloudflare builds every branch other than main as a Preview (`npx wrangler preview`),
   // and that command refuses to run without this block. It can stay empty: the Preview
   // uses the same static files as the live site.

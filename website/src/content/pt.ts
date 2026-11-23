@@ -45,16 +45,17 @@ export const pt = {
   },
 
   liveMap: {
-    label: 'Mapa ao vivo do servidor GeoAnarchy',
+    label: 'Mapa ao vivo do servidor GeoAnarchy. Use + e − para dar zoom e as setas para mover.',
     caption: 'Ao vivo: este é o mapa real do servidor',
-    live: 'Ao vivo',
+    // Shown instead of the caption while the live map is down; {time} is when the
+    // picture was taken.
+    snapshotCaption: 'Mapa ao vivo fora do ar · imagem das {time}',
+    offlineCaption: 'Mapa ao vivo fora do ar',
     loading: 'Carregando o mapa…',
+    offline: 'O mapa está fora do ar no momento.',
     activate: 'Clique para explorar',
-    activateTouch: 'Toque para explorar',
-    hint: 'Arraste para mover, role para dar zoom',
-    failed: 'O mapa não respondeu. Abra em outra aba:',
-    open: 'Tela cheia',
-    foot: `Terra · ${w.scale}`,
+    hint: 'Role para dar zoom, arraste para mover',
+    touchHint: 'Use dois dedos para dar zoom e mover',
   },
 
   anarchy: {

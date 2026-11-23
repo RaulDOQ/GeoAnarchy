@@ -26,8 +26,8 @@ Run these inside `website/` (Node 22.12 or newer):
 |---|---|
 | `npm install` | Installs dependencies |
 | `npm run dev` | Local preview with live reload at `http://localhost:4321` |
-| `npm run check` | Type-checks the pages and scripts |
-| `npm run build` | Type-checks, then writes the finished site to `dist/` |
+| `npm run check` | Type-checks the pages, scripts and Worker, and runs the tests |
+| `npm run build` | Frames the live map, runs the checks, then writes the finished site to `dist/` |
 | `npm run preview` | Serves `dist/` locally, as a host would |
 
 ## Where things live
@@ -40,7 +40,9 @@ Run these inside `website/` (Node 22.12 or newer):
 | `src/components/Logo.astro`, `Wordmark.astro` | The logo with the block Earth (header) and the name on its own (hero, closing section, footer, 404 page). |
 | `src/components/PageHead.astro`, `Editions.astro` | The top of every page other than the home page, and the Java and Bedrock join cards (home page and GeoWiki). |
 | `src/components/home/` | The home page's sections: hero and live map window, anarchy, the block map sheet, realism and its journey map, how to join, questions. `Closing.astro` ends every page. |
-| `src/scripts/` | Browser scripts: live map loading and pointer guard, window tilt, scroll entrances, copy buttons. |
+| `src/scripts/` | Browser scripts: the live map card (what it shows, zoom and move), its tilt, scroll entrances, copy buttons. |
+| `worker/` | The Worker: map snapshots every 20 minutes and the addresses that serve them. |
+| `scripts/detect-map.mjs` | Works out the live map's framing before each build. |
 | `src/assets/earth.png` | The block world map (144 x 72 pixels, one per 2.5 degrees), shown enlarged with sharp edges. |
 | `src/assets/logo.webp`, `logo-small.webp`, `wordmark.webp` | The logo artwork, trimmed: the full logo in two sizes and the name alone. `public/favicon.png`, `public/apple-touch-icon.png` and `public/og.png` (the picture shown when the site's link is shared) come from the same artwork. |
 | `scripts/make-pixel-earth.mjs` | Draws `earth.png` from Natural Earth land data. Its header explains the options. |
@@ -61,15 +63,44 @@ The sea colour is not in the image: it is `--color-ocean` in `src/styles/tokens.
 
 ## The live map
 
-The hero shows the server's Dynmap site (`mapa.geoanarchy.net`) in an iframe, styled as
-a floating window.
+The hero shows the server's Dynmap site (`mapa.geoanarchy.net`) in a plain card: the
+name above it, the map, and one line under it saying whether the map is live.
 
-- It loads only when the window is near the screen.
-- A guard sits over the map so scrolling the page never zooms it by accident. A click or
-  tap hands the pointer to the map; leaving the window, or tapping outside it, gives the
-  page its scroll back.
-- If the map has not answered after 15 seconds, a link to open it directly appears.
-- The Dynmap URL parameters (world, layer, hidden panels) are in `site.map.embedParams`.
+- **It fits.** The map is shown in a frame of exactly the world's size at one Dynmap
+  zoom level, scaled to the card, so the whole world fills the card with no border.
+  `scripts/detect-map.mjs` works out that frame before every build by asking the map
+  for its settings; if the map cannot be reached it uses
+  `src/config/map-view.default.json`. `/api/map-view.json` on the live site shows what
+  the last build used.
+- **Only the map.** Dynmap's own controls are switched off, and the visitor never
+  touches Dynmap: a pad over the card takes the pointer and `src/scripts/live-map.ts`
+  moves and enlarges the whole map. It can be zoomed in from the full view (click, then
+  wheel and drag; two fingers on a phone; `+`, `−`, arrows and `Esc` on a keyboard), never
+  out past it and never off the world. Until the map is clicked, the wheel scrolls the page.
+- **Fallback.** Under the live map lies the newest snapshot, visible while the map loads.
+  The page asks the map site for a small picture first; if that fails, the live map is
+  not loaded, the snapshot stays and the line under the card gives its time. It tries
+  again every minute.
+
+### Snapshots
+
+The Worker in `worker/` takes the snapshots. Every 20 minutes (the cron trigger in
+`wrangler.jsonc`) it opens the map in Cloudflare's hosted browser at the same framing,
+waits for the tiles and stores a JPEG in Cloudflare KV. It keeps the newest three and
+deletes older ones. If the map is down it stores nothing, so the last good picture stays.
+
+| Address | What it is |
+|---|---|
+| `/api/map-snapshot.json` | When the newest snapshot was taken, and its address |
+| `/api/map-snapshot/<time>.jpg` | That picture |
+| `/api/map-view.json` | How the map was framed at the last build |
+
+On Cloudflare's free plan the hosted browser may run 10 minutes a day; a snapshot takes
+a few seconds, so 72 a day fit, without much room. If snapshots stop late in the day,
+that allowance ran out: change the cron line to `*/30 * * * *`, or use a paid plan.
+
+`npm test` runs the snapshot tests (storage, deleting old ones, the addresses).
+`npx wrangler dev` runs the built site with the Worker locally.
 
 The map must allow being shown inside another site: if Dynmap or Cloudflare ever sends
 an `X-Frame-Options` or `Content-Security-Policy: frame-ancestors` header for
@@ -83,9 +114,9 @@ launch.
 
 ## Deploy on Cloudflare
 
-The site runs as a Cloudflare Worker that only serves the static files in `dist/`
-(`wrangler.jsonc`). Cloudflare builds and publishes it from GitHub every time `main`
-changes.
+The site runs as a Cloudflare Worker (`wrangler.jsonc`): the pages are static files in
+`dist/`, and a small script takes the map snapshots (see "Snapshots" above). Cloudflare
+builds and publishes it from GitHub every time `main` changes.
 
 In the Cloudflare dashboard: **Workers & Pages → Create → Import a repository**, pick
 `RaulDOQ/GeoAnarchy`, and set:
@@ -96,7 +127,8 @@ In the Cloudflare dashboard: **Workers & Pages → Create → Import a repositor
 - **Build command:** `npm run build`
 - **Deploy command:** `npx wrangler deploy`
 
-The Node version comes from `.node-version`. There are no variables or secrets to add.
+The Node version comes from `.node-version`. There are no variables or secrets to add,
+and the KV namespace for the snapshots is created by the first deploy.
 
 To publish from a computer instead: `npm run build`, then `npx wrangler deploy` (it asks
 you to sign in to Cloudflare the first time).
