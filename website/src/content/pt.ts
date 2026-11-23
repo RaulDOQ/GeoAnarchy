@@ -236,11 +236,22 @@ export const pt = {
   store: {
     meta: {
       title: 'Loja | GeoAnarchy',
-      description: 'Os planos do GeoAnarchy: Geo+, Geo Ultra e Geo Ultra+, pagos por mês, a cada 3 meses ou a cada 6 meses.',
+      description: 'Ajude o GeoAnarchy a continuar e crescer: a meta mensal do servidor e os planos Geo+, Geo Ultra e Geo Ultra+.',
     },
     chapter: 'Loja',
-    title: ['Escolha', 'seu plano'],
-    lead: 'Três planos, pagos por mês, a cada 3 meses ou a cada 6 meses. Quanto mais meses, menor o preço.',
+    title: ['Ajude o servidor', 'a continuar e crescer'],
+    lead: 'Cada plano ajuda a pagar os custos do servidor. Pague por mês, a cada 3 meses ou a cada 6 meses: quanto mais meses, menor o preço.',
+    // The monthly goal (the amounts are in src/config/store.ts). {goal} is the goal,
+    // {left} what is still missing, {over} what came in beyond it.
+    goal: {
+      label: 'Meta mensal',
+      of: 'de {goal}',
+      left: 'Faltam {left} para completar a meta',
+      reached: 'Meta do mês completa',
+      over: '{over} acima da meta',
+      about: 'A meta é o que precisamos por mês para manter o servidor no ar.',
+      beyond: 'Se a arrecadação passar da meta, todo o valor a mais será investido de volta no servidor: mais recursos, mais jogadores e mais novidades.',
+    },
     // The switch over the plans: how often to pay. One name per period in
     // src/config/store.ts, in the same order.
     periodLabel: 'Forma de pagamento',

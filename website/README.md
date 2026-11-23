@@ -10,7 +10,7 @@ JavaScript that any static host can serve.
 |---|---|---|
 | `/` | `src/pages/index.astro` | Home: the pitch, the live map, the server's ideas, how to join, questions |
 | `/sobre/` | `src/pages/sobre/index.astro` | Sobre nós. The server's story and team are still to be written. |
-| `/loja/` | `src/pages/loja/index.astro` | Loja. The three plans, with a switch for paying every month, every 3 months or every 6 months. They cannot be bought yet; the page says so. |
+| `/loja/` | `src/pages/loja/index.astro` | Loja. The monthly goal (what keeps the server running, and how much is missing), then the three plans with a switch for paying every month, every 3 months or every 6 months. They cannot be bought yet; the page says so. |
 | `/wiki/` | `src/pages/wiki/index.astro` | GeoWiki: how to join, the world, how the server works |
 | any other | `src/pages/404.astro` | Page not found |
 
@@ -35,7 +35,7 @@ Run these inside `website/` (Node 22.12 or newer):
 | Path | Contents |
 |---|---|
 | `src/config/site.ts` | Server addresses, the map address and its parameters, the Discord invite, world size. Change a value here and every page follows. |
-| `src/config/store.ts` | The store's plans, their monthly prices, and the discounts for paying 3 or 6 months at once. The "Loja" page works every price out from these. |
+| `src/config/store.ts` | The store: the monthly goal and how much has come in (kept by hand until payments are connected), the plans, their monthly prices, and the discounts for paying 3 or 6 months at once. The "Loja" page works everything out from these. |
 | `src/content/pt.ts` | Every text on the site. |
 | `src/styles/tokens.css` | Colours, type, spacing and motion values (white, blue and green theme). |
 | `src/components/Logo.astro`, `Wordmark.astro` | The logo with the block Earth (header) and the name on its own (hero, closing section, footer, 404 page). |

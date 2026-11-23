@@ -1,24 +1,59 @@
 ---
-// "Loja": the three plans. A switch chooses how often to pay (every month, every 3
-// months, every 6 months) and every card shows the price for that choice; it works
-// without JavaScript. The plans cannot be bought yet, so the cards say "Em breve" and
-// the page points to Discord for news. Plans and prices: src/config/store.ts.
+// "Loja": how to help pay for the server. First the monthly goal (what it takes to
+// keep the server running, how much has come in and how much is missing), then the
+// three plans. A switch chooses how often to pay (every month, every 3 months, every 6
+// months) and every card shows the price for that choice; it works without JavaScript.
+// The plans cannot be bought yet, so the cards say "Em breve" and the page points to
+// Discord for news. The goal, the plans and the prices: src/config/store.ts.
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import Icon from '../../components/Icon.astro';
 import Closing from '../../components/home/Closing.astro';
 import { site } from '../../config/site';
-import { periodPrice, reais, store } from '../../config/store';
+import { goalProgress, periodPrice, reais, store } from '../../config/store';
 import { pt } from '../../content/pt';
 
 const c = pt.store;
+const g = c.goal;
 const money = (centavos: number) => `R$ ${reais(centavos)}`;
+const { goal } = store;
+const progress = goalProgress(goal);
+const goalOf = g.of.replace('{goal}', money(goal.amount));
+// Under the bar: what is missing, or that the goal is reached (and by how much it was passed).
+const goalStatus = progress.left > 0 ? g.left.replace('{left}', money(progress.left)) : progress.over > 0 ? `${g.reached} · ${g.over.replace('{over}', money(progress.over))}` : g.reached;
 ---
 
 <Base title={c.meta.title} description={c.meta.description} page="store">
   <PageHead chapter={c.chapter} title={c.title} lead={c.lead} />
 
   <section class="container store">
+    <div class="goal card" data-in="settle" style="--d: 40ms">
+      <div class="goal-count">
+        <p class="label">{g.label}</p>
+        <p class="amount">
+          <span class="currency">R$</span>
+          <strong>{reais(goal.raised)}</strong>
+          <span class="per">{goalOf}</span>
+        </p>
+        <div
+          class="bar"
+          role="progressbar"
+          aria-label={g.label}
+          aria-valuemin="0"
+          aria-valuemax={goal.amount / 100}
+          aria-valuenow={Math.min(goal.raised, goal.amount) / 100}
+          aria-valuetext={`${money(goal.raised)} ${goalOf}`}
+        >
+          <i class={progress.percent > 0 ? 'some' : undefined} style={`width: ${progress.percent.toFixed(2)}%`}></i>
+        </div>
+        <p class="goal-status">{goalStatus}</p>
+      </div>
+      <div class="goal-text">
+        <p>{g.about}</p>
+        <p>{g.beyond}</p>
+      </div>
+    </div>
+
     <fieldset class="switch" data-in="settle" style="--d: 60ms">
       <legend class="visually-hidden">{c.periodLabel}</legend>
       {
@@ -116,6 +151,56 @@ const money = (centavos: number) => `R$ ${reais(centavos)}`;
 <style>
   .store {
     padding-top: 3rem;
+  }
+
+  /* The monthly goal: on the left the count and its bar, on the right what it is for. */
+  .goal {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 1.5rem 3rem;
+    margin-bottom: 2.25rem;
+    padding: 1.8rem 1.9rem 1.9rem;
+    display: grid;
+  }
+  .goal-count {
+    gap: .9rem;
+    display: grid;
+  }
+  .bar {
+    box-shadow: var(--edge-strong);
+    background: var(--color-surface-2);
+    border-radius: 999px;
+    height: .75rem;
+    overflow: hidden;
+  }
+  .bar i {
+    background: var(--grad-earth);
+    border-radius: inherit;
+    height: 100%;
+    transition: width 1.1s var(--ease-out) .35s;
+    display: block;
+  }
+  /* A first small amount still shows as a rounded tip. */
+  .bar i.some {
+    min-width: .75rem;
+  }
+  :global(.js) .goal:not(:global(.is-in)) .bar i {
+    width: 0 !important;
+    min-width: 0;
+  }
+  .goal-status {
+    color: var(--color-text-soft);
+    font-size: .9375rem;
+    font-weight: 600;
+  }
+  .goal-text {
+    gap: .75rem;
+    display: grid;
+  }
+  .goal-text p {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    line-height: 1.55;
   }
 
   /* How often to pay: three choices side by side, the chosen one raised. */
@@ -325,6 +410,7 @@ const money = (centavos: number) => `R$ ${reais(centavos)}`;
   }
 
   @media (width <= 900px) {
+    .goal,
     .plans,
     .after {
       grid-template-columns: minmax(0, 1fr);
@@ -347,6 +433,9 @@ const money = (centavos: number) => `R$ ${reais(centavos)}`;
     .status {
       flex-direction: column;
       align-items: flex-start;
+    }
+    .goal {
+      padding: 1.4rem 1.3rem 1.5rem;
     }
   }
 </style>

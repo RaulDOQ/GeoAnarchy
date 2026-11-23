@@ -2,8 +2,17 @@
 // The texts around them are in src/content/pt.ts, under `store`.
 
 export const store = {
-  /** False while the plans cannot be bought yet: the page then says "Em breve". */
-  open: false,
+  /** The monthly goal, in centavos. */
+  goal: {
+    /** What it takes to keep the server running for a month. */
+    amount: 20000,
+    /**
+     * What has come in this month. Nothing can be bought yet, so nothing has. Until
+     * payments are connected this number is kept by hand: raise it as money comes in,
+     * and set it back to 0 when a new month starts.
+     */
+    raised: 0,
+  },
 
   /** The plans, cheapest first. `monthly` is the price of one month, in centavos. */
   plans: [
@@ -37,6 +46,25 @@ export function periodPrice(monthly: number, period: { months: number; off: numb
   const full = monthly * period.months;
   const total = Math.round((full * (100 - period.off)) / 100);
   return { total, perMonth: Math.round(total / period.months), full };
+}
+
+/** Where the month stands against its goal, in centavos. */
+export interface GoalProgress {
+  /** What is still missing (0 once the goal is reached). */
+  left: number;
+  /** What came in beyond the goal (0 until then). */
+  over: number;
+  /** How much of the goal is covered, 0 to 100. */
+  percent: number;
+}
+
+export function goalProgress(goal: { amount: number; raised: number }): GoalProgress {
+  const raised = Math.max(0, goal.raised);
+  return {
+    left: Math.max(0, goal.amount - raised),
+    over: Math.max(0, raised - goal.amount),
+    percent: goal.amount > 0 ? Math.min(100, (raised / goal.amount) * 100) : 100,
+  };
 }
 
 /** Centavos as Brazilians write money, without the currency sign: 799 is "7,99". */
