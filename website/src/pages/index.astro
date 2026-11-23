@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import ServerSection from '../components/home/ServerSection.astro';
+import WorldSection from '../components/home/WorldSection.astro';
+import JoinSection from '../components/home/JoinSection.astro';
+import FaqSection from '../components/home/FaqSection.astro';
+import Closing from '../components/home/Closing.astro';
+import { pt } from '../content/pt';
+---
+
+<Base title={pt.meta.title} description={pt.meta.description}>
+  <Hero />
+  <ServerSection />
+  <WorldSection />
+  <JoinSection />
+  <FaqSection />
+  <Closing />
+</Base>

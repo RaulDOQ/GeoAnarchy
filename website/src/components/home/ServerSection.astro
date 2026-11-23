@@ -1,0 +1,110 @@
+---
+// "O servidor": what makes GeoAnarchy different, with a diagram of the idea (three
+// made-up countries, one alliance, one war) and the four things players do.
+import Icon, { type IconName } from '../Icon.astro';
+import BordersDiagram from './BordersDiagram.astro';
+import SectionHead from './SectionHead.astro';
+import { pt } from '../../content/pt';
+
+const c = pt.server;
+---
+
+<section class="stage" id="servidor">
+  <div class="container">
+    <SectionHead num="01" chapter={c.chapter} title={c.title} lead={c.lead} />
+
+    <div class="borders card" data-in="settle" style="--d: 100ms">
+      <span class="note mono-label">{c.illustrationNote}</span>
+      <div class="wide"><BordersDiagram label={c.lead} /></div>
+      <div class="narrow"><BordersDiagram label={c.lead} compact /></div>
+    </div>
+
+    <ul class="pillars">
+      {
+        c.pillars.map((p, i) => (
+          <li class="pillar card" data-in="settle" style={`--d: ${120 + i * 70}ms`}>
+            <span class:list={['icon-chip', { green: i % 2 === 1 }]}><Icon name={p.icon as IconName} /></span>
+            <h3>{p.title}</h3>
+            <p>{p.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .borders {
+    background: linear-gradient(160deg, #f3f8fe, #f5fbf7);
+    height: clamp(13rem, 8rem + 14vw, 20rem);
+    position: relative;
+    overflow: hidden;
+  }
+  .wide,
+  .narrow {
+    height: 100%;
+  }
+  .narrow {
+    display: none;
+  }
+  .note {
+    background: #ffffffd9;
+    box-shadow: var(--edge);
+    border-radius: 999px;
+    padding: .4rem .6rem;
+    position: absolute;
+    top: .9rem;
+    left: .9rem;
+  }
+  .pillars {
+    gap: 1rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: 1rem;
+    list-style: none;
+    display: grid;
+  }
+  .pillar {
+    align-content: start;
+    gap: .55rem;
+    padding: 1.5rem 1.4rem 1.6rem;
+    transition: box-shadow .3s ease-out, transform .5s var(--spring-smooth);
+    display: grid;
+  }
+  .pillar:hover {
+    box-shadow: var(--edge-strong), var(--shadow-lift);
+    transform: translateY(-3px);
+  }
+  .pillar h3 {
+    letter-spacing: -.02em;
+    margin-top: .7rem;
+    font-size: 1.125rem;
+  }
+  .pillar p {
+    color: var(--color-text-muted);
+    font-size: .9375rem;
+    line-height: 1.55;
+  }
+  @media (width <= 1100px) {
+    .pillars {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (width <= 640px) {
+    .borders {
+      aspect-ratio: 900 / 276;
+      height: auto;
+    }
+    .wide,
+    .note {
+      display: none;
+    }
+    .narrow {
+      display: block;
+    }
+  }
+  @media (width <= 560px) {
+    .pillars {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
