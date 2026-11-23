@@ -1,6 +1,7 @@
 ---
-// The GeoAnarchy logo (the block Earth with the name). Small sizes use a small file.
-import large from '../assets/logo.webp';
+// The GeoAnarchy logo (the block Earth with the name), from the file that suits the size.
+import large from '../assets/logo-large.webp';
+import medium from '../assets/logo.webp';
 import small from '../assets/logo-small.webp';
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const { height = 40, alt = '' } = Astro.props;
-const file = height > 56 ? large : small;
+const file = height > 280 ? large : height > 56 ? medium : small;
 const width = Math.round((height * file.width) / file.height);
 ---
 
