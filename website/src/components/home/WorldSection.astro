@@ -50,7 +50,7 @@ const tiles = drawableTiles(view);
             <img class="livemap-snapshot" data-snapshot alt="" decoding="async" />
             <iframe data-src={mapEmbedUrl(view)} title={m.label} tabindex="-1" aria-hidden="true" scrolling="no" referrerpolicy="strict-origin-when-cross-origin"></iframe>
           </div>
-          {/* The map drawn from its tiles. */}
+          {/* The map drawn from its tiles, or from the site's own copy of the map. */}
           <canvas class="livemap-tiles" data-tiles aria-hidden="true"></canvas>
           <p class="livemap-note" aria-live="polite"><span class="spinner" aria-hidden="true"></span><span data-note-text>{m.loading}</span></p>
           {/* The pad takes every pointer and key, so the map under it is never touched. */}
@@ -61,7 +61,7 @@ const tiles = drawableTiles(view);
           </div>
         </div>
 
-        <p class="livemap-caption" data-caption data-live={m.caption} data-snapshot={m.snapshotCaption} data-offline={m.offlineCaption}>
+        <p class="livemap-caption" data-caption data-live={m.caption} data-snapshot={m.snapshotCaption} data-offline={m.offlineCaption} data-zoomed={m.zoomedCaption}>
           <i class="dot" aria-hidden="true"></i>
           <span data-caption-text>{m.caption}</span>
         </p>
@@ -194,7 +194,8 @@ const tiles = drawableTiles(view);
   }
   .livemap:global(.has-snapshot) .livemap-snapshot,
   .livemap:global(.is-live.shows-frame) iframe,
-  .livemap:global(.is-live.draws-tiles) .livemap-tiles {
+  .livemap:global(.is-live.draws-tiles) .livemap-tiles,
+  .livemap:global(.shows-copy) .livemap-tiles {
     opacity: 1;
   }
   /* Shown only while there is nothing to show yet, or nothing at all. */

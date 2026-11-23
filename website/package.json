@@ -10,8 +10,7 @@
     "build": "node scripts/detect-map.mjs && npm run check && astro build",
     "preview": "astro preview",
     "check": "astro check && tsc -p worker && npm test",
-    "test": "node --test worker/snapshots.test.ts",
-    "make:earth": "node scripts/make-pixel-earth.mjs"
+    "test": "node --test worker/snapshots.test.ts worker/copy.test.ts"
   },
   "dependencies": {
     "@cloudflare/puppeteer": "2.0.1",
@@ -22,10 +21,7 @@
   "devDependencies": {
     "@astrojs/check": "0.9.4",
     "@cloudflare/workers-types": "5.20261123.1",
-    "d3-geo": "^3.1.2",
-    "topojson-client": "^3.1.0",
     "typescript": "5.9.3",
-    "world-atlas": "^2.0.2",
     "wrangler": "4.166.0"
   },
   "engines": {

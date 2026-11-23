@@ -1,31 +1,10 @@
-// Run with `npm test`. A small in-memory stand-in plays the part of Cloudflare KV.
+// Run with `npm test`. A small in-memory stand-in (memory-store.ts) plays the part of Cloudflare KV.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { journeyShot, worldShot, type MapView } from '../src/config/site.ts';
+import { memoryStore } from './memory-store.ts';
 import { handleSnapshotRequest } from './routes.ts';
-import { framingOf, isDue, JOURNEY, latestPicture, readPicture, savePicture, WORLD, type SnapshotStore } from './snapshots.ts';
-
-function memoryStore(): SnapshotStore & { data: Map<string, string | ArrayBuffer> } {
-  const data = new Map<string, string | ArrayBuffer>();
-  return {
-    data,
-    async get(key: string, type: 'json' | 'arrayBuffer') {
-      const value = data.get(key);
-      if (value === undefined) return null;
-      if (type === 'json') return JSON.parse(value as string);
-      return value as ArrayBuffer;
-    },
-    async put(key, value) {
-      data.set(key, typeof value === 'string' ? value : ArrayBuffer.isView(value) ? (value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength) as ArrayBuffer) : value);
-    },
-    async delete(key) {
-      data.delete(key);
-    },
-    async list({ prefix }) {
-      return { keys: [...data.keys()].filter((name) => name.startsWith(prefix)).map((name) => ({ name })) };
-    },
-  } as SnapshotStore & { data: Map<string, string | ArrayBuffer> };
-}
+import { framingOf, isDue, JOURNEY, latestPicture, readPicture, savePicture, WORLD } from './snapshots.ts';
 
 const picture = (byte: number) => new Uint8Array([0xff, 0xd8, byte]);
 const MINUTES = 60_000;
@@ -116,6 +95,10 @@ test('the journey picture never asks for more detail than the map has', () => {
   assert.equal(journeyShot({ ...view, tiles: { ...tiles, nativeZoom: 9 } }).zoom, 4);
   const shallow = journeyShot({ ...view, tiles: { ...tiles, nativeZoom: 3 } });
   assert.deepEqual({ width: shallow.width, height: shallow.height, zoom: shallow.zoom }, { width: 768, height: 576, zoom: 3 });
+  // The same when the Worker found out by trying that the map goes only one level in.
+  assert.deepEqual(journeyShot(view, 1), shallow);
+  assert.equal(journeyShot(view, 0).zoom, 2);
+  assert.equal(journeyShot(view, 4).zoom, 4, 'a deep map changes nothing');
 });
 
 test('the journey picture is taken when there is none, when its framing changes, and once a day', async () => {
@@ -154,6 +137,11 @@ test('the journey picture is offered next to the newest snapshot, and has its ow
   assert.deepEqual([...new Uint8Array(await image!.arrayBuffer())], [0xff, 0xd8, 2]);
   // A whole-world picture is not served under the journey's address, or the other way round.
   assert.equal((await handleSnapshotRequest(new URL(`https://site/api/map-journey/${t}.jpg`), store))?.status, 404);
+
+  // The newest one also has an address that does not change, for the page's first paint.
+  const newest = await handleSnapshotRequest(new URL('https://site/api/map-journey/latest.jpg'), store);
+  assert.deepEqual([...new Uint8Array(await newest!.arrayBuffer())], [0xff, 0xd8, 2]);
+  assert.equal(newest?.headers.get('cache-control'), 'public, max-age=300');
 
   // A new journey picture keeps the one before it, for a page that is still showing it.
   await savePicture(store, JOURNEY, picture(4), t + 24 * HOURS, 'framing');

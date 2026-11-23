@@ -51,6 +51,9 @@ export const pt = {
     // picture was taken.
     snapshotCaption: 'Mapa ao vivo fora do ar · imagem das {time}',
     offlineCaption: 'Mapa ao vivo fora do ar',
+    // Shown while a visitor is zoomed in and the card shows the site's saved copy of
+    // the map instead of Dynmap's page (only when the map's tiles could not be used).
+    zoomedCaption: 'Ampliado: cópia do mapa guardada pelo site',
     loading: 'Carregando o mapa…',
     offline: 'O mapa está fora do ar no momento.',
     activate: 'Clique para explorar',
