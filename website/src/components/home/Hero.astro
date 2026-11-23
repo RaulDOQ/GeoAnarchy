@@ -1,8 +1,8 @@
 ---
-// Hero: the name, the pitch and the two ways in. The live map comes right under it,
-// as the first section.
+// Hero: the pitch and the two ways in on the left, the logo (the block Earth with the
+// name) large on the right. The live map comes right under it, as the first section.
 import Icon from '../Icon.astro';
-import Wordmark from '../Wordmark.astro';
+import Logo from '../Logo.astro';
 import { site } from '../../config/site';
 import { pt } from '../../content/pt';
 
@@ -11,29 +11,34 @@ const c = pt.hero;
 
 <section class="hero-wrap" id="inicio" aria-labelledby="hero-title">
   <div class="hero-bg" aria-hidden="true"></div>
-  <div class="hero-light" aria-hidden="true"></div>
   <div class="hero container">
-    <div class="hero-logo" data-in="settle"><Wordmark width={230} alt={site.name} /></div>
-    <a class="announce" href="#mapa" data-in="settle" style="--d: 60ms">
+    <div class="hero-copy">
+    <a class="announce" href="#mapa" data-in="settle">
       <span><i></i>{c.announceTag}</span>
       {c.announce}
       <Icon name="arrowDown" />
     </a>
-    <h1 id="hero-title" class="hero-title" data-in="lines" style="--d: 120ms">
+    <h1 id="hero-title" class="hero-title" data-in="lines" style="--d: 80ms">
       <span class="line"><span class="grad">{c.title[0]}</span></span>
       <span class="line"><span class="grad-earth">{c.title[1]}</span></span>
     </h1>
-    <p class="hero-lead" data-in="settle" style="--d: 280ms">{c.lead}</p>
-    <div class="hero-cta" data-in="settle" style="--d: 380ms">
+    <p class="hero-lead" data-in="settle" style="--d: 260ms">{c.lead}</p>
+    <div class="hero-cta" data-in="settle" style="--d: 360ms">
       <button class="btn-solid ip" type="button" data-copy={site.java.address}>
         <span class="idle"><Icon name="copy" />{c.ctaCopy}<code>{site.java.address}</code></span>
         <span class="done" aria-hidden="true"><Icon name="check" />{pt.common.copied}</span>
       </button>
       <a class="btn-line" href={site.map.url} target="_blank" rel="noopener">{c.ctaMap}<Icon name="arrowRight" class="arrow" /></a>
     </div>
-    <p class="hero-meta" data-in="dissolve" style="--d: 540ms">
+    <p class="hero-meta" data-in="dissolve" style="--d: 520ms">
       {c.facts.map((fact, i) => <span>{fact}{i < c.facts.length - 1 && ' ·'}</span>)}
     </p>
+    </div>
+    <div class="hero-logo" data-in="dissolve" style="--d: 120ms">
+      <div class="hero-light" aria-hidden="true"></div>
+      <span class="hero-logo-shadow" aria-hidden="true"></span>
+      <div class="hero-logo-float"><Logo height={470} alt={site.name} /></div>
+    </div>
     <div class="hero-next-wrap">
       <a class="hero-next" href="#mapa"><span class="num">01</span>{c.next}<Icon name="arrowDown" /></a>
     </div>
@@ -47,12 +52,11 @@ const c = pt.hero;
   }
   .hero {
     min-height: calc(100svh - var(--nav-offset) - 2.25rem);
-    text-align: center;
-    flex-direction: column;
-    justify-content: center;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
     align-items: center;
-    padding-block: 2.5rem 5.5rem;
-    display: flex;
+    gap: 3.5rem;
+    padding-block: 2.5rem 4.5rem;
+    display: grid;
     position: relative;
   }
   /* A faint chart grid behind the hero, fading out towards the edges. */
@@ -63,20 +67,63 @@ const c = pt.hero;
     background-size: 26px 26px;
     position: absolute;
     inset: -6rem 0 0;
-    -webkit-mask-image: radial-gradient(52rem 30rem at 50% 42%, #000, #0000 78%);
-    mask-image: radial-gradient(52rem 30rem at 50% 42%, #000, #0000 78%);
+    -webkit-mask-image: radial-gradient(60rem 34rem at 62% 38%, #000, #0000 78%);
+    mask-image: radial-gradient(60rem 34rem at 62% 38%, #000, #0000 78%);
+  }
+  .hero-copy {
+    z-index: 2;
+    position: relative;
+  }
+  /* The logo, large, drifting gently up and down over a soft light. */
+  .hero-logo {
+    place-items: center;
+    display: grid;
+    position: relative;
   }
   .hero-light {
     pointer-events: none;
     background:
-      radial-gradient(closest-side at 38% 45%, #1766e021, #1766e00a 55%, #0000),
-      radial-gradient(closest-side at 64% 58%, #12a05c1f, #12a05c08 55%, #0000);
+      radial-gradient(closest-side at 40% 42%, #1766e02e, #1766e00d 55%, #0000),
+      radial-gradient(closest-side at 68% 66%, #12a05c29, #12a05c0a 55%, #0000);
     position: absolute;
-    inset: 4% 12% 0;
+    inset: -18% -26%;
   }
-  .hero-logo {
-    margin-bottom: 1.75rem;
-    display: flex;
+  .hero-logo-float {
+    filter: drop-shadow(0 26px 30px #0a2a5c40);
+    position: relative;
+  }
+  .hero-logo-float :global(img) {
+    width: auto;
+    max-width: 100%;
+    height: clamp(17rem, 9rem + 20vw, 29.5rem);
+  }
+  .hero-logo-shadow {
+    filter: blur(22px);
+    opacity: .55;
+    background: radial-gradient(closest-side, #0a2a5c59, #0a2a5c00);
+    width: 62%;
+    height: 2.6rem;
+    position: absolute;
+    bottom: -1.9rem;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-logo-float {
+      animation: logo-float 7s var(--ease-in-out) infinite;
+    }
+    .hero-logo-shadow {
+      animation: logo-shadow 7s var(--ease-in-out) infinite;
+    }
+    @keyframes logo-float {
+      50% {
+        transform: translateY(-12px) rotate(-1.2deg);
+      }
+    }
+    @keyframes logo-shadow {
+      50% {
+        opacity: .38;
+        transform: scale(.9);
+      }
+    }
   }
   .announce {
     height: 2rem;
@@ -125,22 +172,21 @@ const c = pt.hero;
   }
   .hero-title {
     letter-spacing: -.045em;
-    margin-top: 1.6rem;
-    font-size: clamp(3.4rem, 1.4rem + 5vw, 5.4rem);
+    margin-top: 1.75rem;
+    font-size: clamp(3.2rem, 1.3rem + 4.2vw, 4.6rem);
     font-weight: 600;
     line-height: 1;
   }
   .hero-lead {
     color: var(--color-text-muted);
     letter-spacing: -.012em;
-    max-width: 38rem;
+    max-width: 31rem;
     margin-top: 1.5rem;
     font-size: 1.15rem;
     line-height: 1.55;
   }
   .hero-cta {
     flex-wrap: wrap;
-    justify-content: center;
     gap: .625rem;
     margin-top: 2.25rem;
     display: flex;
@@ -187,7 +233,6 @@ const c = pt.hero;
     font: 500 .75rem/1.5 var(--font-mono);
     letter-spacing: .02em;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 0 .5em;
     margin-top: 1.9rem;
     display: flex;
@@ -256,22 +301,37 @@ const c = pt.hero;
       }
     }
   }
-  @media (width <= 720px) {
+  @media (width <= 1100px) {
     .hero {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2.5rem;
       min-height: 0;
-      padding-block: 2.25rem 3.5rem;
+      padding-block: 2.5rem 5rem;
     }
-    .hero-logo :global(img) {
-      width: 170px;
+    /* On narrow screens the logo comes first, smaller. */
+    .hero-logo {
+      order: -1;
     }
-    .hero-title {
-      font-size: clamp(2.7rem, 1.5rem + 6.4vw, 3.5rem);
+    .hero-logo-float :global(img) {
+      height: clamp(13rem, 8rem + 16vw, 19rem);
     }
-    .hero-lead {
-      font-size: 1.05rem;
+    .hero-light {
+      inset: -10% 0;
     }
     .hero-next-wrap {
       display: none;
+    }
+  }
+  @media (width <= 720px) {
+    .hero {
+      gap: 2rem;
+      padding-block: 1.75rem 3rem;
+    }
+    .hero-title {
+      font-size: clamp(2.5rem, 1.5rem + 6vw, 3.4rem);
+    }
+    .hero-lead {
+      font-size: 1.05rem;
     }
   }
 </style>
