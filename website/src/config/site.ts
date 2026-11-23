@@ -37,8 +37,8 @@ export const site = {
     } as Record<string, string>,
   },
 
-  /** Invite found in the 2025 plugin source (/discord command). Confirm it still works. */
-  discordUrl: 'https://discord.gg/XBwg3WWyqA',
+  /** The server's Discord invite. Every Discord link on the site uses it. */
+  discordUrl: 'https://discord.gg/nXdhtMD8Cx',
 
   /** The Earth world, as installed (1:1000 map, playable rectangle). */
   world: {
