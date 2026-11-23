@@ -1,71 +1,104 @@
 ---
-// "O mapa": the world drawn in blocks on a map sheet. The numbers along the edges are
-// the real limits of the server's world, in game coordinates (config/site.ts).
+// "O mapa", the first section: the live map of the server, large, with the limits of
+// the world along its edges and the size of the world under it. The map rises into
+// view as the visitor scrolls down from the hero. scripts/live-map.ts draws it.
 import Icon from '../Icon.astro';
-import PixelEarth from './PixelEarth.astro';
 import SectionHead from './SectionHead.astro';
-import { site } from '../../config/site';
+import generated from '../../generated/map-view.json';
+import { mapEmbedUrl, site, type MapView } from '../../config/site';
 import { pt } from '../../content/pt';
 
 const c = pt.world;
+const m = pt.liveMap;
+const view: MapView = generated;
+// The page draws the map from its tiles only when the build verified them.
+const tiles = view.tiles?.verified && !view.tiles.dayNight ? view.tiles : null;
 ---
 
 <section class="stage" id="mapa">
   <div class="container">
-    <SectionHead num="02" chapter={c.chapter} title={c.title} lead={c.lead}>
+    <SectionHead num="01" chapter={c.chapter} title={c.title} lead={c.lead}>
       <a class="learn" href={site.map.url} target="_blank" rel="noopener">{c.open}<Icon name="arrowRight" /></a>
     </SectionHead>
 
-    <figure class="sheet" data-in="settle" style="--d: 100ms">
-      <div class="axis-x" aria-hidden="true">
-        <span class="axis-name">X</span>
-        {c.axisX.map((value) => <span>{value}</span>)}
-      </div>
-      <div class="axis-z" aria-hidden="true">
-        <span class="axis-name">Z</span>
-        {c.axisZ.map((value) => <span>{value}</span>)}
-      </div>
-      <div class="sheet-bg card" aria-hidden="true"></div>
-      <div class="map">
-        <PixelEarth label={c.figureLabel} id="seams-world">
-          <span class="cross h" aria-hidden="true"></span>
-          <span class="cross v" aria-hidden="true"></span>
-          <span class="tag origin" aria-hidden="true">{c.origin}</span>
-          <span class="tag title" aria-hidden="true">{c.sheet}</span>
-        </PixelEarth>
-      </div>
-      <figcaption>
-        {
-          c.facts.map((fact) => (
-            <p>
-              <strong>{fact.value}</strong>
-              <span>{fact.label}</span>
-            </p>
-          ))
-        }
-      </figcaption>
-    </figure>
+    <div class="shot-wrap">
+      <figure
+        class="sheet livemap"
+        data-in="shot"
+        data-livemap
+        data-width={view.width}
+        data-height={view.height}
+        data-tiles={tiles ? JSON.stringify(tiles) : undefined}
+        data-probe={`${site.map.url}images/blank.png`}
+        data-snapshot-info="/api/map-snapshot.json"
+        data-offline-text={m.offline}
+        style={`--map-w: ${view.width}; --map-h: ${view.height}`}
+      >
+        <div class="axis-x" aria-hidden="true">
+          <span class="axis-name">X</span>
+          {c.axisX.map((value) => <span>{value}</span>)}
+        </div>
+        <div class="axis-z" aria-hidden="true">
+          <span class="axis-name">Z</span>
+          {c.axisZ.map((value) => <span>{value}</span>)}
+        </div>
+
+        <div class="livemap-card">
+          {/* The snapshot and, when the tiles are not verified, Dynmap's page: both at
+              the frame's real size; the script scales and moves this layer. */}
+          <div class="livemap-world" data-world style={`width: ${view.width}px; height: ${view.height}px`}>
+            <img class="livemap-snapshot" data-snapshot alt="" decoding="async" />
+            <iframe data-src={mapEmbedUrl(view)} title={m.label} tabindex="-1" aria-hidden="true" scrolling="no" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+          {/* The map drawn from its tiles. */}
+          <canvas class="livemap-tiles" data-tiles aria-hidden="true"></canvas>
+          <p class="livemap-note" aria-live="polite"><span class="spinner" aria-hidden="true"></span><span data-note-text>{m.loading}</span></p>
+          {/* The pad takes every pointer and key, so the map under it is never touched. */}
+          <div class="livemap-pad" data-pad tabindex="0" role="application" aria-label={m.label}>
+            <span class="pad-pill idle"><Icon name="pointer" />{m.activate}</span>
+            <span class="pad-pill busy for-mouse">{m.hint}</span>
+            <span class="pad-pill busy for-touch">{m.touchHint}</span>
+          </div>
+        </div>
+
+        <p class="livemap-caption" data-caption data-live={m.caption} data-snapshot={m.snapshotCaption} data-offline={m.offlineCaption}>
+          <i class="dot" aria-hidden="true"></i>
+          <span data-caption-text>{m.caption}</span>
+        </p>
+
+        <figcaption class="facts card">
+          {
+            c.facts.map((fact) => (
+              <p>
+                <strong>{fact.value}</strong>
+                <span>{fact.label}</span>
+              </p>
+            ))
+          }
+        </figcaption>
+
+        <noscript>
+          <p class="livemap-noscript"><a href={site.map.url}>{site.map.host}</a></p>
+        </noscript>
+      </figure>
+    </div>
   </div>
 </section>
+
+<script>
+  import { initLiveMap } from '../../scripts/live-map';
+  document.querySelectorAll<HTMLElement>('[data-livemap]').forEach(initLiveMap);
+</script>
 
 <style>
   :global(.stage-side) .learn {
     margin-top: 1.1rem;
   }
-  /* X along the top, Z down the left side of the map, and one card behind the map and
-     the facts under it. */
+  /* X along the top, Z down the left side of the map, then the line that says whether
+     the map is live, then the size of the world. */
   .sheet {
-    grid-template: "corner x" auto "z map" auto ". facts" auto / 1.6rem minmax(0, 1fr);
+    grid-template: "corner x" auto "z map" auto ". caption" auto ". facts" auto / 1.6rem minmax(0, 1fr);
     display: grid;
-  }
-  .sheet-bg {
-    grid-area: 2 / 2 / 4 / 3;
-  }
-  .map {
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    grid-area: map;
-    position: relative;
-    overflow: hidden;
   }
   .axis-x,
   .axis-z {
@@ -111,54 +144,253 @@ const c = pt.world;
   .axis-x span:nth-child(6) {
     text-align: right;
   }
-  .cross {
-    background: #ffffff73;
+
+  /* The map card: nothing but the map. */
+  .livemap-card {
+    aspect-ratio: var(--map-w) / var(--map-h);
+    background: #dbe7f6;
+    border-radius: var(--radius-xl);
+    grid-area: map;
+    transition: box-shadow .3s ease-out;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px #0a1b2e1f,
+      0 50px 100px -40px #0a2a5c73,
+      0 24px 48px -28px #0a1b2e52;
+  }
+  .livemap:global(.is-active) .livemap-card {
+    box-shadow:
+      0 0 0 1px var(--color-blue),
+      0 0 0 4px var(--color-blue-ring),
+      0 50px 100px -40px #0a2a5c73;
+  }
+  .livemap-world {
+    transform-origin: 0 0;
+    opacity: 0;
     position: absolute;
-  }
-  .cross.h {
-    height: 1px;
-    top: 50%;
-    left: 0;
-    right: 0;
-  }
-  .cross.v {
-    width: 1px;
     top: 0;
-    bottom: 0;
-    left: 50%;
+    left: 0;
   }
-  .tag {
-    color: var(--color-text);
-    font: 500 .6875rem/1 var(--font-mono);
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    background: #fff;
-    border-radius: .4rem;
-    padding: .4rem .55rem;
+  .livemap:global(.is-ready) .livemap-world {
+    opacity: 1;
+  }
+  .livemap-snapshot,
+  iframe,
+  .livemap-tiles {
+    opacity: 0;
+    border: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    transition: opacity .6s ease-out;
+    display: block;
     position: absolute;
-    box-shadow: 0 6px 14px -6px #0a1b2e80;
+    inset: 0;
   }
-  .origin {
-    top: calc(50% + .5rem);
-    left: calc(50% + .5rem);
+  iframe,
+  .livemap-tiles {
+    pointer-events: none;
   }
-  .title {
-    bottom: .8rem;
-    left: .8rem;
+  .livemap:global(.has-snapshot) .livemap-snapshot,
+  .livemap:global(.is-live.shows-frame) iframe,
+  .livemap:global(.is-live.draws-tiles) .livemap-tiles {
+    opacity: 1;
   }
-  figcaption {
-    grid-area: facts;
-    grid-template-columns: 1.35fr 1fr 1fr;
+  /* Shown only while there is nothing to show yet, or nothing at all. */
+  .livemap-note {
+    color: var(--color-text-muted);
+    align-items: center;
+    gap: .7rem;
+    font-size: .9375rem;
+    font-weight: 500;
+    transition: opacity .4s ease-out;
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .livemap:global(.is-live) .livemap-note,
+  .livemap:global(.has-snapshot) .livemap-note {
+    opacity: 0;
+  }
+  .spinner {
+    border: 2px solid #1766e033;
+    border-top-color: var(--color-blue);
+    border-radius: 50%;
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    animation: spin .9s linear infinite;
+  }
+  .livemap:global(.is-offline) .spinner {
+    display: none;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .livemap-pad {
+    cursor: pointer;
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+    place-items: end center;
+    padding-bottom: 1.1rem;
     display: grid;
+    position: absolute;
+    inset: 0;
+  }
+  .livemap-pad:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -4px;
+    border-radius: var(--radius-xl);
+  }
+  .livemap:global(.is-active) .livemap-pad {
+    cursor: zoom-in;
+  }
+  .livemap:global(.is-active.is-zoomed) .livemap-pad {
+    cursor: grab;
+  }
+  .livemap:global(.is-dragging) .livemap-pad {
+    cursor: grabbing;
+  }
+  /* One small hint at the bottom of the map, only while the pointer is over it. */
+  .pad-pill {
+    grid-area: 1 / 1;
+    pointer-events: none;
+    color: #fff;
+    opacity: 0;
+    white-space: nowrap;
+    background: #0a1b2ee6;
+    border-radius: 999px;
+    align-items: center;
+    gap: .5rem;
+    padding: .55rem .95rem;
+    font-size: .8125rem;
+    font-weight: 600;
+    transition: opacity .25s ease-out, transform .45s var(--spring-snappy);
+    display: inline-flex;
+    transform: translateY(6px);
+    box-shadow: 0 10px 24px -10px #0a1b2e99;
+  }
+  .pad-pill :global(svg) {
+    width: .85rem;
+    height: .85rem;
+  }
+  .for-touch {
+    display: none;
+  }
+  @media (hover: hover) {
+    .livemap:not(:global(.is-active)) .livemap-pad:hover .idle,
+    .livemap:not(:global(.is-active)) .livemap-pad:focus-visible .idle {
+      opacity: 1;
+      transform: none;
+    }
+    .livemap:global(.is-active) .busy.for-mouse {
+      animation: hint 3.4s ease-out both;
+    }
+  }
+  @media (hover: none) {
+    .for-mouse {
+      display: none;
+    }
+    .for-touch {
+      display: inline-flex;
+    }
+    .livemap:global(.is-active) .busy.for-touch {
+      animation: hint 2.4s ease-out both;
+    }
+  }
+  @keyframes hint {
+    0%,
+    70% {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: none;
+    }
+  }
+  /* The line under the map: grey until the live map answers, green while it is live. */
+  .livemap-caption {
+    box-shadow: var(--edge);
+    color: var(--color-text-muted);
+    letter-spacing: -.005em;
+    background: var(--color-surface);
+    border-radius: 999px;
+    grid-area: caption;
+    place-self: center;
+    align-items: center;
+    gap: .6rem;
+    margin-top: 1.4rem;
+    padding: .45rem .9rem .45rem .8rem;
+    font-size: .84375rem;
+    font-weight: 600;
+    transition: color .3s, background-color .3s, box-shadow .3s;
+    display: inline-flex;
+  }
+  .dot {
+    background: var(--color-text-faint);
+    border-radius: 50%;
+    flex: none;
+    width: 7px;
+    height: 7px;
+    transition: background-color .3s;
     position: relative;
   }
-  figcaption p {
+  .livemap:global(.is-live) .livemap-caption {
+    box-shadow: inset 0 0 0 1px var(--color-green-ring);
+    color: var(--color-green-strong);
+    background: #f1fbf5;
+  }
+  .livemap:global(.is-live) .dot {
+    background: var(--color-green);
+  }
+  .livemap:global(.is-live) .dot:after {
+    content: "";
+    border: 1.5px solid var(--color-green);
+    border-radius: 50%;
+    animation: ping 2.2s var(--ease-out) infinite;
+    position: absolute;
+    inset: -1px;
+  }
+  @keyframes ping {
+    0% {
+      opacity: .9;
+      transform: scale(1);
+    }
+    70%,
+    to {
+      opacity: 0;
+      transform: scale(3.2);
+    }
+  }
+  .livemap-noscript {
+    grid-column: 2;
+  }
+  .livemap-noscript a {
+    color: var(--color-blue-strong);
+    font-family: var(--font-mono);
+    text-decoration: underline;
+  }
+
+  /* The size of the world. */
+  .facts {
+    grid-area: facts;
+    grid-template-columns: 1.35fr 1fr 1fr;
+    margin-top: 1.75rem;
+    display: grid;
+  }
+  .facts p {
     gap: .7rem;
     padding: 1.9rem 2rem 2rem;
     display: grid;
   }
-  figcaption strong {
+  .facts strong {
     font: 500 clamp(1.5rem, .95rem + 1.5vw, 2.25rem)/1.05 var(--font-mono);
     letter-spacing: -.045em;
     color: #0000;
@@ -168,7 +400,7 @@ const c = pt.world;
     background-clip: text;
     padding-bottom: .08em;
   }
-  figcaption span {
+  .facts span {
     color: var(--color-text-muted);
     font-size: .9375rem;
     line-height: 1.45;
@@ -191,23 +423,28 @@ const c = pt.world;
     .axis-x .axis-name {
       right: calc(100% + .35rem);
     }
-    .tag {
-      font-size: .5625rem;
-      padding: .3rem .4rem;
+    .livemap-card,
+    .livemap-pad:focus-visible {
+      border-radius: .8rem;
     }
-    .origin {
-      top: calc(50% + .3rem);
-      left: calc(50% + .3rem);
+    .livemap-caption {
+      font-size: .8125rem;
     }
-    .title {
-      display: none;
-    }
-    figcaption {
+    .facts {
+      grid-column: 1 / -1;
       grid-template-columns: 1fr;
       padding-block: .5rem;
     }
-    figcaption p {
+    .facts p {
       padding: 1rem 1.4rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .livemap:global(.is-live) .dot:after {
+      display: none;
+    }
+    .livemap:global(.is-active) .busy {
+      animation-duration: 3.4s !important;
     }
   }
 </style>

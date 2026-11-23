@@ -41,7 +41,7 @@ export const pt = {
     lead: 'Um servidor de Minecraft brasileiro que se passa no mapa real da Terra. Crie sua nação, forme alianças, declare guerras, conquiste territórios. No GeoAnarchy, quem controla são os jogadores.',
     ctaCopy: 'Copiar IP',
     ctaMap: 'Abrir o mapa',
-    next: 'Anarquia',
+    next: 'O mapa',
   },
 
   liveMap: {
@@ -186,14 +186,14 @@ export const pt = {
     lead: 'O GeoAnarchy é um servidor de Minecraft brasileiro que se passa no mapa real da Terra. Crie sua nação, forme alianças, declare guerras, conquiste territórios.',
     pillars: [
       {
-        title: 'Uma verdadeira anarquia política',
-        body: 'Um país pode atacar o outro quando quiser. Cada país pode ter o nome que quiser, onde quiser, ter suas próprias leis e filosofias.',
-        href: '/#anarquia',
-      },
-      {
         title: 'Baseado no mundo real',
         body: 'O mundo do servidor é uma réplica do mundo real: continentes, terreno, mares e biomas. Cada bloco representa aproximadamente 1 km.',
         href: '/#mapa',
+      },
+      {
+        title: 'Uma verdadeira anarquia política',
+        body: 'Um país pode atacar o outro quando quiser. Cada país pode ter o nome que quiser, onde quiser, ter suas próprias leis e filosofias.',
+        href: '/#anarquia',
       },
       {
         title: 'Um servidor realista',

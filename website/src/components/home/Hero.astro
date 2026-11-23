@@ -1,7 +1,8 @@
 ---
-// Hero: the pitch on the left, the live map of the server on the right.
+// Hero: the name, the pitch and the two ways in. The live map comes right under it,
+// as the first section.
 import Icon from '../Icon.astro';
-import LiveMap from './LiveMap.astro';
+import Wordmark from '../Wordmark.astro';
 import { site } from '../../config/site';
 import { pt } from '../../content/pt';
 
@@ -10,36 +11,32 @@ const c = pt.hero;
 
 <section class="hero-wrap" id="inicio" aria-labelledby="hero-title">
   <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-light" aria-hidden="true"></div>
   <div class="hero container">
-  <div class="hero-copy">
-    <a class="announce" href={site.map.url} target="_blank" rel="noopener" data-in="settle">
+    <div class="hero-logo" data-in="settle"><Wordmark width={230} alt={site.name} /></div>
+    <a class="announce" href="#mapa" data-in="settle" style="--d: 60ms">
       <span><i></i>{c.announceTag}</span>
       {c.announce}
-      <Icon name="arrowUpRight" />
+      <Icon name="arrowDown" />
     </a>
-    <h1 id="hero-title" class="hero-title" data-in="lines" style="--d: 80ms">
+    <h1 id="hero-title" class="hero-title" data-in="lines" style="--d: 120ms">
       <span class="line"><span class="grad">{c.title[0]}</span></span>
       <span class="line"><span class="grad-earth">{c.title[1]}</span></span>
     </h1>
-    <p class="hero-lead" data-in="settle" style="--d: 260ms">{c.lead}</p>
-    <div class="hero-cta" data-in="settle" style="--d: 360ms">
+    <p class="hero-lead" data-in="settle" style="--d: 280ms">{c.lead}</p>
+    <div class="hero-cta" data-in="settle" style="--d: 380ms">
       <button class="btn-solid ip" type="button" data-copy={site.java.address}>
         <span class="idle"><Icon name="copy" />{c.ctaCopy}<code>{site.java.address}</code></span>
         <span class="done" aria-hidden="true"><Icon name="check" />{pt.common.copied}</span>
       </button>
       <a class="btn-line" href={site.map.url} target="_blank" rel="noopener">{c.ctaMap}<Icon name="arrowRight" class="arrow" /></a>
     </div>
-    <p class="hero-meta" data-in="dissolve" style="--d: 520ms">
+    <p class="hero-meta" data-in="dissolve" style="--d: 540ms">
       {c.facts.map((fact, i) => <span>{fact}{i < c.facts.length - 1 && ' ·'}</span>)}
     </p>
-  </div>
-  <div class="hero-map" data-in="dissolve" style="--d: 120ms">
-    <div class="hero-light" aria-hidden="true"></div>
-    <LiveMap />
-  </div>
-  <div class="hero-next-wrap">
-    <a class="hero-next" href="#anarquia"><span class="num">01</span>{c.next}<Icon name="arrowDown" /></a>
-  </div>
+    <div class="hero-next-wrap">
+      <a class="hero-next" href="#mapa"><span class="num">01</span>{c.next}<Icon name="arrowDown" /></a>
+    </div>
   </div>
 </section>
 
@@ -50,11 +47,12 @@ const c = pt.hero;
   }
   .hero {
     min-height: calc(100svh - var(--nav-offset) - 2.25rem);
-    grid-template-columns: minmax(0, 1fr) minmax(0, 38rem);
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 3.5rem;
-    padding-block: 2.5rem 4.5rem;
-    display: grid;
+    padding-block: 2.5rem 5.5rem;
+    display: flex;
     position: relative;
   }
   /* A faint chart grid behind the hero, fading out towards the edges. */
@@ -65,12 +63,20 @@ const c = pt.hero;
     background-size: 26px 26px;
     position: absolute;
     inset: -6rem 0 0;
-    -webkit-mask-image: radial-gradient(60rem 34rem at 62% 38%, #000, #0000 78%);
-    mask-image: radial-gradient(60rem 34rem at 62% 38%, #000, #0000 78%);
+    -webkit-mask-image: radial-gradient(52rem 30rem at 50% 42%, #000, #0000 78%);
+    mask-image: radial-gradient(52rem 30rem at 50% 42%, #000, #0000 78%);
   }
-  .hero-copy {
-    z-index: 2;
-    position: relative;
+  .hero-light {
+    pointer-events: none;
+    background:
+      radial-gradient(closest-side at 38% 45%, #1766e021, #1766e00a 55%, #0000),
+      radial-gradient(closest-side at 64% 58%, #12a05c1f, #12a05c08 55%, #0000);
+    position: absolute;
+    inset: 4% 12% 0;
+  }
+  .hero-logo {
+    margin-bottom: 1.75rem;
+    display: flex;
   }
   .announce {
     height: 2rem;
@@ -115,25 +121,26 @@ const c = pt.hero;
     transition: transform .4s var(--spring-snappy);
   }
   .announce:hover :global(svg) {
-    transform: translate(2px, -2px);
+    transform: translateY(2px);
   }
   .hero-title {
     letter-spacing: -.045em;
-    margin-top: 1.75rem;
-    font-size: clamp(3.2rem, 1.3rem + 4.2vw, 4.6rem);
+    margin-top: 1.6rem;
+    font-size: clamp(3.4rem, 1.4rem + 5vw, 5.4rem);
     font-weight: 600;
     line-height: 1;
   }
   .hero-lead {
     color: var(--color-text-muted);
     letter-spacing: -.012em;
-    max-width: 31rem;
+    max-width: 38rem;
     margin-top: 1.5rem;
     font-size: 1.15rem;
     line-height: 1.55;
   }
   .hero-cta {
     flex-wrap: wrap;
+    justify-content: center;
     gap: .625rem;
     margin-top: 2.25rem;
     display: flex;
@@ -180,28 +187,13 @@ const c = pt.hero;
     font: 500 .75rem/1.5 var(--font-mono);
     letter-spacing: .02em;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0 .5em;
     margin-top: 1.9rem;
     display: flex;
   }
   .hero-meta span {
     white-space: nowrap;
-  }
-  .hero-map {
-    display: grid;
-    position: relative;
-  }
-  .hero-light {
-    z-index: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(closest-side at 38% 42%, #1766e02b, #1766e00d 55%, #0000),
-      radial-gradient(closest-side at 72% 68%, #12a05c26, #12a05c0a 55%, #0000);
-    position: absolute;
-    inset: -22% -30% -24% -26%;
-  }
-  .hero-map :global(.livemap) {
-    z-index: 1;
   }
   .hero-next-wrap {
     position: absolute;
@@ -264,35 +256,22 @@ const c = pt.hero;
       }
     }
   }
-  @media (width <= 1100px) {
-    .hero {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 3rem;
-      min-height: 0;
-      padding-block: 3rem 5rem;
-    }
-    .hero-map {
-      max-width: 44rem;
-      width: 100%;
-      margin-inline: auto;
-    }
-    .hero-next-wrap {
-      display: none;
-    }
-  }
   @media (width <= 720px) {
     .hero {
-      gap: 2.5rem;
-      padding-block: 1.75rem 3rem;
+      min-height: 0;
+      padding-block: 2.25rem 3.5rem;
+    }
+    .hero-logo :global(img) {
+      width: 170px;
     }
     .hero-title {
-      font-size: clamp(2.5rem, 1.5rem + 6vw, 3.4rem);
+      font-size: clamp(2.7rem, 1.5rem + 6.4vw, 3.5rem);
     }
     .hero-lead {
       font-size: 1.05rem;
     }
-    .hero-light {
-      inset: -10% -20%;
+    .hero-next-wrap {
+      display: none;
     }
   }
 </style>

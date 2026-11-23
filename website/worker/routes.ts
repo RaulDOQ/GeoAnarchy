@@ -19,7 +19,7 @@ export async function handleSnapshotRequest(url: URL, store: SnapshotStore, view
   if (url.pathname === '/api/map-snapshot.json') {
     const takenAt = await latestSnapshotTime(store);
     if (takenAt === null) return json({ error: 'no snapshot yet' }, 404, 'public, max-age=60');
-    // A new snapshot arrives every 20 minutes, so a minute of caching is plenty.
+    // A new snapshot arrives every 30 minutes, so a minute of caching is plenty.
     return json({ takenAt, url: `/api/map-snapshot/${takenAt}.jpg` }, 200, 'public, max-age=60');
   }
 
