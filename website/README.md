@@ -41,7 +41,7 @@ Run these inside `website/` (Node 22.12 or newer):
 | `src/components/PageHead.astro`, `Editions.astro` | The top of every page other than the home page, and the Java and Bedrock join cards (home page and GeoWiki). |
 | `src/components/home/` | The home page's sections: hero, the live map, anarchy, realism and its journey map, how to join, questions. `Closing.astro` ends every page. |
 | `src/scripts/` | Browser scripts: the live map (zoom and move), the tile painter it shares with the still map picture, scroll entrances, copy buttons. |
-| `worker/` | The Worker: map snapshots every 30 minutes and the addresses that serve them. |
+| `worker/` | The Worker: a map snapshot every 30 minutes, the journey picture once a day, and the addresses that serve them. |
 | `scripts/detect-map.mjs` | Finds and checks the live map's tiles before each build. |
 | `src/assets/earth.png` | The block world map (144 x 72 pixels, one per 2.5 degrees): what the journey picture shows until the real map arrives. |
 | `src/assets/anarchy-chaos.webp`, `anarchy-order.webp` | The pictures in the two "Anarquia" panels. Replace a file to change a picture; without a file the panel shows blocks. |
@@ -94,8 +94,9 @@ along its edges, rising into view as the visitor scrolls down from the hero.
 
 The "Realismo" section shows part of the same real map as a still picture, with a long
 journey drawn on it (`src/scripts/map-still.ts`). It starts as the block map, then puts
-the same region cut from the newest snapshot over it, then the map's own tiles, which are
-sharp. It is drawn once and is not interactive.
+a photograph of that part of the map over it (the "journey picture", see Snapshots), and
+the map's own tiles when the build has verified them. It is drawn once and is not
+interactive. Which part of the world it shows is `site.journey` in `src/config/site.ts`.
 
 ### Snapshots
 
@@ -104,16 +105,27 @@ The Worker in `worker/` takes the snapshots. Every 30 minutes (the cron trigger 
 world fills the picture, waits for the tiles and stores a JPEG in Cloudflare KV. It keeps the newest three and
 deletes older ones. If the map is down it stores nothing, so the last good picture stays.
 
+Once a day the same run also takes the **journey picture**: only the part of the world
+in the "Realismo" figure, two zoom levels further in (1536 x 1152 pixels with the usual
+map; cut from the whole-world snapshot that part would be 384 x 288 and blurred when
+shown). It is taken again at once when the site changes what the figure shows. The run
+waits for every tile and stores nothing if the map opens at another zoom level than
+asked, so a half-loaded or wrongly framed picture is never kept. Until the first journey
+picture exists (up to 30 minutes after the first deploy), the figure shows that part of
+the whole-world snapshot.
+
 | Address | What it is |
 |---|---|
-| `/api/map-snapshot.json` | When the newest snapshot was taken, and its address |
-| `/api/map-snapshot/<time>.jpg` | That picture |
+| `/api/map-snapshot.json` | When the newest snapshot was taken and its address; the same for the journey picture, under `journey` |
+| `/api/map-snapshot/<time>.jpg` | A whole-world snapshot |
+| `/api/map-journey/<time>.jpg` | A journey picture |
 | `/api/map-view.json` | What the last build found out about the map (tiles, framing) |
 
 On Cloudflare's free plan the hosted browser may run 10 minutes a day; a snapshot takes
-a few seconds, so the 48 a day fit comfortably.
+a few seconds, so the 48 a day, and the one journey picture, fit comfortably.
 
-`npm test` runs the snapshot tests (storage, deleting old ones, the addresses).
+`npm test` runs the snapshot tests (storage, deleting old ones, the addresses, when the
+journey picture is due and how it is framed).
 `npx wrangler dev` runs the built site with the Worker locally.
 
 The map must allow being shown inside another site: if Dynmap or Cloudflare ever sends
