@@ -51,6 +51,13 @@ export const site = {
     minZ: -9216,
     maxZ: 9215,
   },
+
+  /** The block map (src/assets/earth.png): this many pixels for the whole world. */
+  blockMap: { width: 144, height: 72 },
+
+  /** The part of the world the journey figure in "Realismo" shows, in pixels of the
+      block map (2.5 degrees each): 75°W to 45°E, 60°N to 30°S. */
+  journey: { x: 42, y: 12, w: 48, h: 36 },
 } as const;
 
 /** The map's own picture tiles, as scripts/detect-map.mjs found them. */
@@ -87,6 +94,55 @@ export interface MapView {
 /** The tiles, when the pages may draw the map from them: found, checked, one set only. */
 export function drawableTiles(view: MapView): MapTiles | null {
   return view.tiles?.verified && !view.tiles.dayNight ? view.tiles : null;
+}
+
+/** One photograph of the map, taken from Dynmap's own page (worker/capture.ts). */
+export interface MapShot {
+  /** The page to open. */
+  url: string;
+  /** The size of the picture, in pixels. */
+  width: number;
+  height: number;
+  /** The Dynmap zoom level the page must be at. */
+  zoom: number;
+}
+
+/** The whole world: the picture the live map falls back to. */
+export function worldShot(view: MapView): MapShot {
+  return { url: mapEmbedUrl(view), width: view.width, height: view.height, zoom: view.zoom };
+}
+
+/** The journey figure is about 680 pixels wide on a large screen; twice that keeps it
+    sharp on a high-density one. */
+const JOURNEY_SHOT_WIDTH = 1300;
+
+/**
+ * The journey figure's part of the world, photographed on its own: zoomed in until it
+ * is at least JOURNEY_SHOT_WIDTH pixels wide (cut from the whole-world picture it would
+ * be a third of that, and blurred when shown).
+ */
+export function journeyShot(view: MapView): MapShot {
+  const { journey, blockMap, world } = site;
+  const across = journey.w / blockMap.width;
+  const down = journey.h / blockMap.height;
+  // Each zoom level in doubles the size. Never past the level where the tiles are at
+  // full detail, when that is known.
+  let steps = Math.max(0, Math.ceil(Math.log2(JOURNEY_SHOT_WIDTH / (view.width * across)) - 1e-9));
+  if (view.tiles) steps = Math.min(steps, Math.max(0, view.tiles.nativeZoom - view.zoom));
+  const zoom = view.zoom + steps;
+  // Even sizes, so the centre of the picture is between two pixels, as Dynmap puts it.
+  const even = (pixels: number) => 2 * Math.round(pixels / 2);
+  return {
+    url: mapEmbedUrl({
+      ...view,
+      zoom,
+      x: Math.round(world.minX + ((journey.x + journey.w / 2) / blockMap.width) * world.width),
+      z: Math.round(world.minZ + ((journey.y + journey.h / 2) / blockMap.height) * world.depth),
+    }),
+    width: even(view.width * 2 ** steps * across),
+    height: even(view.height * 2 ** steps * down),
+    zoom,
+  };
 }
 
 /** The embedded map's address: the layer, no controls, and the given framing. */

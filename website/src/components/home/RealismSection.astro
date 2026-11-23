@@ -1,19 +1,20 @@
 ---
 // "Realismo": no server shop and no teleport. The figure shows part of the server's
 // real map with one long journey drawn on it: by sea, across a desert and over
-// mountains. The real map is put over the block map by scripts/map-still.ts (first the
-// newest snapshot, then the map's own tiles), so the figure is never empty.
+// mountains. The real map is put over the block map by scripts/map-still.ts (a
+// photograph of that part of the map, and the map's own tiles when the page may use
+// them), so the figure is never empty.
 import PixelEarth from './PixelEarth.astro';
 import SectionHead from './SectionHead.astro';
 import generated from '../../generated/map-view.json';
-import { drawableTiles, type MapView } from '../../config/site';
+import { drawableTiles, site, type MapView } from '../../config/site';
 import { pt } from '../../content/pt';
 
 const c = pt.realism;
 const tiles = drawableTiles(generated as MapView);
 
-// The cut, in map pixels (2.5 degrees each): 75°W to 45°E, 60°N to 30°S.
-const crop = { x: 42, y: 12, w: 48, h: 36 };
+// The cut, in pixels of the block map (2.5 degrees each): 75°W to 45°E, 60°N to 30°S.
+const crop = site.journey;
 // The journey, in pixels of the cut: north-east Brazil, the Atlantic, West Africa, the
 // Sahara, the Mediterranean, the Alps, central Europe.
 const route: [number, number][] = [
@@ -28,8 +29,9 @@ const start = route[0];
 const end = route[route.length - 1];
 const points = route.map(([x, y]) => `${x},${y}`).join(' ');
 const at = (x: number, y: number) => `left: ${((x / crop.w) * 100).toFixed(2)}%; top: ${((y / crop.h) * 100).toFixed(2)}%`;
-// The same cut as fractions of the whole world (the block map is 144 x 72 pixels).
-const region = [crop.x / 144, crop.y / 72, (crop.x + crop.w) / 144, (crop.y + crop.h) / 72];
+// The same cut as fractions of the whole world.
+const { width: mapWidth, height: mapHeight } = site.blockMap;
+const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWidth, (crop.y + crop.h) / mapHeight];
 ---
 
 <section class="stage" id="realismo">
@@ -62,7 +64,7 @@ const region = [crop.x / 144, crop.y / 72, (crop.x + crop.w) / 144, (crop.y + cr
         style={`--d: 140ms; --rx: ${region[0]}; --ry: ${region[1]}; --rw: ${region[2] - region[0]}; --rh: ${region[3] - region[1]}`}
       >
         <PixelEarth label={c.route.label} crop={crop} id="seams-journey">
-          <img class="still-snapshot" data-still-snapshot alt="" decoding="async" />
+          <img class="still-photo" data-still-photo alt="" decoding="async" />
           <canvas class="still-tiles" data-still-tiles aria-hidden="true"></canvas>
           <svg class="route" viewBox={`0 0 ${crop.w} ${crop.h}`} preserveAspectRatio="none" aria-hidden="true">
             <polyline class="under" points={points}></polyline>
@@ -140,27 +142,30 @@ const region = [crop.x / 144, crop.y / 72, (crop.x + crop.w) / 144, (crop.y + cr
     box-shadow: var(--shadow-window);
     overflow: hidden;
   }
-  /* The real map over the block map: the same region cut from the newest snapshot,
-     then the map's own tiles. Each fades in when it has arrived. */
-  .still-snapshot,
+  /* The real map over the block map: a photograph of this part of the map, then the
+     map's own tiles. Each fades in when it has arrived. */
+  .still-photo,
   .still-tiles {
     opacity: 0;
+    width: 100%;
+    height: 100%;
     transition: opacity .6s ease-out;
     position: absolute;
+    inset: 0;
   }
-  .still-snapshot {
-    width: calc(100% / var(--rw));
+  .still-photo {
+    object-fit: cover;
     max-width: none;
+  }
+  /* Until that photograph exists, the whole-world picture stands in: enlarged, so that
+     only this part of it is in the frame. */
+  .journey:global(.cuts-world) .still-photo {
+    width: calc(100% / var(--rw));
     height: calc(100% / var(--rh));
     top: calc(var(--ry) / var(--rh) * -100%);
     left: calc(var(--rx) / var(--rw) * -100%);
   }
-  .still-tiles {
-    width: 100%;
-    height: 100%;
-    inset: 0;
-  }
-  .journey:global(.has-snapshot) .still-snapshot,
+  .journey:global(.has-photo) .still-photo,
   .journey:global(.has-tiles) .still-tiles {
     opacity: 1;
   }
