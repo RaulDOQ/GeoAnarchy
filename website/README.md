@@ -40,27 +40,11 @@ Run these inside `website/` (Node 22.12 or newer):
 | `src/components/Logo.astro`, `Wordmark.astro` | The logo with the block Earth (header) and the name on its own (hero, closing section, footer, 404 page). |
 | `src/components/PageHead.astro`, `Editions.astro` | The top of every page other than the home page, and the Java and Bedrock join cards (home page and GeoWiki). |
 | `src/components/home/` | The home page's sections: hero, the live map, anarchy, realism and its journey map, how to join, questions. `Closing.astro` ends every page. |
-| `src/scripts/` | Browser scripts: the live map (zoom and move), the tile painter it shares with the still map picture, scroll entrances, copy buttons. |
-| `worker/` | The Worker: a map snapshot every 30 minutes, the journey picture once a day, and the addresses that serve them. |
+| `src/scripts/` | Browser scripts: the live map (zoom and move), the tile painter it shares with the still map picture, the site's copy of the map as the pages read it, scroll entrances, copy buttons. |
+| `worker/` | The Worker: every 30 minutes a map snapshot and a few sheets of the site's own copy of the map, the journey picture once a day, and the addresses that serve them. |
 | `scripts/detect-map.mjs` | Finds and checks the live map's tiles before each build. |
-| `src/assets/earth.png` | The block world map (144 x 72 pixels, one per 2.5 degrees): what the journey picture shows until the real map arrives. |
 | `src/assets/anarchy-chaos.webp`, `anarchy-order.webp` | The pictures in the two "Anarquia" panels. Replace a file to change a picture; without a file the panel shows blocks. |
 | `src/assets/logo.webp`, `logo-small.webp`, `wordmark.webp` | The logo artwork, trimmed: the full logo in two sizes and the name alone. `public/favicon.png`, `public/apple-touch-icon.png` and `public/og.png` (the picture shown when the site's link is shared) come from the same artwork. |
-| `scripts/make-pixel-earth.mjs` | Draws `earth.png` from Natural Earth land data. Its header explains the options. |
-
-## The block map
-
-The world map on the page is a real map: `scripts/make-pixel-earth.mjs` tests every
-2.5-degree cell of the Earth against Natural Earth coastlines and paints the land cells
-green and the polar ice white. The result of that test is saved in
-`scripts/earth-mask.txt`, so changing the colours is instant:
-
-| Command | What it does |
-|---|---|
-| `npm run make:earth` | Repaints `src/assets/earth.png` from the saved mask |
-| `npm run make:earth -- --remask` | Works the land mask out again first (about two minutes) |
-
-The sea colour is not in the image: it is `--color-ocean` in `src/styles/tokens.css`.
 
 ## The live map
 
@@ -79,33 +63,43 @@ along its edges, rising into view as the visitor scrolls down from the hero.
   last build found.
 - **If the tiles are not verified** (the map was down during the build, or its settings
   changed in a way the script does not understand), the page shows Dynmap's own page in a
-  frame instead, scaled so the world fills the card. It works the same way for the
-  visitor, but zooms less far.
+  frame instead, scaled so the world fills the card. Dynmap's page cannot be enlarged
+  without blurring, so as soon as the visitor zooms in, the card shows the site's own
+  copy of the map (see below) and the line under the card says so.
 - **Using it.** A pad over the card takes the pointer: click, then wheel and drag; two
   fingers on a phone; `+`, `−`, arrows and `Esc` on a keyboard. The map can be zoomed in
   from the full view, never out past it or off the world. Until it is clicked, the wheel
   scrolls the page.
 - **Staying current.** While the map is on screen in a visible tab, the tiles in view are
   fetched again every five minutes.
-- **Fallback.** Under the map lies the newest snapshot, visible while the map loads. The
-  page asks the map site for a small picture first; if that fails, nothing live is
-  loaded, the snapshot stays and the line under the card gives its time. It tries again
-  every minute.
+- **When the map does not load.** Under the map lies the newest snapshot, visible while
+  the map loads. The page asks the map site for a small picture first; if that fails,
+  nothing live is loaded and the card shows the site's own copy of the map: the real
+  map, some hours or days old, sharp and zoomable in the same way. The line under the
+  card gives the time of the newest picture. The page tries the live map again every
+  minute and goes back to it when it answers.
 
 The "Realismo" section shows part of the same real map as a still picture, with a long
-journey drawn on it (`src/scripts/map-still.ts`). It starts as the block map, then puts
-a photograph of that part of the map over it (the "journey picture", see Snapshots), and
-the map's own tiles when the build has verified them. It is drawn once and is not
-interactive. Which part of the world it shows is `site.journey` in `src/config/site.ts`.
+journey drawn on it (`src/scripts/map-still.ts`). The picture is a photograph of that
+part of the map which the Worker takes and keeps (the "journey picture", see below), so
+it is there whether or not the live map is up; the map's own tiles are drawn over it when
+the build has verified them. It is not interactive. Which part of the world it shows is
+`site.journey` in `src/config/site.ts`.
 
-### Snapshots
+No picture on the site is generated or drawn by hand: every map shown is the server's
+own, live or as last photographed.
 
-The Worker in `worker/` takes the snapshots. Every 30 minutes (the cron trigger in
+### The pictures the site keeps
+
+The Worker in `worker/` takes three kinds of picture of the live map and keeps them in
+Cloudflare KV, where they stay when the map is down.
+
+**Snapshots.** Every 30 minutes (the cron trigger in
 `wrangler.jsonc`) it opens Dynmap's page in Cloudflare's hosted browser, framed so the
 world fills the picture, waits for the tiles and stores a JPEG in Cloudflare KV. It keeps the newest three and
 deletes older ones. If the map is down it stores nothing, so the last good picture stays.
 
-Once a day the same run also takes the **journey picture**: only the part of the world
+**The journey picture.** Once a day the same run also photographs only the part of the world
 in the "Realismo" figure, two zoom levels further in (1536 x 1152 pixels with the usual
 map; cut from the whole-world snapshot that part would be 384 x 288 and blurred when
 shown). It is taken again at once when the site changes what the figure shows. The run
@@ -114,18 +108,44 @@ asked, so a half-loaded or wrongly framed picture is never kept. Until the first
 picture exists (up to 30 minutes after the first deploy), the figure shows that part of
 the whole-world snapshot.
 
+**The copy of the map** (`worker/copy.ts`). This is what makes the map zoomable when the
+live one is down. It is a pyramid of pictures ("sheets"), all the size of the snapshot:
+
+| Level | Sheets | Detail |
+|---|---|---|
+| 0 | 1 (the snapshot itself) | the whole world in one picture |
+| 1 | 2 x 2 | twice the detail |
+| 2 | 4 x 4 | 4 times |
+| 3 | 8 x 8 | 8 times |
+| 4 | 16 x 16 | 16 times |
+
+Each run photographs up to four sheets: first the ones that are missing, shallow levels
+first, then the oldest. So after the first deploy the copy fills up level by level (with a
+map that answers quickly: level 2 within about three hours, level 3 within eleven, level 4
+within two days) and is then renewed sheet by sheet, each about every two days. Nothing is ever deleted, so the copy stays
+when the map is down. Visitors can zoom as far as the deepest level that is whole.
+
+A complete copy at every zoom level of the live map would be hundreds of thousands of
+tiles and several gigabytes, more than Cloudflare's free storage holds and far more than
+the hosted browser could photograph; level 4 (`COPY_LEVELS` in `worker/copy.ts`) is the
+practical limit on the free plan. If the map itself cannot zoom that far, the Worker
+notices and the copy ends where the map does.
+
 | Address | What it is |
 |---|---|
-| `/api/map-snapshot.json` | When the newest snapshot was taken and its address; the same for the journey picture, under `journey` |
+| `/api/map-snapshot.json` | When the newest snapshot was taken and its address; the same for the journey picture, under `journey`; which sheets of the copy exist, under `copy` |
 | `/api/map-snapshot/<time>.jpg` | A whole-world snapshot |
-| `/api/map-journey/<time>.jpg` | A journey picture |
+| `/api/map-journey/<time>.jpg`, `/api/map-journey/latest.jpg` | A journey picture; the newest one |
+| `/api/map-copy/<level>/<col>_<row>.jpg` | One sheet of the copy |
 | `/api/map-view.json` | What the last build found out about the map (tiles, framing) |
 
-On Cloudflare's free plan the hosted browser may run 10 minutes a day; a snapshot takes
-a few seconds, so the 48 a day, and the one journey picture, fit comfortably.
+On Cloudflare's free plan the hosted browser may run 10 minutes a day. One browser
+serves a whole run. The snapshot always comes first; the copy's sheets get at most five
+seconds per run, and none once the day's use passes seven minutes (the Worker keeps
+count), so the snapshots are never starved.
 
-`npm test` runs the snapshot tests (storage, deleting old ones, the addresses, when the
-journey picture is due and how it is framed).
+`npm test` runs the Worker's tests (storage, deleting old ones, the addresses, when the
+journey picture is due and how it is framed, which sheets of the copy come next).
 `npx wrangler dev` runs the built site with the Worker locally.
 
 The map must allow being shown inside another site: if Dynmap or Cloudflare ever sends

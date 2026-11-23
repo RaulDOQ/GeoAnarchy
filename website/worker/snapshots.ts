@@ -5,6 +5,8 @@
 //   JOURNEY  the part of the world in the "Realismo" journey figure, zoomed in. It is
 //            a still picture, so one a day is plenty.
 //
+// (The site's zoomable copy of the map, which goes deeper than WORLD, is in copy.ts.)
+//
 // Only the newest few of each kind are kept. Keys, for a shelf with prefix `p:`:
 //   p:<time>          the picture (JPEG), <time> in milliseconds, zero-padded so that
 //                     keys sort by age
@@ -14,9 +16,9 @@
 export interface SnapshotStore {
   get(key: string, type: 'json'): Promise<unknown>;
   get(key: string, type: 'arrayBuffer'): Promise<ArrayBuffer | null>;
-  put(key: string, value: string | ArrayBuffer | ArrayBufferView): Promise<void>;
+  put(key: string, value: string | ArrayBuffer | ArrayBufferView, options?: { metadata?: unknown }): Promise<void>;
   delete(key: string): Promise<void>;
-  list(options: { prefix: string }): Promise<{ keys: { name: string }[] }>;
+  list(options: { prefix: string; cursor?: string }): Promise<{ keys: { name: string; metadata?: unknown }[]; cursor?: string }>;
 }
 
 export interface Shelf {

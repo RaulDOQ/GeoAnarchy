@@ -30,8 +30,7 @@
   --color-green-ring: #12a05c40;
 
   --color-on-accent: #ffffff;
-  /* The block maps: the sea behind the map image, and land drawn on dark panels. */
-  --color-ocean: #1355c2;
+  /* Land drawn on dark panels. */
   --color-land-bright: #46d08a;
   --color-ink: #0a1b2e;
   --color-hairline: #0a1b2e14;

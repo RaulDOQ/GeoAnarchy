@@ -1,23 +1,71 @@
-// Paints the server's map on a canvas from the map's own picture tiles.
+// Paints a map on a canvas from picture tiles.
 //
-// The tiles come from the server's Dynmap site; scripts/detect-map.mjs finds them at
-// build time. Every tile is drawn snapped to whole screen pixels and its neighbours
-// share the rounded edge, so no line ever shows between two tiles, at any size.
+// The tiles come from one of two places (a TileSource says which):
+//   - the server's Dynmap site: the map's own tiles, live. scripts/detect-map.mjs
+//     finds them at build time (dynmapTiles below);
+//   - the site's own copy of the map: larger pictures the Worker has photographed and
+//     stored, for when the live map does not load (map-copy.ts).
+// Every tile is drawn snapped to whole screen pixels and its neighbours share the
+// rounded edge, so no line ever shows between two tiles, at any size. Where a tile is
+// missing or has not arrived, the same place is shown from a coarser tile.
 // Used by the live map (live-map.ts) and by the still map picture (map-still.ts).
 
 const MAX_LOADS = 24;
-const MAX_TILES_KEPT = 600;
 
-/** What scripts/detect-map.mjs found out about the map's tiles. */
+/** Where the tiles are and how they are laid out. */
 export interface TileSource {
+  /** The size of one tile, in its own pixels. */
+  tileWidth: number;
+  tileHeight: number;
+  /** The deepest level there are tiles for (level 0 is zoomed all the way out). */
+  maxLevel: number;
+  /** The deepest level that has every one of its tiles, when that is less than maxLevel. */
+  completeLevel?: number;
+  /** Where the world lies, in pixels at level 0. */
+  world: { x: number; y: number; width: number; height: number };
+  /** The address of one tile, or null when there is none. */
+  address(level: number, col: number, row: number): string | null;
+  /** Enlarged past their real size, tiles are smoothed (photographs) rather than shown as crisp blocks. */
+  smooth?: boolean;
+  /** How many tile pictures stay in memory (large tiles: fewer). */
+  keep?: number;
+}
+
+/** What scripts/detect-map.mjs found out about the live map's tiles (MapTiles in config/site.ts). */
+interface DynmapSettings {
   base: string;
   prefix: string;
   format: string;
   tileSize: number;
-  /** The zoom level at which tiles are at full detail (0 is zoomed all the way out). */
   nativeZoom: number;
-  /** Where the world lies, in pixels at zoom level 0. */
   world: { x: number; y: number; width: number; height: number };
+}
+
+/** The live map's own tiles, named exactly as Dynmap's page names them (see detect-map.mjs). */
+export function dynmapTiles(settings: DynmapSettings): TileSource {
+  return {
+    tileWidth: settings.tileSize,
+    tileHeight: settings.tileSize,
+    maxLevel: settings.nativeZoom,
+    world: settings.world,
+    address(level, col, row) {
+      const out = Math.max(0, settings.nativeZoom - level);
+      const scale = 2 ** out;
+      const x = scale * col;
+      const y = -(scale * row);
+      const prefix = out === 0 ? '' : `${'z'.repeat(out)}_`;
+      return `${settings.base}${settings.prefix}/${x >> 5}_${y >> 5}/${prefix}${x}_${y}.${settings.format}`;
+    },
+  };
+}
+
+/** The live map's tiles, from the settings an element carries in data-tiles, if any. */
+export function readTileSource(element: HTMLElement): TileSource | null {
+  try {
+    return element.dataset.tiles ? dynmapTiles(JSON.parse(element.dataset.tiles) as DynmapSettings) : null;
+  } catch {
+    return null;
+  }
 }
 
 /** What to paint: a canvas of `width` x `height` CSS pixels showing part of the world. */
@@ -30,8 +78,10 @@ export interface PaintView {
   /** How large the whole world is drawn, in CSS pixels. */
   mapWidth: number;
   mapHeight: number;
-  /** Also fetch coarser tiles to stand in for ones that have not arrived. */
+  /** Also fetch coarser tiles to stand in for ones that have not arrived yet. */
   coarser: boolean;
+  /** Only fetch the tiles this view needs; leave the canvas as it is. */
+  fetchOnly?: boolean;
 }
 
 export interface TilePainter {
@@ -52,25 +102,6 @@ interface Tile {
   used: number;
 }
 
-/** Reads the tile settings an element carries in data-tiles, if any. */
-export function readTileSource(element: HTMLElement): TileSource | null {
-  try {
-    return element.dataset.tiles ? (JSON.parse(element.dataset.tiles) as TileSource) : null;
-  } catch {
-    return null;
-  }
-}
-
-/** The file name of one tile, exactly as Dynmap's page builds it (see detect-map.mjs). */
-function tileName(source: TileSource, zoom: number, col: number, row: number): string {
-  const level = Math.max(0, source.nativeZoom - zoom);
-  const scale = 2 ** level;
-  const x = scale * col;
-  const y = -(scale * row);
-  const prefix = level === 0 ? '' : `${'z'.repeat(level)}_`;
-  return `${source.prefix}/${x >> 5}_${y >> 5}/${prefix}${x}_${y}.${source.format}`;
-}
-
 /**
  * A painter for `canvas`, or null when the browser cannot draw on it. `onTile` is
  * called for every tile that arrives (true) or fails (false); `onChange` when a new
@@ -80,6 +111,7 @@ export function createTilePainter(canvas: HTMLCanvasElement, source: TileSource,
   const context = canvas.getContext('2d');
   if (!context) return null;
 
+  const keep = source.keep ?? 600;
   const tiles = new Map<string, Tile>();
   const waiting: (() => void)[] = [];
   let pass = 0;
@@ -109,24 +141,28 @@ export function createTilePainter(canvas: HTMLCanvasElement, source: TileSource,
           tile.state = 'failed';
           failed++;
           hooks.onTile?.(false);
+          hooks.onChange();
         }
         waiting.shift()?.();
       };
       image.onload = () => done(true);
       image.onerror = () => done(false);
-      image.src = stamp ? `${url}?t=${stamp}` : url;
+      image.src = stamp ? `${url}${url.includes('?') ? '&' : '?'}t=${stamp}` : url;
     };
     if (loading < MAX_LOADS) start();
     else waiting.push(start);
   }
 
-  function tileAt(zoom: number, col: number, row: number, wanted: boolean): Tile | undefined {
-    const key = `${zoom}:${col}:${row}`;
+  /** The tile at that place if there is one; `fetch` asks for it when it is not here yet. */
+  function tileAt(level: number, col: number, row: number, fetch: boolean): Tile | undefined {
+    const key = `${level}:${col}:${row}`;
     let tile = tiles.get(key);
-    if (!tile && wanted) {
+    if (!tile && fetch) {
+      const url = source.address(level, col, row);
+      if (!url) return undefined;
       tile = { image: new Image(), state: 'loading', used: pass };
       tiles.set(key, tile);
-      load(tile, source.base + tileName(source, zoom, col, row));
+      load(tile, url);
     }
     if (tile) tile.used = pass;
     return tile;
@@ -135,25 +171,30 @@ export function createTilePainter(canvas: HTMLCanvasElement, source: TileSource,
   function paint(view: PaintView): void {
     if (!context || !view.width || !view.height) return;
     pass++;
+    const draw = !view.fetchOnly;
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     const pixelWidth = Math.round(view.width * ratio);
     const pixelHeight = Math.round(view.height * ratio);
-    if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
-      canvas.width = pixelWidth;
-      canvas.height = pixelHeight;
+    if (draw) {
+      if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+        canvas.width = pixelWidth;
+        canvas.height = pixelHeight;
+      }
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.clearRect(0, 0, pixelWidth, pixelHeight);
     }
-    context.setTransform(1, 0, 0, 1, 0, 0);
-    context.clearRect(0, 0, pixelWidth, pixelHeight);
 
     const w = source.world;
-    // CSS pixels per map pixel (map pixels are counted at zoom level 0).
+    // CSS pixels per map pixel (map pixels are counted at level 0).
     const scaleX = view.mapWidth / w.width;
     const scaleY = view.mapHeight / w.height;
     // The level whose tiles are at least as sharp as the screen needs.
-    const level = Math.min(source.nativeZoom, Math.max(0, Math.ceil(Math.log2(scaleX * ratio) - 0.25)));
-    const span = source.tileSize / 2 ** level;
-    // Past the tiles' real size, show crisp blocks rather than a blur.
-    context.imageSmoothingEnabled = scaleX * ratio <= 2 ** level * 1.01;
+    const level = Math.min(source.maxLevel, Math.max(0, Math.ceil(Math.log2(scaleX * ratio) - 0.25)));
+    const spanX = source.tileWidth / 2 ** level;
+    const spanY = source.tileHeight / 2 ** level;
+    // Past the tiles' real size, map tiles show as crisp blocks rather than a blur.
+    context.imageSmoothingEnabled = source.smooth || scaleX * ratio <= 2 ** level * 1.01;
+    context.imageSmoothingQuality = 'high';
 
     // The part of the world on the canvas, in map pixels.
     const x0 = Math.max(w.x, w.x - view.left / scaleX);
@@ -161,10 +202,10 @@ export function createTilePainter(canvas: HTMLCanvasElement, source: TileSource,
     const y0 = Math.max(w.y, w.y - view.top / scaleY);
     const y1 = Math.min(w.y + w.height, w.y + (view.height - view.top) / scaleY);
     const edge = 1e-7;
-    const firstCol = Math.floor(x0 / span);
-    const lastCol = Math.floor((x1 - edge) / span);
-    const firstRow = Math.floor(y0 / span);
-    const lastRow = Math.floor((y1 - edge) / span);
+    const firstCol = Math.floor(x0 / spanX);
+    const lastCol = Math.floor((x1 - edge) / spanX);
+    const firstRow = Math.floor(y0 / spanY);
+    const lastRow = Math.floor((y1 - edge) / spanY);
 
     // Positions are rounded to whole pixels, and neighbours share the rounded edge, so
     // there is never a gap or an overlap between two tiles.
@@ -172,41 +213,53 @@ export function createTilePainter(canvas: HTMLCanvasElement, source: TileSource,
     const screenY = (my: number) => Math.round((view.top + (my - w.y) * scaleY) * ratio);
 
     onScreen = [];
-    context.save();
-    context.beginPath();
-    context.rect(screenX(w.x), screenY(w.y), screenX(w.x + w.width) - screenX(w.x), screenY(w.y + w.height) - screenY(w.y));
-    context.clip();
+    if (draw) {
+      context.save();
+      context.beginPath();
+      context.rect(screenX(w.x), screenY(w.y), screenX(w.x + w.width) - screenX(w.x), screenY(w.y + w.height) - screenY(w.y));
+      context.clip();
+    }
     for (let row = firstRow; row <= lastRow; row++) {
       for (let col = firstCol; col <= lastCol; col++) {
-        const dx = screenX(col * span);
-        const dy = screenY(row * span);
-        const dw = screenX((col + 1) * span) - dx;
-        const dh = screenY((row + 1) * span) - dy;
+        const dx = screenX(col * spanX);
+        const dy = screenY(row * spanY);
+        const dw = screenX((col + 1) * spanX) - dx;
+        const dh = screenY((row + 1) * spanY) - dy;
         const tile = tileAt(level, col, row, true);
-        onScreen.push({ key: `${level}:${col}:${row}`, url: source.base + tileName(source, level, col, row) });
+        const url = tile && source.address(level, col, row);
+        if (url) onScreen.push({ key: `${level}:${col}:${row}`, url });
         if (tile?.state === 'ready') {
-          context.drawImage(tile.image, dx, dy, dw, dh);
+          if (draw) context.drawImage(tile.image, dx, dy, dw, dh);
           continue;
         }
-        // Not here yet (or missing): show the same place from a coarser tile.
+        // Not here: show the same place from a coarser tile. When this tile is only
+        // on its way, coarser ones are fetched if the view asks for that; when there
+        // is none (or it failed), the nearest coarser one that exists is fetched.
+        const gone = !tile || tile.state === 'failed';
+        let asked = false;
         for (let up = 1; up <= level; up++) {
           const parts = 2 ** up;
           const parentCol = Math.floor(col / parts);
           const parentRow = Math.floor(row / parts);
-          const parent = tileAt(level - up, parentCol, parentRow, view.coarser && up <= 2);
+          const fetch = !asked && (gone || (view.coarser && up <= 2));
+          const parent = tileAt(level - up, parentCol, parentRow, fetch);
+          if (parent && parent.state !== 'failed') asked = true;
           if (parent?.state !== 'ready') continue;
-          const size = parent.image.naturalWidth / parts;
-          context.drawImage(parent.image, (col - parentCol * parts) * size, (row - parentRow * parts) * size, size, size, dx, dy, dw, dh);
+          if (draw) {
+            const sw = parent.image.naturalWidth / parts;
+            const sh = parent.image.naturalHeight / parts;
+            context.drawImage(parent.image, (col - parentCol * parts) * sw, (row - parentRow * parts) * sh, sw, sh, dx, dy, dw, dh);
+          }
           break;
         }
       }
     }
-    context.restore();
+    if (draw) context.restore();
 
     // Forget tiles that have not been used for a while.
-    if (tiles.size > MAX_TILES_KEPT) {
+    if (tiles.size > keep) {
       const old = [...tiles.entries()].filter(([, tile]) => tile.state !== 'loading').sort((a, b) => a[1].used - b[1].used);
-      for (const [key] of old.slice(0, tiles.size - MAX_TILES_KEPT)) tiles.delete(key);
+      for (const [key] of old.slice(0, tiles.size - keep)) tiles.delete(key);
     }
   }
 

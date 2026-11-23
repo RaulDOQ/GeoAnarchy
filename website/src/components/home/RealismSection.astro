@@ -1,10 +1,9 @@
 ---
 // "Realismo": no server shop and no teleport. The figure shows part of the server's
 // real map with one long journey drawn on it: by sea, across a desert and over
-// mountains. The real map is put over the block map by scripts/map-still.ts (a
-// photograph of that part of the map, and the map's own tiles when the page may use
-// them), so the figure is never empty.
-import PixelEarth from './PixelEarth.astro';
+// mountains. The map is always the real one: a photograph of that part of it, which the
+// Worker takes and keeps (so it is there when the live map is down), and on top the
+// map's own tiles when the page may use them. scripts/map-still.ts looks after both.
 import SectionHead from './SectionHead.astro';
 import generated from '../../generated/map-view.json';
 import { drawableTiles, site, type MapView } from '../../config/site';
@@ -13,9 +12,9 @@ import { pt } from '../../content/pt';
 const c = pt.realism;
 const tiles = drawableTiles(generated as MapView);
 
-// The cut, in pixels of the block map (2.5 degrees each): 75°W to 45°E, 60°N to 30°S.
+// The cut, in cells of 2.5 degrees: 75°W to 45°E, 60°N to 30°S.
 const crop = site.journey;
-// The journey, in pixels of the cut: north-east Brazil, the Atlantic, West Africa, the
+// The journey, in cells of the cut: north-east Brazil, the Atlantic, West Africa, the
 // Sahara, the Mediterranean, the Alps, central Europe.
 const route: [number, number][] = [
   [14.5, 27.5],
@@ -30,7 +29,7 @@ const end = route[route.length - 1];
 const points = route.map(([x, y]) => `${x},${y}`).join(' ');
 const at = (x: number, y: number) => `left: ${((x / crop.w) * 100).toFixed(2)}%; top: ${((y / crop.h) * 100).toFixed(2)}%`;
 // The same cut as fractions of the whole world.
-const { width: mapWidth, height: mapHeight } = site.blockMap;
+const { width: mapWidth, height: mapHeight } = site.grid;
 const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWidth, (crop.y + crop.h) / mapHeight];
 ---
 
@@ -63,8 +62,10 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
         data-snapshot-info="/api/map-snapshot.json"
         style={`--d: 140ms; --rx: ${region[0]}; --ry: ${region[1]}; --rw: ${region[2] - region[0]}; --rh: ${region[3] - region[1]}`}
       >
-        <PixelEarth label={c.route.label} crop={crop} id="seams-journey">
-          <img class="still-photo" data-still-photo alt="" decoding="async" />
+        <div class="journey-map" role="img" aria-label={c.route.label} style={`aspect-ratio: ${crop.w} / ${crop.h}`}>
+          {/* The newest photograph of this part of the map. If there is none yet, the
+              script puts the whole-world picture here instead, enlarged. */}
+          <img class="still-photo" data-still-photo src="/api/map-journey/latest.jpg" alt="" loading="lazy" decoding="async" />
           <canvas class="still-tiles" data-still-tiles aria-hidden="true"></canvas>
           <svg class="route" viewBox={`0 0 ${crop.w} ${crop.h}`} preserveAspectRatio="none" aria-hidden="true">
             <polyline class="under" points={points}></polyline>
@@ -78,7 +79,7 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
           <span class="tag" style={at(26.5, 15)} aria-hidden="true">{c.route.desert}</span>
           <span class="tag right" style={at(32.6, 5.5)} aria-hidden="true">{c.route.mountains}</span>
           <span class="tag left strong" style={at(37.6, 3.5)} aria-hidden="true">{c.route.to}</span>
-        </PixelEarth>
+        </div>
       </figure>
     </div>
   </div>
@@ -142,11 +143,16 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
     box-shadow: var(--shadow-window);
     overflow: hidden;
   }
-  /* The real map over the block map: a photograph of this part of the map, then the
-     map's own tiles. Each fades in when it has arrived. */
+  /* The sea's own blue, for the moment before the map arrives. */
+  .journey-map {
+    background: #1c3d78;
+    position: relative;
+    overflow: hidden;
+  }
+  /* A photograph of this part of the map, then the map's own tiles. Each fades in when
+     it has arrived. */
   .still-photo,
   .still-tiles {
-    opacity: 0;
     width: 100%;
     height: 100%;
     transition: opacity .6s ease-out;
@@ -157,6 +163,10 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
     object-fit: cover;
     max-width: none;
   }
+  .still-tiles,
+  :global(.js) .still-photo {
+    opacity: 0;
+  }
   /* Until that photograph exists, the whole-world picture stands in: enlarged, so that
      only this part of it is in the frame. */
   .journey:global(.cuts-world) .still-photo {
@@ -165,7 +175,7 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
     top: calc(var(--ry) / var(--rh) * -100%);
     left: calc(var(--rx) / var(--rw) * -100%);
   }
-  .journey:global(.has-photo) .still-photo,
+  :global(.js) .journey:global(.has-photo) .still-photo,
   .journey:global(.has-tiles) .still-tiles {
     opacity: 1;
   }

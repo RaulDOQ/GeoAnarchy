@@ -9,14 +9,20 @@
 // instead, scaled so the world fills the card. That works, but zooms less far.
 //
 // Either way, under the map lies the newest snapshot (worker/): it is visible while
-// the map loads and stays, with its time, when the live map is down.
+// the map loads.
+//
+// When the live map is down, the card shows the site's own copy of the map instead
+// (map-copy.ts): a real map, some hours or days old, sharp and zoomable like the live
+// one. In a frame the copy also takes over as soon as the visitor zooms in, because
+// Dynmap's page cannot be enlarged without blurring.
 //
 // The visitor never touches Dynmap. A pad on top takes the pointer:
 //   mouse     click, then wheel to zoom and drag to move; double click zooms in
 //   touch     two fingers zoom and move (one finger still scrolls the page)
 //   keyboard  + and − zoom, the arrows move, 0 or Escape goes back to the full view
 // The map can be zoomed in from the full view, never out past it or off the world.
-import { createTilePainter, readTileSource, type TilePainter } from './tile-painter';
+import { copyTiles, snapshotInfo, type SnapshotInfo } from './map-copy';
+import { createTilePainter, readTileSource, type TilePainter, type TileSource } from './tile-painter';
 
 const PROBE_TIMEOUT = 8000;
 const LIVE_TIMEOUT = 20000;
@@ -29,6 +35,8 @@ const FRAME_OVERSCAN = 1.01;
 const FRAME_MAX_UPSCALE = 1.5;
 /** Tiles may be enlarged to twice their real pixels at the deepest level. */
 const TILE_MAX_UPSCALE = 2;
+/** So may the sheets of the site's copy of the map. */
+const COPY_MAX_UPSCALE = 2;
 
 interface Parts {
   figure: HTMLElement;
@@ -75,6 +83,27 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
   if (!painter) source = null;
   figure.classList.add(source ? 'draws-tiles' : 'shows-frame');
 
+  // ---- The site's own copy of the map, for when the live one is not there.
+  /** What the snapshot service has, once it has answered. */
+  let info: SnapshotInfo | null = null;
+  let copy: { source: TileSource; painter: TilePainter } | null = null;
+  let live = false;
+  /** True from the moment the live tiles are being asked for until they are given up on. */
+  let fetchingLive = false;
+
+  function copyReady(): boolean {
+    if (copy) return true;
+    if (!info) return false;
+    const tiles = copyTiles(info, frameWidth, frameHeight);
+    const copyPainter = tiles && createTilePainter(canvas, tiles, { onChange: () => requestDraw() });
+    if (!tiles || !copyPainter) return false;
+    copy = { source: tiles, painter: copyPainter };
+    return true;
+  }
+  const offline = () => !live && figure.classList.contains('is-offline');
+  /** The copy is shown when the live map is down and, in a frame, when zoomed in. */
+  const showsCopy = () => (offline() || (!source && live && zoom > 1.001)) && copyReady();
+
   // ---- The view: how much the map is enlarged and where it sits in the card.
   let cardWidth = 0;
   let cardHeight = 0;
@@ -95,9 +124,14 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
   };
   const mapWidth = () => cardWidth * overscan() * zoom;
   const mapHeight = () => mapWidth() * (frameHeight / frameWidth);
+  /** How far the map can be zoomed in: as far as what is shown has real detail. */
   const maxZoom = () => {
     if (!cardWidth) return 2;
-    const full = source ? 2 ** source.nativeZoom * source.world.width * TILE_MAX_UPSCALE : frameWidth * FRAME_MAX_UPSCALE;
+    const ofFrame = frameWidth * FRAME_MAX_UPSCALE;
+    const ofCopy = copyReady() && copy ? 2 ** (copy.source.completeLevel ?? copy.source.maxLevel) * copy.source.world.width * COPY_MAX_UPSCALE : 0;
+    let full: number;
+    if (source) full = offline() ? Math.max(ofFrame, ofCopy) : 2 ** source.maxLevel * source.world.width * TILE_MAX_UPSCALE;
+    else full = Math.max(ofFrame, ofCopy);
     return Math.max(2, full / (cardWidth * overscan()));
   };
 
@@ -107,7 +141,18 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
     top = Math.min(0, Math.max(cardHeight - mapHeight(), top));
     world.style.transform = `translate(${left.toFixed(2)}px, ${top.toFixed(2)}px) scale(${(mapWidth() / frameWidth).toFixed(5)})`;
     figure.classList.toggle('is-zoomed', zoom > 1.001);
+    if (figure.classList.toggle('shows-copy', showsCopy()) !== shownCopy) {
+      shownCopy = !shownCopy;
+      showCaption();
+    }
     requestDraw();
+  }
+
+  /** After the map went down or came back: what is shown, and how far it zooms, changed. */
+  function refit(): void {
+    if (!cardWidth) return;
+    zoom = Math.min(zoom, maxZoom());
+    apply();
   }
 
   /** Zooms to `next`, keeping the point (x, y) of the card where it is. */
@@ -151,14 +196,22 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
 
   // ---- Drawing the tiles.
   let drawQueued = false;
+  let shownCopy = false;
   function requestDraw(): void {
-    if (!painter || drawQueued) return;
+    if (drawQueued || !cardWidth) return;
     drawQueued = true;
     requestAnimationFrame(() => {
       drawQueued = false;
+      const view = { width: cardWidth, height: cardHeight, left, top, mapWidth: mapWidth(), mapHeight: mapHeight() };
+      if (showsCopy() && copy) {
+        copy.painter.paint({ ...view, coarser: true });
+        // The live tiles are still asked for, so the map is noticed coming back.
+        if (fetchingLive) painter?.paint({ ...view, coarser: false, fetchOnly: true });
+        return;
+      }
       // Coarser tiles are only fetched once the visitor zooms in; in the full view the
       // snapshot underneath already fills the gaps while tiles arrive.
-      painter.paint({ width: cardWidth, height: cardHeight, left, top, mapWidth: mapWidth(), mapHeight: mapHeight(), coarser: zoom > 1.001 });
+      painter?.paint({ ...view, coarser: zoom > 1.001 });
     });
   }
 
@@ -275,7 +328,6 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
 
   // ---- What is shown: the snapshot first, then the live map if it answers.
   let snapshotTime: number | null = null;
-  let live = false;
   let started = false;
   let liveTimer = 0;
 
@@ -287,7 +339,7 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
   };
 
   function showCaption(): void {
-    if (live) captionText.textContent = caption.dataset.live ?? '';
+    if (live) captionText.textContent = (shownCopy && caption.dataset.zoomed) || (caption.dataset.live ?? '');
     else if (!figure.classList.contains('is-offline')) return;
     else if (snapshotTime !== null) captionText.textContent = (caption.dataset.snapshot ?? '').replace('{time}', timeText(snapshotTime));
     else captionText.textContent = caption.dataset.offline ?? '';
@@ -296,33 +348,33 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
   async function loadSnapshot(): Promise<void> {
     const infoUrl = figure.dataset.snapshotInfo;
     if (!infoUrl) return;
-    try {
-      const response = await fetch(infoUrl);
-      if (!response.ok) return;
-      const info = (await response.json()) as { takenAt?: unknown; url?: unknown };
-      if (typeof info.takenAt !== 'number' || typeof info.url !== 'string') return;
-      const takenAt = info.takenAt;
-      snapshot.addEventListener(
-        'load',
-        () => {
-          snapshotTime = takenAt;
-          figure.classList.add('has-snapshot');
-          showCaption();
-        },
-        { once: true },
-      );
-      snapshot.src = info.url;
-    } catch {
-      // No snapshot service (for example in local development): the card just waits.
-    }
+    // Without a snapshot service (for example in local development) the card just waits.
+    info = await snapshotInfo(infoUrl);
+    if (!info) return;
+    // The copy may be what the card was waiting for.
+    refit();
+    if (typeof info.takenAt !== 'number' || typeof info.url !== 'string') return;
+    const takenAt = info.takenAt;
+    snapshot.addEventListener(
+      'load',
+      () => {
+        snapshotTime = takenAt;
+        figure.classList.add('has-snapshot');
+        showCaption();
+      },
+      { once: true },
+    );
+    snapshot.src = info.url;
   }
 
   function setOffline(): void {
     if (live) return;
     window.clearTimeout(liveTimer);
+    fetchingLive = false;
     figure.classList.add('is-offline');
     noteText.textContent = figure.dataset.offlineText ?? '';
     showCaption();
+    refit();
     window.setTimeout(probe, RETRY_AFTER);
   }
 
@@ -332,11 +384,13 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
     figure.classList.remove('is-offline');
     figure.classList.add('is-live');
     showCaption();
+    refit();
   }
 
   function startTiles(): void {
     // A retry after the map was down: forget the failures and ask again.
     painter?.retryFailed();
+    fetchingLive = true;
     liveTimer = window.setTimeout(setOffline, LIVE_TIMEOUT);
     requestDraw();
   }
