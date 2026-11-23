@@ -67,7 +67,34 @@ an `X-Frame-Options` or `Content-Security-Policy: frame-ancestors` header for
 desenvolvimento" strip and asks search engines not to index it. Set it to `false` at
 launch.
 
-## Deploying
+## Deploy on Cloudflare
 
-Any static host works. For Cloudflare Pages: root directory `website`, build command
-`npm run build`, output directory `dist`.
+The site runs as a Cloudflare Worker that only serves the static files in `dist/`
+(`wrangler.jsonc`). Cloudflare builds and publishes it from GitHub every time `main`
+changes.
+
+In the Cloudflare dashboard: **Workers & Pages → Create → Import a repository**, pick
+`RaulDOQ/GeoAnarchy`, and set:
+
+- **Project name:** `geoanarchy-website` (the name in `wrangler.jsonc`)
+- **Production branch:** `main`
+- **Path / root directory:** `website`
+- **Build command:** `npm run build`
+- **Deploy command:** `npx wrangler deploy`
+
+The Node version comes from `.node-version`. There are no variables or secrets to add.
+
+To publish from a computer instead: `npm run build`, then `npx wrangler deploy` (it asks
+you to sign in to Cloudflare the first time).
+
+### Custom domain
+
+Worker → **Settings → Domains & Routes → Add → Custom domain**. Read the note below
+before adding `geoanarchy.net` itself.
+
+`geoanarchy.net` is also the game address. Java players are sent to the game server by
+the `_minecraft._tcp` SRV record, which keeps working when the website takes over the
+name. Bedrock players are not: Bedrock connects straight to whatever `geoanarchy.net`
+points at, so once that is the website, Bedrock needs its own name (for example
+`jogar.geoanarchy.net`, DNS only, pointing at the game host). Change `bedrock.address`
+in `src/config/site.ts` to match.
