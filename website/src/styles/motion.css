@@ -51,7 +51,36 @@
   filter: none;
   transform: none;
 }
+/* Going from one page to another: the old page fades, the new one rises in. The header
+   stays put (Nav.astro names it) and the current-page pill glides to its new tab. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root) {
+  animation: .16s ease-in both vt-out;
+}
+::view-transition-new(root) {
+  animation: .42s var(--ease-out) 60ms both vt-in;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+::view-transition-group(nav-active) {
+  animation-duration: .5s;
+  animation-timing-function: var(--spring-smooth);
+}
 @media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
   html {
     scroll-behavior: auto;
   }

@@ -17,14 +17,14 @@ export const pt = {
     devBanner: 'Prévia do site, ainda em desenvolvimento.',
     navLabel: 'Seções',
     menu: 'Menu',
+    // The header tabs: one per page.
     nav: [
-      { id: 'inicio', label: 'Início' },
-      { id: 'anarquia', label: 'Anarquia' },
-      { id: 'mapa', label: 'O mapa' },
-      { id: 'realismo', label: 'Realismo' },
-      { id: 'entrar', label: 'Como entrar' },
-      { id: 'duvidas', label: 'Dúvidas' },
+      { id: 'home', label: 'Início', href: '/' },
+      { id: 'about', label: 'Sobre nós', href: '/sobre/' },
+      { id: 'store', label: 'Loja', href: '/loja/' },
+      { id: 'wiki', label: 'GeoWiki', href: '/wiki/' },
     ],
+    soon: 'Em breve',
     discord: 'Discord',
     play: 'Jogar',
     copy: 'Copiar',
@@ -173,8 +173,111 @@ export const pt = {
     note: 'Servidor brasileiro · Survival · Mapa da Terra',
   },
 
+  // "Sobre nós". The three ideas repeat the home page's own words; the rest of the page
+  // is waiting for the server's story and team.
+  about: {
+    meta: {
+      title: 'Sobre nós | GeoAnarchy',
+      description: 'O que é o GeoAnarchy: um servidor de Minecraft brasileiro no mapa real da Terra, onde quem controla são os jogadores.',
+    },
+    chapter: 'Sobre nós',
+    title: ['Quem controla', 'são os jogadores'],
+    lead: 'O GeoAnarchy é um servidor de Minecraft brasileiro que se passa no mapa real da Terra. Crie sua nação, forme alianças, declare guerras, conquiste territórios.',
+    pillars: [
+      {
+        title: 'Uma verdadeira anarquia política',
+        body: 'Um país pode atacar o outro quando quiser. Cada país pode ter o nome que quiser, onde quiser, ter suas próprias leis e filosofias.',
+        href: '/#anarquia',
+      },
+      {
+        title: 'Baseado no mundo real',
+        body: 'O mundo do servidor é uma réplica do mundo real: continentes, terreno, mares e biomas. Cada bloco representa aproximadamente 1 km.',
+        href: '/#mapa',
+      },
+      {
+        title: 'Um servidor realista',
+        body: 'Toda a economia é controlada por jogadores, sem loja do servidor, e não temos nenhum comando de teleporte.',
+        href: '/#realismo',
+      },
+    ],
+    more: 'Ver na página inicial',
+    soon: {
+      title: 'Esta página ainda está sendo escrita',
+      body: 'A história do servidor e a equipe por trás do GeoAnarchy vão aparecer aqui.',
+    },
+  },
+
+  // "Loja". Nothing is on sale yet, so the page only says so.
+  store: {
+    meta: {
+      title: 'Loja | GeoAnarchy',
+      description: 'A loja do GeoAnarchy ainda não abriu.',
+    },
+    chapter: 'Loja',
+    title: ['A loja ainda', 'não abriu'],
+    lead: 'Acompanhe as novidades no Discord.',
+    cta: 'Entrar no Discord',
+    note: {
+      title: 'E dentro do jogo?',
+      body: 'No GeoAnarchy, toda a economia é controlada por jogadores, sem loja do servidor.',
+    },
+  },
+
+  // "GeoWiki". Three first articles, all taken from what the site already says.
+  wiki: {
+    meta: {
+      title: 'GeoWiki | GeoAnarchy',
+      description: 'O guia do GeoAnarchy: como entrar, o mundo do servidor e como ele funciona.',
+    },
+    chapter: 'GeoWiki',
+    title: ['O guia do', 'GeoAnarchy'],
+    lead: 'O essencial para começar. Mais páginas em breve.',
+    indexLabel: 'Nesta página',
+    join: {
+      id: 'como-entrar',
+      title: 'Como entrar',
+      intro: 'O mesmo mundo para quem joga no Java Edition ou no Bedrock Edition. Copie o endereço e conecte.',
+    },
+    world: {
+      id: 'o-mundo',
+      title: 'O mundo',
+      intro: 'O mundo do servidor é uma réplica do mundo real: continentes, terreno, mares e biomas.',
+      rows: [
+        { label: 'Tamanho', value: `${n(w.width)} × ${n(w.depth)} blocos` },
+        { label: 'Escala', value: '1 bloco ≈ 1 km' },
+        { label: 'Limites em X', value: `${n(w.minX)} a ${n(w.maxX)}` },
+        { label: 'Limites em Z', value: `${n(w.minZ)} a ${n(w.maxZ)}` },
+        { label: 'Mapa ao vivo', value: site.map.host },
+      ],
+    },
+    rules: {
+      id: 'como-funciona',
+      title: 'Como o servidor funciona',
+      intro: 'No GeoAnarchy, quem controla são os jogadores.',
+      items: [
+        'Um país pode atacar o outro quando quiser.',
+        'O servidor não impõe nenhuma regra de roleplay.',
+        'Cada país pode ter o nome que quiser, onde quiser, e ter suas próprias leis e filosofias.',
+        'Toda a economia é controlada por jogadores, sem loja do servidor.',
+        'Não existe nenhum comando de teleporte.',
+      ],
+    },
+  },
+
+  notFound: {
+    meta: {
+      title: 'Página não encontrada | GeoAnarchy',
+      description: 'Este endereço não existe.',
+    },
+    chapter: 'Erro 404',
+    title: ['Página não', 'encontrada'],
+    lead: 'Este endereço não existe no site.',
+    back: 'Voltar ao início',
+  },
+
   footer: {
     tagline: 'Um servidor de Minecraft brasileiro no mapa real da Terra. Quem controla são os jogadores.',
+    siteTitle: 'Site',
     serverTitle: 'Servidor',
     communityTitle: 'Comunidade',
     liveMap: 'Mapa ao vivo',

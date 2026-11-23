@@ -1,0 +1,23 @@
+---
+// The GeoAnarchy name on its own (the logo without the block Earth).
+import wordmark from '../assets/wordmark.webp';
+
+interface Props {
+  /** Width in CSS pixels; the height follows the artwork. */
+  width?: number;
+  /** Leave empty when the name is already written nearby. */
+  alt?: string;
+}
+
+const { width = 160, alt = '' } = Astro.props;
+const height = Math.round((width * wordmark.height) / wordmark.width);
+---
+
+<img class="wordmark" src={wordmark.src} width={width} height={height} alt={alt} decoding="async" />
+
+<style>
+  .wordmark {
+    flex: none;
+    height: auto;
+  }
+</style>

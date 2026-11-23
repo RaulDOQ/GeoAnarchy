@@ -1,6 +1,7 @@
 ---
 // Hero: the pitch on the left, the live map of the server on the right.
 import Icon from '../Icon.astro';
+import Wordmark from '../Wordmark.astro';
 import LiveMap from './LiveMap.astro';
 import { site } from '../../config/site';
 import { pt } from '../../content/pt';
@@ -12,12 +13,13 @@ const c = pt.hero;
   <div class="hero-bg" aria-hidden="true"></div>
   <div class="hero container">
   <div class="hero-copy">
-    <a class="announce" href={site.map.url} target="_blank" rel="noopener" data-in="settle">
+    <div class="hero-logo" data-in="settle"><Wordmark width={184} alt={site.name} /></div>
+    <a class="announce" href={site.map.url} target="_blank" rel="noopener" data-in="settle" style="--d: 60ms">
       <span><i></i>{c.announceTag}</span>
       {c.announce}
       <Icon name="arrowUpRight" />
     </a>
-    <h1 id="hero-title" class="hero-title" data-in="lines" style="--d: 80ms">
+    <h1 id="hero-title" class="hero-title" data-in="lines" style="--d: 120ms">
       <span class="line"><span class="grad">{c.title[0]}</span></span>
       <span class="line"><span class="grad-earth">{c.title[1]}</span></span>
     </h1>
@@ -71,6 +73,10 @@ const c = pt.hero;
   .hero-copy {
     z-index: 2;
     position: relative;
+  }
+  .hero-logo {
+    margin: 0 0 1.5rem -.35rem;
+    display: flex;
   }
   .announce {
     height: 2rem;
@@ -287,6 +293,9 @@ const c = pt.hero;
     }
     .hero-title {
       font-size: clamp(2.5rem, 1.5rem + 6vw, 3.4rem);
+    }
+    .hero-logo :global(img) {
+      width: 148px;
     }
     .hero-lead {
       font-size: 1.05rem;

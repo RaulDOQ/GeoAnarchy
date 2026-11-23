@@ -1,6 +1,6 @@
 ---
 import Icon from '../Icon.astro';
-import Logo from '../Logo.astro';
+import Wordmark from '../Wordmark.astro';
 import { site } from '../../config/site';
 import { pt } from '../../content/pt';
 
@@ -9,13 +9,13 @@ const c = pt.closing;
 
 <section class="closing container">
   <div class="closing-light" aria-hidden="true"></div>
-  <div class="closing-logo" data-in="settle"><Logo height={190} alt={site.name} /></div>
+  <div class="closing-logo" data-in="settle"><Wordmark width={280} alt={site.name} /></div>
   <h2 class="closing-title" data-in="lines" style="--d: 100ms">
     <span class="line"><span class="grad">{c.title[0]}</span></span>
     <span class="line"><span class="grad-earth">{c.title[1]}</span></span>
   </h2>
   <div class="closing-cta" data-in="settle" style="--d: 200ms">
-    <a class="btn-solid" href="#entrar">{pt.join.chapter}</a>
+    <a class="btn-solid" href="/#entrar">{pt.join.chapter}</a>
     <a class="btn-line" href={site.discordUrl} target="_blank" rel="noopener">{pt.common.discord}<Icon name="arrowUpRight" class="arrow" /></a>
   </div>
   <p class="note" data-in="dissolve" style="--d: 400ms">{c.note}</p>

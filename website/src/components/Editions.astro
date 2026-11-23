@@ -1,0 +1,128 @@
+---
+// The two ways in: Java and Bedrock, each with its address (and a copy button) and the
+// three steps to connect. Used on the home page and in the GeoWiki.
+import Icon from './Icon.astro';
+import CopyField from './CopyField.astro';
+import { site } from '../config/site';
+import { pt } from '../content/pt';
+
+const c = pt.join;
+---
+
+<div class="editions">
+  <article class="edition card" data-in="settle" style="--d: 100ms">
+    <header>
+      <span class="icon-chip"><Icon name="java" /></span>
+      <div>
+        <h3>{c.java.name}</h3>
+        <p>{c.java.note}</p>
+      </div>
+    </header>
+    <div class="fields">
+      <CopyField label={c.java.addressLabel} value={site.java.address} />
+    </div>
+    <ol>
+      {c.java.steps.map((step) => <li>{step}</li>)}
+    </ol>
+  </article>
+
+  <article class="edition card" data-in="settle" style="--d: 170ms">
+    <header>
+      <span class="icon-chip green"><Icon name="bedrock" /></span>
+      <div>
+        <h3>{c.bedrock.name}</h3>
+        <p>{c.bedrock.note}</p>
+      </div>
+    </header>
+    <div class="fields two">
+      <CopyField label={c.bedrock.addressLabel} value={site.bedrock.address} />
+      <CopyField label={c.bedrock.portLabel} value={String(site.bedrock.port)} />
+    </div>
+    <ol>
+      {c.bedrock.steps.map((step) => <li>{step}</li>)}
+    </ol>
+  </article>
+</div>
+
+<style>
+  .editions {
+    container-type: inline-size;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    display: grid;
+  }
+  .edition {
+    align-content: start;
+    gap: 1.5rem;
+    padding: 1.75rem;
+    display: grid;
+  }
+  header {
+    align-items: center;
+    gap: .9rem;
+    display: flex;
+  }
+  h3 {
+    letter-spacing: -.02em;
+    font-size: 1.1875rem;
+  }
+  header p {
+    color: var(--color-text-muted);
+    margin-top: .2rem;
+    font-size: .875rem;
+  }
+  .fields {
+    gap: .6rem;
+    display: grid;
+  }
+  .fields.two {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  }
+  ol {
+    counter-reset: step;
+    gap: .7rem;
+    list-style: none;
+    display: grid;
+  }
+  li {
+    counter-increment: step;
+    color: var(--color-text-soft);
+    align-items: center;
+    gap: .75rem;
+    font-size: .9375rem;
+    line-height: 1.4;
+    display: flex;
+  }
+  li:before {
+    content: counter(step);
+    box-shadow: var(--edge);
+    color: var(--color-text-muted);
+    font: 500 .6875rem/1 var(--font-mono);
+    background: var(--color-surface);
+    border-radius: .4rem;
+    flex: none;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: grid;
+  }
+  /* Where the cards are narrow (the GeoWiki column), the address and port stack. */
+  @container (width < 60rem) {
+    .fields.two {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (width <= 900px) {
+    .editions {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (width <= 520px) {
+    .edition {
+      padding: 1.25rem;
+    }
+    .fields.two {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
