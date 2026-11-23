@@ -84,6 +84,11 @@ export interface MapView {
   z: number;
 }
 
+/** The tiles, when the pages may draw the map from them: found, checked, one set only. */
+export function drawableTiles(view: MapView): MapTiles | null {
+  return view.tiles?.verified && !view.tiles.dayNight ? view.tiles : null;
+}
+
 /** The embedded map's address: the layer, no controls, and the given framing. */
 export function mapEmbedUrl(view: MapView): string {
   const query = new URLSearchParams({

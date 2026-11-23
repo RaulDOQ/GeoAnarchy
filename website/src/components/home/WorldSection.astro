@@ -5,14 +5,14 @@
 import Icon from '../Icon.astro';
 import SectionHead from './SectionHead.astro';
 import generated from '../../generated/map-view.json';
-import { mapEmbedUrl, site, type MapView } from '../../config/site';
+import { drawableTiles, mapEmbedUrl, site, type MapView } from '../../config/site';
 import { pt } from '../../content/pt';
 
 const c = pt.world;
 const m = pt.liveMap;
 const view: MapView = generated;
 // The page draws the map from its tiles only when the build verified them.
-const tiles = view.tiles?.verified && !view.tiles.dayNight ? view.tiles : null;
+const tiles = drawableTiles(view);
 ---
 
 <section class="stage" id="mapa">

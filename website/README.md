@@ -40,10 +40,11 @@ Run these inside `website/` (Node 22.12 or newer):
 | `src/components/Logo.astro`, `Wordmark.astro` | The logo with the block Earth (header) and the name on its own (hero, closing section, footer, 404 page). |
 | `src/components/PageHead.astro`, `Editions.astro` | The top of every page other than the home page, and the Java and Bedrock join cards (home page and GeoWiki). |
 | `src/components/home/` | The home page's sections: hero, the live map, anarchy, realism and its journey map, how to join, questions. `Closing.astro` ends every page. |
-| `src/scripts/` | Browser scripts: the live map (drawing it, zoom and move), scroll entrances, copy buttons. |
+| `src/scripts/` | Browser scripts: the live map (zoom and move), the tile painter it shares with the still map picture, scroll entrances, copy buttons. |
 | `worker/` | The Worker: map snapshots every 30 minutes and the addresses that serve them. |
 | `scripts/detect-map.mjs` | Finds and checks the live map's tiles before each build. |
-| `src/assets/earth.png` | The block world map (144 x 72 pixels, one per 2.5 degrees), shown enlarged with sharp edges. |
+| `src/assets/earth.png` | The block world map (144 x 72 pixels, one per 2.5 degrees): what the journey picture shows until the real map arrives. |
+| `src/assets/anarchy-chaos.webp`, `anarchy-order.webp` | The pictures in the two "Anarquia" panels. Replace a file to change a picture; without a file the panel shows blocks. |
 | `src/assets/logo.webp`, `logo-small.webp`, `wordmark.webp` | The logo artwork, trimmed: the full logo in two sizes and the name alone. `public/favicon.png`, `public/apple-touch-icon.png` and `public/og.png` (the picture shown when the site's link is shared) come from the same artwork. |
 | `scripts/make-pixel-earth.mjs` | Draws `earth.png` from Natural Earth land data. Its header explains the options. |
 
@@ -90,6 +91,11 @@ along its edges, rising into view as the visitor scrolls down from the hero.
   page asks the map site for a small picture first; if that fails, nothing live is
   loaded, the snapshot stays and the line under the card gives its time. It tries again
   every minute.
+
+The "Realismo" section shows part of the same real map as a still picture, with a long
+journey drawn on it (`src/scripts/map-still.ts`). It starts as the block map, then puts
+the same region cut from the newest snapshot over it, then the map's own tiles, which are
+sharp. It is drawn once and is not interactive.
 
 ### Snapshots
 

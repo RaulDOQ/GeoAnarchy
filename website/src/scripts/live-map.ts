@@ -16,6 +16,7 @@
 //   touch     two fingers zoom and move (one finger still scrolls the page)
 //   keyboard  + and − zoom, the arrows move, 0 or Escape goes back to the full view
 // The map can be zoomed in from the full view, never out past it or off the world.
+import { createTilePainter, readTileSource, type TilePainter } from './tile-painter';
 
 const PROBE_TIMEOUT = 8000;
 const LIVE_TIMEOUT = 20000;
@@ -28,27 +29,6 @@ const FRAME_OVERSCAN = 1.01;
 const FRAME_MAX_UPSCALE = 1.5;
 /** Tiles may be enlarged to twice their real pixels at the deepest level. */
 const TILE_MAX_UPSCALE = 2;
-const MAX_LOADS = 24;
-const MAX_TILES_KEPT = 600;
-
-/** What scripts/detect-map.mjs found out about the map's tiles. */
-interface TileSource {
-  base: string;
-  prefix: string;
-  format: string;
-  tileSize: number;
-  /** The zoom level at which tiles are at full detail (0 is zoomed all the way out). */
-  nativeZoom: number;
-  /** Where the world lies, in pixels at zoom level 0. */
-  world: { x: number; y: number; width: number; height: number };
-}
-
-interface Tile {
-  image: HTMLImageElement;
-  state: 'loading' | 'ready' | 'failed';
-  /** The drawing pass that last used it (for deciding what to forget). */
-  used: number;
-}
 
 interface Parts {
   figure: HTMLElement;
@@ -77,27 +57,22 @@ export function initLiveMap(figure: HTMLElement): void {
   setup({ figure, card, world, frame, snapshot, canvas, pad, caption, captionText, noteText });
 }
 
-/** The file name of one tile, exactly as Dynmap's page builds it (see detect-map.mjs). */
-function tileName(source: TileSource, zoom: number, col: number, row: number): string {
-  const level = Math.max(0, source.nativeZoom - zoom);
-  const scale = 2 ** level;
-  const x = scale * col;
-  const y = -(scale * row);
-  const prefix = level === 0 ? '' : `${'z'.repeat(level)}_`;
-  return `${source.prefix}/${x >> 5}_${y >> 5}/${prefix}${x}_${y}.${source.format}`;
-}
-
 function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, captionText, noteText }: Parts): void {
   const frameWidth = Number(figure.dataset.width) || 1152;
   const frameHeight = Number(figure.dataset.height) || 576;
-  let source: TileSource | null = null;
-  try {
-    source = figure.dataset.tiles ? (JSON.parse(figure.dataset.tiles) as TileSource) : null;
-  } catch {
-    source = null;
-  }
-  const context = source ? canvas.getContext('2d') : null;
-  if (!context) source = null;
+  let source = readTileSource(figure);
+  // With tiles, the map counts as live once the first tile has arrived, and as down
+  // when the first several all fail.
+  const painter: TilePainter | null = source
+    ? createTilePainter(canvas, source, {
+        onTile: (ok) => {
+          if (ok && !live) setLive();
+          else if (!ok && !live && painter && painter.ready === 0 && painter.failed >= 6) setOffline();
+        },
+        onChange: () => requestDraw(),
+      })
+    : null;
+  if (!painter) source = null;
   figure.classList.add(source ? 'draws-tiles' : 'shows-frame');
 
   // ---- The view: how much the map is enlarged and where it sits in the card.
@@ -175,143 +150,16 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
   }
 
   // ---- Drawing the tiles.
-  const tiles = new Map<string, Tile>();
-  let pass = 0;
   let drawQueued = false;
-  let loading = 0;
-  const waiting: (() => void)[] = [];
-  let tilesReady = 0;
-  let tilesFailed = 0;
-  /** Added to tile addresses when they are fetched again, so the browser really asks. */
-  let stamp = '';
-  /** The tiles the last drawing pass wanted, for the periodic refresh. */
-  let onScreen: { key: string; url: string }[] = [];
-
-  function load(tile: Tile, url: string): void {
-    const start = () => {
-      loading++;
-      const image = new Image();
-      image.decoding = 'async';
-      const done = (ok: boolean) => {
-        loading--;
-        if (ok) {
-          tile.image = image;
-          if (tile.state !== 'ready') tilesReady++;
-          tile.state = 'ready';
-          onTileReady();
-          requestDraw();
-        } else if (tile.state === 'loading') {
-          tile.state = 'failed';
-          tilesFailed++;
-          onTileFailed();
-        }
-        waiting.shift()?.();
-      };
-      image.onload = () => done(true);
-      image.onerror = () => done(false);
-      image.src = stamp ? `${url}?t=${stamp}` : url;
-    };
-    if (loading < MAX_LOADS) start();
-    else waiting.push(start);
-  }
-
-  function tileAt(zoomLevel: number, col: number, row: number, wanted: boolean): Tile | undefined {
-    const key = `${zoomLevel}:${col}:${row}`;
-    let tile = tiles.get(key);
-    if (!tile && wanted && source) {
-      tile = { image: new Image(), state: 'loading', used: pass };
-      tiles.set(key, tile);
-      load(tile, source.base + tileName(source, zoomLevel, col, row));
-    }
-    if (tile) tile.used = pass;
-    return tile;
-  }
-
   function requestDraw(): void {
-    if (!source || drawQueued) return;
+    if (!painter || drawQueued) return;
     drawQueued = true;
-    requestAnimationFrame(draw);
-  }
-
-  function draw(): void {
-    drawQueued = false;
-    if (!source || !context || !cardWidth) return;
-    pass++;
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
-    const pixelWidth = Math.round(cardWidth * ratio);
-    const pixelHeight = Math.round(cardHeight * ratio);
-    if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
-      canvas.width = pixelWidth;
-      canvas.height = pixelHeight;
-    }
-    context.setTransform(1, 0, 0, 1, 0, 0);
-    context.clearRect(0, 0, pixelWidth, pixelHeight);
-
-    const w = source.world;
-    // Card pixels per map pixel (map pixels are counted at zoom level 0).
-    const scaleX = mapWidth() / w.width;
-    const scaleY = mapHeight() / w.height;
-    // The level whose tiles are at least as sharp as the screen needs.
-    const level = Math.min(source.nativeZoom, Math.max(0, Math.ceil(Math.log2(scaleX * ratio) - 0.25)));
-    const span = source.tileSize / 2 ** level;
-    // Past the tiles' real size, show crisp blocks rather than a blur.
-    context.imageSmoothingEnabled = scaleX * ratio <= 2 ** level * 1.01;
-
-    // The part of the world on screen, in map pixels.
-    const x0 = Math.max(w.x, w.x - left / scaleX);
-    const x1 = Math.min(w.x + w.width, w.x + (cardWidth - left) / scaleX);
-    const y0 = Math.max(w.y, w.y - top / scaleY);
-    const y1 = Math.min(w.y + w.height, w.y + (cardHeight - top) / scaleY);
-    const edge = 1e-7;
-    const firstCol = Math.floor(x0 / span);
-    const lastCol = Math.floor((x1 - edge) / span);
-    const firstRow = Math.floor(y0 / span);
-    const lastRow = Math.floor((y1 - edge) / span);
-
-    // Screen positions are rounded to whole pixels, and neighbours share the rounded
-    // edge, so there is never a gap or an overlap between two tiles.
-    const screenX = (mx: number) => Math.round((left + (mx - w.x) * scaleX) * ratio);
-    const screenY = (my: number) => Math.round((top + (my - w.y) * scaleY) * ratio);
-
-    onScreen = [];
-    context.save();
-    context.beginPath();
-    context.rect(screenX(w.x), screenY(w.y), screenX(w.x + w.width) - screenX(w.x), screenY(w.y + w.height) - screenY(w.y));
-    context.clip();
-    for (let row = firstRow; row <= lastRow; row++) {
-      for (let col = firstCol; col <= lastCol; col++) {
-        const dx = screenX(col * span);
-        const dy = screenY(row * span);
-        const dw = screenX((col + 1) * span) - dx;
-        const dh = screenY((row + 1) * span) - dy;
-        const tile = tileAt(level, col, row, true);
-        onScreen.push({ key: `${level}:${col}:${row}`, url: source.base + tileName(source, level, col, row) });
-        if (tile?.state === 'ready') {
-          context.drawImage(tile.image, dx, dy, dw, dh);
-          continue;
-        }
-        // Not here yet (or missing): show the same place from a coarser tile.
-        for (let up = 1; up <= level; up++) {
-          const parts = 2 ** up;
-          const parentCol = Math.floor(col / parts);
-          const parentRow = Math.floor(row / parts);
-          // Coarser tiles are only fetched once the visitor zooms in; in the full view
-          // the snapshot underneath already fills the gaps while tiles arrive.
-          const parent = tileAt(level - up, parentCol, parentRow, zoom > 1.001 && up <= 2);
-          if (parent?.state !== 'ready') continue;
-          const size = parent.image.naturalWidth / parts;
-          context.drawImage(parent.image, (col - parentCol * parts) * size, (row - parentRow * parts) * size, size, size, dx, dy, dw, dh);
-          break;
-        }
-      }
-    }
-    context.restore();
-
-    // Forget tiles that have not been used for a while.
-    if (tiles.size > MAX_TILES_KEPT) {
-      const old = [...tiles.entries()].filter(([, tile]) => tile.state !== 'loading').sort((a, b) => a[1].used - b[1].used);
-      for (const [key] of old.slice(0, tiles.size - MAX_TILES_KEPT)) tiles.delete(key);
-    }
+    requestAnimationFrame(() => {
+      drawQueued = false;
+      // Coarser tiles are only fetched once the visitor zooms in; in the full view the
+      // snapshot underneath already fills the gaps while tiles arrive.
+      painter.paint({ width: cardWidth, height: cardHeight, left, top, mapWidth: mapWidth(), mapHeight: mapHeight(), coarser: zoom > 1.001 });
+    });
   }
 
   // ---- Mouse, touch and keyboard.
@@ -486,19 +334,9 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
     showCaption();
   }
 
-  // With tiles, the map counts as live once the first tile has arrived, and as down
-  // when the first several all fail.
-  function onTileReady(): void {
-    if (!live) setLive();
-  }
-  function onTileFailed(): void {
-    if (!live && tilesReady === 0 && tilesFailed >= 6) setOffline();
-  }
-
   function startTiles(): void {
     // A retry after the map was down: forget the failures and ask again.
-    for (const [key, tile] of tiles) if (tile.state === 'failed') tiles.delete(key);
-    tilesFailed = 0;
+    painter?.retryFailed();
     liveTimer = window.setTimeout(setOffline, LIVE_TIMEOUT);
     requestDraw();
   }
@@ -537,12 +375,8 @@ function setup({ figure, card, world, frame, snapshot, canvas, pad, caption, cap
   // every few minutes, so the picture follows the server.
   let inView = false;
   window.setInterval(() => {
-    if (!source || !live || !inView || document.hidden) return;
-    stamp = String(Math.floor(Date.now() / REFRESH_EVERY));
-    for (const { key, url } of onScreen) {
-      const tile = tiles.get(key);
-      if (tile && tile.state !== 'loading') load(tile, url);
-    }
+    if (!painter || !live || !inView || document.hidden) return;
+    painter.refresh(String(Math.floor(Date.now() / REFRESH_EVERY)));
   }, REFRESH_EVERY);
 
   const start = () => {
