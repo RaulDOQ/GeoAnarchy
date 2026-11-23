@@ -1,0 +1,120 @@
+---
+// "Vanilla": the server plays like the Minecraft people already know. On the left, the
+// things other servers add and this one does not (tanks, planes, guns), crossed out
+// one after the other as the section comes into view; on the right, what that means
+// and what the server's plugins are for.
+import SectionHead from './SectionHead.astro';
+import { pt } from '../../content/pt';
+
+const c = pt.vanilla;
+---
+
+<section class="stage" id="vanilla">
+  <div class="container">
+    <SectionHead num="04" chapter={c.chapter} title={c.title} lead={c.lead} />
+
+    <div class="split">
+      <div class="slab" data-in="settle" style="--d: 100ms">
+        <p class="mono-label">{c.goneLabel}</p>
+        <ul class="gone">
+          {
+            c.gone.map((item, i) => (
+              <li style={`--i: ${i}`}>
+                <s>{item}</s>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="note">{c.goneNote}</p>
+      </div>
+
+      <div class="points">
+        {
+          c.points.map((point, i) => (
+            <div class="point" data-in="settle" style={`--d: ${170 + i * 70}ms`}>
+              <p class="mono-label">{point.label}</p>
+              <p class="body">{point.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .split {
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, .82fr);
+    gap: 1rem;
+    display: grid;
+  }
+  /* The two text cards share the height of the list beside them. */
+  .points {
+    grid-auto-rows: 1fr;
+    gap: 1rem;
+    display: grid;
+  }
+  .slab {
+    background: var(--grad-surface);
+    box-shadow: var(--edge), var(--shadow-card);
+    border-radius: var(--radius-xl);
+    align-content: space-between;
+    gap: 1.6rem;
+    padding: 1.8rem 2rem 1.9rem;
+    display: grid;
+  }
+  .gone {
+    gap: .15em;
+    font-size: clamp(2rem, 1.15rem + 2.7vw, 3.25rem);
+    list-style: none;
+    display: grid;
+  }
+  .gone li {
+    letter-spacing: -.038em;
+    font-weight: 600;
+    line-height: 1.12;
+  }
+  /* Each word is struck out by a line drawn across it, a little after the one above. */
+  s {
+    color: var(--color-text-faint);
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+  }
+  s:after {
+    content: "";
+    background: var(--color-ink);
+    border-radius: 1em;
+    height: .085em;
+    transition: transform .7s var(--ease-out);
+    transition-delay: calc(var(--d, 0ms) + 380ms + var(--i, 0) * 150ms);
+    position: absolute;
+    top: 54%;
+    left: -.14em;
+    right: -.14em;
+    transform-origin: 0 50%;
+  }
+  :global(.js) .slab:not(:global(.is-in)) s:after {
+    transform: scaleX(0);
+  }
+  .note {
+    max-width: 26rem;
+    color: var(--color-text-muted);
+    letter-spacing: -.008em;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  @media (width <= 900px) {
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .points {
+      grid-auto-rows: auto;
+    }
+  }
+  @media (width <= 560px) {
+    .slab {
+      padding: 1.4rem 1.3rem 1.5rem;
+    }
+  }
+</style>

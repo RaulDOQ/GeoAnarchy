@@ -101,23 +101,6 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
     gap: 1rem;
     display: grid;
   }
-  .point {
-    background: var(--grad-surface);
-    box-shadow: var(--edge), var(--shadow-card);
-    border-radius: var(--radius-xl);
-    gap: .8rem;
-    padding: 1.6rem 1.6rem 1.7rem;
-    display: grid;
-  }
-  .point .mono-label {
-    color: var(--color-blue-strong);
-  }
-  .body {
-    color: var(--color-text-soft);
-    letter-spacing: -.01em;
-    font-size: 1.0625rem;
-    line-height: 1.55;
-  }
   /* Teleport commands, crossed out. */
   .commands {
     flex-wrap: wrap;
@@ -251,12 +234,6 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
     }
   }
   @media (width <= 560px) {
-    .point {
-      padding: 1.3rem;
-    }
-    .body {
-      font-size: 1rem;
-    }
     .tag {
       font-size: .5625rem;
       padding: .3rem .4rem;

@@ -120,6 +120,26 @@ export const pt = {
     commands: ['/tpa', '/home', '/warp'],
   },
 
+  vanilla: {
+    chapter: 'Vanilla',
+    title: ['Servidor sem', '“Modern slop”.'],
+    lead: 'No GeoAnarchy, a experiência é vanilla: o Minecraft que você já conhece.',
+    // The things other servers add and this one does not, shown crossed out.
+    goneLabel: 'Não existe aqui',
+    gone: ['Tanques', 'Aviões', 'Armas de fogo'],
+    goneNote: 'Coisas assim estragam a experiência do Minecraft, então ficam de fora.',
+    points: [
+      {
+        label: 'Vanilla',
+        body: 'A jogabilidade é a que você já está acostumado. Quem conhece o Minecraft já sabe jogar aqui.',
+      },
+      {
+        label: 'Plugins',
+        body: 'Usamos alguns plugins que melhoram a jogabilidade e acrescentam novidades, mas nada que fuja muito do que você já conhece.',
+      },
+    ],
+  },
+
   join: {
     chapter: 'Como entrar',
     title: ['Quer participar?'],
