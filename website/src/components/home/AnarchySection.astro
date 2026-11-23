@@ -73,7 +73,7 @@ for (let y = 0; y < ROWS; y++) {
     display: grid;
   }
   .path {
-    border-radius: var(--radius-panel);
+    border-radius: var(--radius-xl);
     min-height: 24rem;
     display: grid;
     position: relative;
@@ -81,13 +81,14 @@ for (let y = 0; y < ROWS; y++) {
   }
   .chaos {
     color: #fff;
-    background: var(--ink);
+    background: linear-gradient(180deg, #10263f, var(--color-ink));
+    box-shadow: var(--shadow-lift);
   }
   .order {
-    border: 1px solid var(--ink);
-    background: var(--paper);
+    background: var(--grad-surface);
+    box-shadow: var(--edge), var(--shadow-card);
   }
-  /* The blocks fill the top of the panel and fade out behind the words. */
+  /* The blocks fill the top of the panel and fade out before the words. */
   .blocks {
     width: 100%;
     height: 54%;
@@ -98,19 +99,19 @@ for (let y = 0; y < ROWS; y++) {
     mask-image: linear-gradient(#000 50%, #0000 96%);
   }
   .chaos .a {
-    fill: var(--green-bright);
+    fill: var(--color-land-bright);
   }
   .chaos .b {
-    fill: var(--blue);
+    fill: var(--color-blue-bright);
   }
   .chaos .c {
     fill: #ffffff;
   }
   .order .a {
-    fill: var(--green);
+    fill: var(--color-green);
   }
   .order .b {
-    fill: var(--blue);
+    fill: var(--color-blue);
   }
   .words {
     align-self: end;
@@ -130,10 +131,10 @@ for (let y = 0; y < ROWS; y++) {
     font-weight: 600;
   }
   .chaos .words p {
-    color: var(--green-bright);
+    color: var(--color-land-bright);
   }
   .order .words p {
-    color: var(--blue-strong);
+    color: var(--color-blue-strong);
   }
   @media (width <= 800px) {
     .paths {

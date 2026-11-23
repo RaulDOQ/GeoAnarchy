@@ -23,11 +23,12 @@ Run these inside `website/` (Node 22.12 or newer):
 |---|---|
 | `src/config/site.ts` | Server addresses, the map address and its parameters, the Discord invite, world size. Change a value here and every page follows. |
 | `src/content/pt.ts` | Every text on the site. |
-| `src/styles/tokens.css` | Colours, type, spacing and motion values. The look is flat: white paper, ink lines, one blue and one green. |
-| `src/components/Logo.astro` | The logo. It holds a stand-in mark until the real logo file is added. |
+| `src/styles/tokens.css` | Colours, type, spacing and motion values (white, blue and green theme). |
+| `src/components/Logo.astro` | The logo, shown in the header, the footer and the closing section. |
 | `src/components/home/` | The page sections: hero and live map window, anarchy, the block map sheet, realism and its journey map, how to join, questions, closing. |
 | `src/scripts/` | Browser scripts: live map loading and pointer guard, window tilt, scroll entrances, copy buttons. |
 | `src/assets/earth.png` | The block world map (144 x 72 pixels, one per 2.5 degrees), shown enlarged with sharp edges. |
+| `src/assets/logo.webp`, `logo-small.webp`, `wordmark.webp` | The logo artwork, trimmed: the full logo in two sizes and the name alone. `public/favicon.png` and `public/apple-touch-icon.png` come from the same artwork. |
 | `scripts/make-pixel-earth.mjs` | Draws `earth.png` from Natural Earth land data. Its header explains the options. |
 
 ## The block map
@@ -42,7 +43,7 @@ green and the polar ice white. The result of that test is saved in
 | `npm run make:earth` | Repaints `src/assets/earth.png` from the saved mask |
 | `npm run make:earth -- --remask` | Works the land mask out again first (about two minutes) |
 
-The sea colour is not in the image: it is `--ocean` in `src/styles/tokens.css`.
+The sea colour is not in the image: it is `--color-ocean` in `src/styles/tokens.css`.
 
 ## The live map
 

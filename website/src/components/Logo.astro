@@ -1,20 +1,25 @@
 ---
-// The GeoAnarchy mark. This is a stand-in until the real logo file arrives: replace
-// the SVG below with it (or an <img> pointing at a file in public/) and every place
-// that shows the logo follows.
+// The GeoAnarchy logo (the block Earth with the name). Small sizes use a small file.
+import large from '../assets/logo.webp';
+import small from '../assets/logo-small.webp';
+
 interface Props {
-  size?: number;
+  /** Height in CSS pixels; the width follows the artwork. */
+  height?: number;
+  /** Leave empty when the name is written next to the logo. */
+  alt?: string;
 }
 
-const { size = 28 } = Astro.props;
+const { height = 40, alt = '' } = Astro.props;
+const file = height > 56 ? large : small;
+const width = Math.round((height * file.width) / file.height);
 ---
 
-<svg class="logo" width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-  <rect width="32" height="32" rx="6" fill="#1766e0"></rect>
-  <g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round">
-    <circle cx="16" cy="16" r="8.6"></circle>
-    <path d="M7.4 16h17.2"></path>
-    <path d="M16 7.4c3.4 2.7 3.4 14.5 0 17.2"></path>
-    <path d="M16 7.4c-3.4 2.7-3.4 14.5 0 17.2"></path>
-  </g>
-</svg>
+<img class="logo" src={file.src} width={width} height={height} alt={alt} decoding="async" />
+
+<style>
+  .logo {
+    flex: none;
+    max-width: none;
+  }
+</style>

@@ -69,45 +69,54 @@ const at = (x: number, y: number) => `left: ${((x / crop.w) * 100).toFixed(2)}%;
   .split {
     grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
     align-items: start;
-    gap: 4rem;
+    gap: 1rem;
     display: grid;
   }
   .points {
-    border-top: 1px solid var(--line-strong);
+    gap: 1rem;
+    display: grid;
   }
   .point {
-    border-bottom: 1px solid var(--line-strong);
-    gap: .7rem;
-    padding: 1.5rem 0 1.6rem;
+    background: var(--grad-surface);
+    box-shadow: var(--edge), var(--shadow-card);
+    border-radius: var(--radius-xl);
+    gap: .8rem;
+    padding: 1.6rem 1.6rem 1.7rem;
     display: grid;
+  }
+  .point .mono-label {
+    color: var(--color-blue-strong);
   }
   .body {
     color: var(--color-text-soft);
     letter-spacing: -.01em;
-    font-size: 1.125rem;
+    font-size: 1.0625rem;
     line-height: 1.55;
   }
   /* Teleport commands, crossed out. */
   .commands {
     flex-wrap: wrap;
     align-items: center;
-    gap: .5rem .6rem;
-    padding-top: 1.4rem;
+    gap: .5rem;
+    padding: .5rem .35rem 0;
     display: flex;
   }
   .commands .mono-label {
-    margin-right: .4rem;
+    margin-right: .35rem;
   }
   s {
-    border: 1px solid var(--line-strong);
-    border-radius: 4px;
+    box-shadow: var(--edge);
     color: var(--color-text-muted);
-    font: 500 .875rem/1 var(--font-mono);
-    padding: .4rem .5rem;
-    text-decoration: line-through var(--ink) 1.5px;
+    font: 500 .8125rem/1 var(--font-mono);
+    background: var(--color-surface-2);
+    border-radius: 999px;
+    padding: .45rem .7rem;
+    text-decoration: line-through var(--color-text) 1.5px;
   }
   .journey {
-    border: 1px solid var(--ink);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-window);
+    overflow: hidden;
   }
   .route {
     width: 100%;
@@ -120,7 +129,7 @@ const at = (x: number, y: number) => `left: ${((x / crop.w) * 100).toFixed(2)}%;
     stroke-linejoin: round;
   }
   .under {
-    stroke: var(--ink);
+    stroke: var(--color-ink);
     stroke-opacity: .45;
     stroke-width: .62px;
   }
@@ -131,25 +140,26 @@ const at = (x: number, y: number) => `left: ${((x / crop.w) * 100).toFixed(2)}%;
   }
   .stop {
     fill: #fff;
-    stroke: var(--ink);
+    stroke: var(--color-ink);
     stroke-width: .12px;
   }
   .end {
     fill: #fff;
-    stroke: var(--ink);
+    stroke: var(--color-ink);
     stroke-width: .2px;
   }
   .tag {
-    color: var(--ink);
+    color: var(--color-text);
     font: 500 .6875rem/1 var(--font-mono);
     letter-spacing: .06em;
     text-transform: uppercase;
     white-space: nowrap;
     background: #fff;
-    border: 1px solid var(--ink);
-    padding: .35rem .45rem;
+    border-radius: .4rem;
+    padding: .4rem .55rem;
     position: absolute;
     transform: translate(-50%, -50%);
+    box-shadow: 0 6px 14px -6px #0a1b2e80;
   }
   .tag.right {
     transform: translate(-100%, -50%);
@@ -159,7 +169,7 @@ const at = (x: number, y: number) => `left: ${((x / crop.w) * 100).toFixed(2)}%;
   }
   .tag.strong {
     color: #fff;
-    background: var(--ink);
+    background: var(--color-ink);
   }
   @media (prefers-reduced-motion: no-preference) {
     .over {
@@ -174,16 +184,21 @@ const at = (x: number, y: number) => `left: ${((x / crop.w) * 100).toFixed(2)}%;
   @media (width <= 900px) {
     .split {
       grid-template-columns: minmax(0, 1fr);
-      gap: 2.5rem;
+    }
+    .journey {
+      margin-top: .75rem;
     }
   }
   @media (width <= 560px) {
+    .point {
+      padding: 1.3rem;
+    }
     .body {
-      font-size: 1.0625rem;
+      font-size: 1rem;
     }
     .tag {
       font-size: .5625rem;
-      padding: .28rem .34rem;
+      padding: .3rem .4rem;
     }
   }
 </style>

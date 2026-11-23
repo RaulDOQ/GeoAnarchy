@@ -34,7 +34,9 @@ export const pt = {
   },
 
   hero: {
-    facts: ['Minecraft survival', 'Java e Bedrock', `Terra ${w.scale}`],
+    announceTag: 'Ao vivo',
+    announce: 'Veja o mapa em tempo real',
+    facts: ['Minecraft survival', 'Java e Bedrock', `Terra em escala ${w.scale}`],
     title: ['Geopolítica', 'Sem regras'],
     lead: 'Um servidor de Minecraft brasileiro que se passa no mapa real da Terra. Crie sua nação, forme alianças, declare guerras, conquiste territórios. No GeoAnarchy, quem controla são os jogadores.',
     ctaCopy: 'Copiar IP',
@@ -44,7 +46,7 @@ export const pt = {
 
   liveMap: {
     label: 'Mapa ao vivo do servidor GeoAnarchy',
-    caption: 'Ao vivo: o mapa real do servidor',
+    caption: 'Ao vivo: este é o mapa real do servidor',
     live: 'Ao vivo',
     loading: 'Carregando o mapa…',
     activate: 'Clique para explorar',

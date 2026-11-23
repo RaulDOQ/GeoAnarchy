@@ -12,7 +12,7 @@ const c = pt.common;
 <header class="nav" data-site-nav>
   <div class="nav-inner">
     <a class="brand" href="#inicio" aria-label={site.name}>
-      <span class="brand-mark"><Logo size={28} /></span>
+      <span class="brand-mark"><Logo height={42} /></span>
       <span>{site.name}</span>
     </a>
     <nav class="tabs" aria-label={c.navLabel} data-nav-tabs>
@@ -157,33 +157,37 @@ const c = pt.common;
     -webkit-backdrop-filter: blur(18px) saturate(160%);
     backdrop-filter: blur(18px) saturate(160%);
     pointer-events: auto;
-    background: #ffffffd1;
-    border: 1px solid var(--line-strong);
-    border-radius: .7rem;
+    background: #ffffffc7;
+    border-radius: .95rem;
     max-width: 75rem;
     height: 3.25rem;
     margin: 0 auto;
-    padding: 0 .5rem 0 .75rem;
-    transition: background-color .3s ease-out, border-color .3s ease-out;
+    padding: 0 .5rem 0 .55rem;
+    transition: background-color .3s ease-out, box-shadow .3s ease-out;
     display: flex;
     position: relative;
+    box-shadow:
+      inset 0 0 0 1px #0a1b2e14,
+      0 10px 30px -18px #0a1b2e40;
   }
   .nav.is-scrolled .nav-inner {
-    background: #fffffff2;
-    border-color: var(--ink);
+    background: #ffffffeb;
+    box-shadow:
+      inset 0 0 0 1px #0a1b2e1a,
+      0 16px 36px -18px #0a1b2e5c;
   }
   .nav-control {
     height: var(--ctl-h);
-    border-radius: var(--radius-control);
+    border-radius: .55rem;
     align-items: center;
-    transition: background-color .2s, border-color .2s, color .2s, transform .16s var(--ease-out);
+    transition: background-color .2s, box-shadow .2s, color .2s, transform .16s var(--ease-out);
     display: inline-flex;
   }
   .brand {
     letter-spacing: -.04em;
     white-space: nowrap;
     align-items: center;
-    gap: .6rem;
+    gap: .5rem;
     font-size: 1.125rem;
     font-weight: 700;
     display: inline-flex;
@@ -193,14 +197,14 @@ const c = pt.common;
     display: grid;
   }
   .brand:hover .brand-mark {
-    animation: globe-turn 1s var(--spring-smooth);
+    animation: logo-nod .9s var(--spring-smooth);
   }
-  @keyframes globe-turn {
+  @keyframes logo-nod {
     35% {
-      transform: rotate(-16deg) scale(1.04);
+      transform: rotate(-7deg) scale(1.06);
     }
     70% {
-      transform: rotate(8deg);
+      transform: rotate(4deg);
     }
   }
   .tabs {
@@ -218,16 +222,17 @@ const c = pt.common;
     color: var(--color-text-muted);
     white-space: nowrap;
     transition: color .2s;
-    border-radius: var(--radius-control);
+    border-radius: .55rem;
     align-items: center;
-    padding: 0 .75rem;
+    padding: 0 .8rem;
     font-size: .875rem;
     font-weight: 500;
     display: flex;
     position: relative;
   }
   .tab:hover,
-  .tab:focus-visible {
+  .tab:focus-visible,
+  .tab[aria-current] {
     color: var(--color-text);
   }
   .tab-pill,
@@ -238,21 +243,22 @@ const c = pt.common;
       transform .5s var(--spring-smooth),
       width .5s var(--spring-smooth),
       opacity .18s;
-    border-radius: var(--radius-control);
+    border-radius: .55rem;
     position: absolute;
     top: 0;
     left: 0;
   }
   .tab-pill {
     z-index: -1;
-    background: var(--blue-soft);
-  }
-  .tab[aria-current] {
-    color: var(--blue-strong);
+    background: linear-gradient(#ffffff, #f1f6fb);
+    box-shadow:
+      inset 0 0 0 1px #0a1b2e1c,
+      0 1px 2px #0a1b2e14,
+      0 4px 10px -6px #0a1b2e40;
   }
   .tab-hover {
     z-index: -2;
-    background: #0b1c300d;
+    background: #0a1b2e0b;
   }
   .tab-pill.on,
   .tab-hover.on {
@@ -276,19 +282,23 @@ const c = pt.common;
     transition: color .2s;
   }
   .discord:hover {
-    color: var(--blue-strong);
+    color: var(--color-blue-strong);
   }
   .nav-cta {
     color: #fff;
     white-space: nowrap;
-    background: var(--ink);
+    background: linear-gradient(#17304d, #0a1b2e);
     gap: .5rem;
     padding: 0 .7rem 0 .85rem;
     font-size: .875rem;
     font-weight: 600;
+    box-shadow:
+      inset 0 1px #ffffff2e,
+      0 0 0 1px #0a1b2e,
+      0 4px 10px -4px #0a1b2e80;
   }
   .nav-cta:hover {
-    background: #1b3350;
+    background: linear-gradient(#1d3b5e, #0f2338);
   }
   .nav-cta:active {
     transform: scale(.97);
@@ -313,7 +323,7 @@ const c = pt.common;
     width: 2.25rem;
     padding: 0;
     list-style: none;
-    border: 1px solid var(--line-strong);
+    box-shadow: inset 0 0 0 1px #0a1b2e21;
   }
   .mobile-menu summary::-webkit-details-marker {
     display: none;
@@ -334,17 +344,17 @@ const c = pt.common;
   .mobile-menu nav {
     transform-origin: top;
     animation: pop-in .32s var(--spring-snappy);
-    background: var(--paper);
-    border: 1px solid var(--ink);
-    border-radius: .7rem;
+    background: #fffffffa;
+    border-radius: .95rem;
     flex-direction: column;
     gap: 2px;
     padding: .4rem;
     display: flex;
     position: absolute;
     top: calc(100% + .5rem);
-    left: -1px;
-    right: -1px;
+    left: 0;
+    right: 0;
+    box-shadow: inset 0 0 0 1px #0a1b2e1a, 0 30px 60px -24px #0a1b2e73;
   }
   @keyframes pop-in {
     0% {
@@ -365,16 +375,16 @@ const c = pt.common;
   }
   .mobile-menu nav > a {
     color: var(--color-text-soft);
-    border-radius: var(--radius-control);
+    border-radius: .65rem;
     padding: .8rem .9rem;
     font-size: .95rem;
     font-weight: 500;
   }
   .mobile-menu nav > a:active {
-    background: var(--paper-tint);
+    background: var(--color-surface-2);
   }
   .mobile-actions {
-    border-top: 1px solid var(--line);
+    border-top: 1px solid var(--color-hairline);
     gap: .4rem;
     margin-top: .35rem;
     padding-top: .45rem;
@@ -383,8 +393,8 @@ const c = pt.common;
   .mobile-actions a {
     text-align: center;
     color: var(--color-text);
-    background: var(--paper-tint);
-    border-radius: var(--radius-control);
+    background: var(--color-surface-2);
+    border-radius: .65rem;
     flex: 1;
     padding: .75rem .9rem;
     font-size: .9rem;

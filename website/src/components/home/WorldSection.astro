@@ -25,6 +25,7 @@ const c = pt.world;
         <span class="axis-name">Z</span>
         {c.axisZ.map((value) => <span>{value}</span>)}
       </div>
+      <div class="sheet-bg card" aria-hidden="true"></div>
       <div class="map">
         <PixelEarth label={c.figureLabel} id="seams-world">
           <span class="cross h" aria-hidden="true"></span>
@@ -51,14 +52,24 @@ const c = pt.world;
   :global(.stage-side) .learn {
     margin-top: 1.1rem;
   }
-  /* The sheet: X along the top, Z down the left side, the map, then the legend. */
+  /* X along the top, Z down the left side of the map, and one card behind the map and
+     the facts under it. */
   .sheet {
-    grid-template: "corner x" auto "z map" auto "legend legend" auto / 1.6rem minmax(0, 1fr);
+    grid-template: "corner x" auto "z map" auto ". facts" auto / 1.6rem minmax(0, 1fr);
     display: grid;
+  }
+  .sheet-bg {
+    grid-area: 2 / 2 / 4 / 3;
+  }
+  .map {
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    grid-area: map;
+    position: relative;
+    overflow: hidden;
   }
   .axis-x,
   .axis-z {
-    color: var(--color-text-muted);
+    color: var(--color-text-faint);
     font: 500 .6875rem/1 var(--font-mono);
     letter-spacing: .02em;
     justify-content: space-between;
@@ -67,18 +78,17 @@ const c = pt.world;
   }
   .axis-x {
     grid-area: x;
-    padding-bottom: .55rem;
+    padding: 0 .9rem .6rem;
   }
   .axis-z {
     grid-area: z;
     writing-mode: vertical-rl;
-    padding-right: .55rem;
+    padding: .9rem 0 .9rem .6rem;
     transform: rotate(180deg);
     flex-direction: row-reverse;
   }
   .axis-name {
-    color: var(--blue);
-    font-weight: 500;
+    color: var(--color-blue-strong);
     position: absolute;
   }
   .axis-x .axis-name {
@@ -101,12 +111,8 @@ const c = pt.world;
   .axis-x span:nth-child(6) {
     text-align: right;
   }
-  .map {
-    border: 1px solid var(--ink);
-    grid-area: map;
-  }
   .cross {
-    background: #ffffff80;
+    background: #ffffff73;
     position: absolute;
   }
   .cross.h {
@@ -122,64 +128,72 @@ const c = pt.world;
     left: 50%;
   }
   .tag {
-    color: var(--ink);
+    color: var(--color-text);
     font: 500 .6875rem/1 var(--font-mono);
     letter-spacing: .06em;
     text-transform: uppercase;
     white-space: nowrap;
     background: #fff;
-    border: 1px solid var(--ink);
-    padding: .4rem .5rem;
+    border-radius: .4rem;
+    padding: .4rem .55rem;
     position: absolute;
+    box-shadow: 0 6px 14px -6px #0a1b2e80;
   }
   .origin {
     top: calc(50% + .5rem);
     left: calc(50% + .5rem);
   }
   .title {
-    bottom: .75rem;
-    left: .75rem;
+    bottom: .8rem;
+    left: .8rem;
   }
   figcaption {
-    border-bottom: 1px solid var(--line-strong);
-    grid-area: legend;
-    grid-template-columns: 1.3fr 1fr 1fr;
-    margin-left: 1.6rem;
+    grid-area: facts;
+    grid-template-columns: 1.35fr 1fr 1fr;
     display: grid;
+    position: relative;
   }
   figcaption p {
-    gap: .45rem;
-    padding: 1.4rem 1.5rem 1.4rem 0;
+    gap: .7rem;
+    padding: 1.9rem 2rem 2rem;
     display: grid;
   }
-  figcaption p + p {
-    border-left: 1px solid var(--line-strong);
-    padding-left: 1.5rem;
-  }
   figcaption strong {
-    font: 500 clamp(1.25rem, .9rem + 1vw, 1.75rem)/1.1 var(--font-mono);
-    letter-spacing: -.04em;
+    font: 500 clamp(1.5rem, .95rem + 1.5vw, 2.25rem)/1.05 var(--font-mono);
+    letter-spacing: -.045em;
+    color: #0000;
     white-space: nowrap;
+    background: var(--grad-earth);
+    -webkit-background-clip: text;
+    background-clip: text;
+    padding-bottom: .08em;
   }
   figcaption span {
     color: var(--color-text-muted);
     font-size: .9375rem;
-    line-height: 1.4;
+    line-height: 1.45;
   }
   @media (width <= 800px) {
     .sheet {
-      grid-template-columns: 1.25rem minmax(0, 1fr);
+      grid-template-columns: 1.2rem minmax(0, 1fr);
     }
     .axis-x,
     .axis-z {
       font-size: .5625rem;
     }
+    .axis-x {
+      padding-inline: .4rem;
+    }
+    .axis-z {
+      padding-block: .4rem;
+      padding-left: .45rem;
+    }
     .axis-x .axis-name {
-      right: calc(100% + .45rem);
+      right: calc(100% + .35rem);
     }
     .tag {
       font-size: .5625rem;
-      padding: .3rem .35rem;
+      padding: .3rem .4rem;
     }
     .origin {
       top: calc(50% + .3rem);
@@ -190,15 +204,10 @@ const c = pt.world;
     }
     figcaption {
       grid-template-columns: 1fr;
-      margin-left: 0;
+      padding-block: .5rem;
     }
     figcaption p {
-      padding: 1.1rem 0;
-    }
-    figcaption p + p {
-      border-top: 1px solid var(--line-strong);
-      border-left: 0;
-      padding-left: 0;
+      padding: 1rem 1.4rem;
     }
   }
 </style>

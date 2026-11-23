@@ -9,30 +9,37 @@ const c = pt.hero;
 ---
 
 <section class="hero-wrap" id="inicio" aria-labelledby="hero-title">
+  <div class="hero-bg" aria-hidden="true"></div>
   <div class="hero container">
-    <div class="hero-copy">
-      <p class="hero-facts mono-label" data-in="dissolve">
-        {c.facts.map((fact, i) => <span>{i > 0 && <i aria-hidden="true">/</i>}{fact}</span>)}
-      </p>
-      <h1 id="hero-title" class="hero-title" data-in="lines" style="--d: 80ms">
-        <span class="line"><span>{c.title[0]}</span></span>
-        <span class="line"><span class="accent">{c.title[1]}</span></span>
-      </h1>
-      <p class="hero-lead" data-in="settle" style="--d: 260ms">{c.lead}</p>
-      <div class="hero-cta" data-in="settle" style="--d: 360ms">
-        <button class="btn-solid ip" type="button" data-copy={site.java.address}>
-          <span class="idle"><Icon name="copy" />{c.ctaCopy}<code>{site.java.address}</code></span>
-          <span class="done" aria-hidden="true"><Icon name="check" />{pt.common.copied}</span>
-        </button>
-        <a class="btn-line" href={site.map.url} target="_blank" rel="noopener">{c.ctaMap}<Icon name="arrowRight" class="arrow" /></a>
-      </div>
+  <div class="hero-copy">
+    <a class="announce" href={site.map.url} target="_blank" rel="noopener" data-in="settle">
+      <span><i></i>{c.announceTag}</span>
+      {c.announce}
+      <Icon name="arrowUpRight" />
+    </a>
+    <h1 id="hero-title" class="hero-title" data-in="lines" style="--d: 80ms">
+      <span class="line"><span class="grad">{c.title[0]}</span></span>
+      <span class="line"><span class="grad-earth">{c.title[1]}</span></span>
+    </h1>
+    <p class="hero-lead" data-in="settle" style="--d: 260ms">{c.lead}</p>
+    <div class="hero-cta" data-in="settle" style="--d: 360ms">
+      <button class="btn-solid ip" type="button" data-copy={site.java.address}>
+        <span class="idle"><Icon name="copy" />{c.ctaCopy}<code>{site.java.address}</code></span>
+        <span class="done" aria-hidden="true"><Icon name="check" />{pt.common.copied}</span>
+      </button>
+      <a class="btn-line" href={site.map.url} target="_blank" rel="noopener">{c.ctaMap}<Icon name="arrowRight" class="arrow" /></a>
     </div>
-    <div class="hero-map" data-in="dissolve" style="--d: 120ms">
-      <LiveMap />
-    </div>
-    <div class="hero-next-wrap">
-      <a class="hero-next" href="#anarquia"><span class="num">01</span>{c.next}<Icon name="arrowDown" /></a>
-    </div>
+    <p class="hero-meta" data-in="dissolve" style="--d: 520ms">
+      {c.facts.map((fact, i) => <span>{fact}{i < c.facts.length - 1 && ' ·'}</span>)}
+    </p>
+  </div>
+  <div class="hero-map" data-in="dissolve" style="--d: 120ms">
+    <div class="hero-light" aria-hidden="true"></div>
+    <LiveMap />
+  </div>
+  <div class="hero-next-wrap">
+    <a class="hero-next" href="#anarquia"><span class="num">01</span>{c.next}<Icon name="arrowDown" /></a>
+  </div>
   </div>
 </section>
 
@@ -50,38 +57,78 @@ const c = pt.hero;
     display: grid;
     position: relative;
   }
+  /* A faint chart grid behind the hero, fading out towards the edges. */
+  .hero-bg {
+    pointer-events: none;
+    background-image: radial-gradient(#0a1b2e1f 1px, #0000 1.2px);
+    background-position: 50% 0;
+    background-size: 26px 26px;
+    position: absolute;
+    inset: -6rem 0 0;
+    -webkit-mask-image: radial-gradient(60rem 34rem at 62% 38%, #000, #0000 78%);
+    mask-image: radial-gradient(60rem 34rem at 62% 38%, #000, #0000 78%);
+  }
   .hero-copy {
     z-index: 2;
     position: relative;
   }
-  .hero-facts {
-    color: var(--color-text-muted);
-    flex-wrap: wrap;
-    gap: .35rem .7rem;
-    font-size: .75rem;
-    display: flex;
-  }
-  .hero-facts span {
-    white-space: nowrap;
-    gap: .7rem;
+  .announce {
+    height: 2rem;
+    box-shadow: var(--edge), 0 2px 6px -3px #0a1b2e2e;
+    color: var(--color-text-soft);
+    background: var(--color-surface);
+    border-radius: 999px;
+    align-items: center;
+    gap: .6rem;
+    padding: 0 .75rem 0 .25rem;
+    font-size: .84375rem;
+    font-weight: 500;
+    transition: background-color .2s, box-shadow .2s;
     display: inline-flex;
   }
-  .hero-facts i {
-    color: var(--blue);
-    font-style: normal;
+  .announce:hover {
+    background: var(--color-surface-2);
+    box-shadow: var(--edge-strong), 0 2px 6px -3px #0a1b2e2e;
+  }
+  .announce > span {
+    color: var(--color-green-strong);
+    background: var(--color-green-soft);
+    border-radius: 999px;
+    align-items: center;
+    gap: .4rem;
+    padding: .25rem .6rem .25rem .5rem;
+    font-size: .75rem;
+    font-weight: 600;
+    display: inline-flex;
+  }
+  .announce > span i {
+    background: var(--color-green);
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+  }
+  .announce :global(svg) {
+    color: var(--color-text-faint);
+    stroke-width: 2.2px;
+    width: .8rem;
+    height: .8rem;
+    transition: transform .4s var(--spring-snappy);
+  }
+  .announce:hover :global(svg) {
+    transform: translate(2px, -2px);
   }
   .hero-title {
-    letter-spacing: -.05em;
-    margin-top: 1.4rem;
-    font-size: clamp(3.3rem, 1.2rem + 4.8vw, 5.1rem);
-    font-weight: 700;
-    line-height: .98;
+    letter-spacing: -.045em;
+    margin-top: 1.75rem;
+    font-size: clamp(3.2rem, 1.3rem + 4.2vw, 4.6rem);
+    font-weight: 600;
+    line-height: 1;
   }
   .hero-lead {
     color: var(--color-text-muted);
     letter-spacing: -.012em;
-    max-width: 32rem;
-    margin-top: 1.6rem;
+    max-width: 31rem;
+    margin-top: 1.5rem;
     font-size: 1.15rem;
     line-height: 1.55;
   }
@@ -92,7 +139,7 @@ const c = pt.hero;
     display: flex;
   }
   .hero-cta > * {
-    min-height: 3rem;
+    min-height: 2.875rem;
   }
   /* The copy button: "Copiar IP geoanarchy.net", swapped for "Copiado" for a moment. */
   .ip {
@@ -103,20 +150,18 @@ const c = pt.hero;
     grid-area: 1 / 1;
     justify-content: center;
     align-items: center;
-    gap: .55rem;
+    gap: .5rem;
     transition: opacity .2s, transform .35s var(--spring-snappy);
     display: inline-flex;
   }
   .ip code {
     font: 500 .8125rem/1 var(--font-mono);
     letter-spacing: -.01em;
-    background: var(--blue-strong);
-    border-radius: .3rem;
+    background: #ffffff29;
+    border-radius: .45rem;
     margin-left: .25rem;
-    padding: .5rem .55rem;
-  }
-  .ip:hover code {
-    background: #0c479f;
+    padding: .45rem .55rem;
+    box-shadow: inset 0 0 0 1px #ffffff2e;
   }
   .ip .done {
     opacity: 0;
@@ -130,9 +175,33 @@ const c = pt.hero;
     opacity: 1;
     transform: none;
   }
+  .hero-meta {
+    color: var(--color-text-faint);
+    font: 500 .75rem/1.5 var(--font-mono);
+    letter-spacing: .02em;
+    flex-wrap: wrap;
+    gap: 0 .5em;
+    margin-top: 1.9rem;
+    display: flex;
+  }
+  .hero-meta span {
+    white-space: nowrap;
+  }
   .hero-map {
     display: grid;
     position: relative;
+  }
+  .hero-light {
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(closest-side at 38% 42%, #1766e02b, #1766e00d 55%, #0000),
+      radial-gradient(closest-side at 72% 68%, #12a05c26, #12a05c0a 55%, #0000);
+    position: absolute;
+    inset: -22% -30% -24% -26%;
+  }
+  .hero-map :global(.livemap) {
+    z-index: 1;
   }
   .hero-next-wrap {
     position: absolute;
@@ -142,21 +211,30 @@ const c = pt.hero;
   }
   .hero-next {
     color: var(--color-text-muted);
-    font: 500 .75rem/1 var(--font-mono);
-    letter-spacing: .09em;
-    text-transform: uppercase;
     white-space: nowrap;
+    border-radius: .6rem;
     align-items: center;
-    gap: .7rem;
-    padding: .5rem .6rem;
-    transition: color .2s;
+    gap: .55rem;
+    padding: .4rem .7rem .4rem .45rem;
+    font-size: .8125rem;
+    font-weight: 500;
+    transition: color .2s, background-color .2s;
     display: inline-flex;
   }
   .hero-next:hover {
-    color: var(--ink);
+    color: var(--color-text);
+    background: #0a1b2e0a;
   }
   .hero-next .num {
-    color: var(--blue);
+    min-width: 1.6rem;
+    height: 1.25rem;
+    box-shadow: inset 0 0 0 1px var(--color-blue-ring);
+    color: var(--color-blue-strong);
+    font: 500 .65625rem/1 var(--font-mono);
+    background: var(--color-blue-soft);
+    border-radius: .35rem;
+    place-items: center;
+    display: inline-grid;
   }
   .hero-next :global(svg) {
     width: .85rem;
@@ -208,10 +286,13 @@ const c = pt.hero;
       padding-block: 1.75rem 3rem;
     }
     .hero-title {
-      font-size: clamp(2.7rem, 1.5rem + 6.4vw, 3.5rem);
+      font-size: clamp(2.5rem, 1.5rem + 6vw, 3.4rem);
     }
     .hero-lead {
       font-size: 1.05rem;
+    }
+    .hero-light {
+      inset: -10% -20%;
     }
   }
 </style>

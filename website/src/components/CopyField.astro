@@ -25,13 +25,13 @@ const c = pt.common;
 
 <style>
   .copy-field {
-    background: var(--paper-tint);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-control);
+    box-shadow: var(--edge);
+    background: var(--color-bg-tint);
+    border-radius: .85rem;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    padding: .7rem .7rem .7rem .95rem;
+    padding: .7rem .7rem .7rem 1rem;
     display: flex;
   }
   .copy-text {
@@ -49,18 +49,19 @@ const c = pt.common;
     cursor: pointer;
     height: 2.25rem;
     color: var(--color-text);
-    background: var(--paper);
-    border: 1px solid var(--line-strong);
-    border-radius: .35rem;
+    background: var(--color-surface);
+    box-shadow: 0 0 0 1px var(--color-hairline-strong), 0 2px 5px -3px #0a1b2e40;
+    border: 0;
+    border-radius: .6rem;
     flex: none;
-    padding: 0 .75rem;
+    padding: 0 .8rem;
     font-size: .8125rem;
     font-weight: 600;
-    transition: border-color .2s, color .2s, transform .16s var(--ease-out);
+    transition: background-color .2s, color .2s, box-shadow .2s, transform .16s var(--ease-out);
     display: inline-grid;
   }
   .copy-btn:hover {
-    border-color: var(--ink);
+    background: var(--color-surface-2);
   }
   .copy-btn:active {
     transform: scale(.96);
@@ -82,8 +83,8 @@ const c = pt.common;
     transform: translateY(5px);
   }
   .copy-btn:global(.is-copied) {
-    border-color: var(--green);
-    color: var(--green-strong);
+    color: var(--color-green-strong);
+    box-shadow: 0 0 0 1px var(--color-green-ring), 0 2px 5px -3px #0a1b2e40;
   }
   .copy-btn:global(.is-copied) .idle {
     opacity: 0;

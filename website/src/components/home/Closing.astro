@@ -1,5 +1,6 @@
 ---
 import Icon from '../Icon.astro';
+import Logo from '../Logo.astro';
 import { site } from '../../config/site';
 import { pt } from '../../content/pt';
 
@@ -7,15 +8,17 @@ const c = pt.closing;
 ---
 
 <section class="closing container">
-  <h2 class="closing-title" data-in="lines">
-    <span class="line"><span>{c.title[0]}</span></span>
-    <span class="line"><span class="accent">{c.title[1]}</span></span>
+  <div class="closing-light" aria-hidden="true"></div>
+  <div class="closing-logo" data-in="settle"><Logo height={190} alt={site.name} /></div>
+  <h2 class="closing-title" data-in="lines" style="--d: 100ms">
+    <span class="line"><span class="grad">{c.title[0]}</span></span>
+    <span class="line"><span class="grad-earth">{c.title[1]}</span></span>
   </h2>
   <div class="closing-cta" data-in="settle" style="--d: 200ms">
     <a class="btn-solid" href="#entrar">{pt.join.chapter}</a>
     <a class="btn-line" href={site.discordUrl} target="_blank" rel="noopener">{pt.common.discord}<Icon name="arrowUpRight" class="arrow" /></a>
   </div>
-  <p class="note mono-label" data-in="dissolve" style="--d: 400ms">{c.note}</p>
+  <p class="note" data-in="dissolve" style="--d: 400ms">{c.note}</p>
 </section>
 
 <style>
@@ -24,10 +27,25 @@ const c = pt.closing;
     padding-block: clamp(8rem, 4rem + 9vw, 13rem) 2rem;
     position: relative;
   }
+  .closing-light {
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(closest-side at 40% 50%, #1766e01f, #0000),
+      radial-gradient(closest-side at 62% 55%, #12a05c1c, #0000);
+    height: 26rem;
+    position: absolute;
+    inset: auto 0 -6rem;
+  }
+  .closing-logo {
+    justify-content: center;
+    margin-bottom: 2.25rem;
+    display: flex;
+  }
   .closing-title {
-    letter-spacing: -.045em;
+    letter-spacing: -.042em;
     font-size: clamp(2.6rem, 1.4rem + 3.4vw, 4rem);
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.04;
   }
   .closing-cta {
@@ -38,9 +56,12 @@ const c = pt.closing;
     display: flex;
   }
   .closing-cta > * {
-    min-height: 3rem;
+    min-height: 2.875rem;
   }
   .note {
+    color: var(--color-text-faint);
+    font: 500 .75rem/1.5 var(--font-mono);
+    letter-spacing: .04em;
     margin-top: 2.75rem;
   }
   @media (width <= 720px) {
