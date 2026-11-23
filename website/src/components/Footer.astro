@@ -11,7 +11,7 @@ const year = new Date().getFullYear();
   <div class="container footer-grid">
     <div class="footer-brand">
       <a class="brand" href="#inicio">
-        <Logo size={34} id="ga-mark-footer" />
+        <Logo size={32} />
         <span>{site.name}</span>
       </a>
       <p>{f.tagline}</p>
@@ -37,9 +37,10 @@ const year = new Date().getFullYear();
 
 <style>
   .footer {
-    background: linear-gradient(#f4f8fc00, var(--color-bg-tint) 9rem);
+    background: var(--paper-tint);
+    border-top: 1px solid var(--ink);
     margin-top: clamp(5rem, 2rem + 6vw, 9rem);
-    padding-block: 6rem 2.5rem;
+    padding-block: 4rem 2.5rem;
     position: relative;
   }
   .footer-grid {
@@ -80,7 +81,7 @@ const year = new Date().getFullYear();
     transition: color .15s;
   }
   .footer-col a:hover {
-    color: var(--color-blue-strong);
+    color: var(--blue-strong);
   }
   .footer-meta {
     justify-content: space-between;
@@ -101,11 +102,9 @@ const year = new Date().getFullYear();
     color: var(--color-text);
   }
   .status i {
-    background: var(--color-green);
-    border-radius: 50%;
+    background: var(--green);
     width: 6px;
     height: 6px;
-    box-shadow: 0 0 0 3px var(--color-green-soft);
   }
   .disclaimer {
     color: var(--color-text-faint);

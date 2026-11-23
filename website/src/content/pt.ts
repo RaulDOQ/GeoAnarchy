@@ -7,9 +7,9 @@ const w = site.world;
 
 export const pt = {
   meta: {
-    title: 'GeoAnarchy | Minecraft survival no mapa da Terra',
+    title: 'GeoAnarchy | Geopolítica sem regras',
     description:
-      'GeoAnarchy é um servidor brasileiro de Minecraft survival no mapa real da Terra. Funde um país, conquiste território, forme alianças, negocie e declare guerra sem pedir permissão.',
+      'Um servidor de Minecraft brasileiro que se passa no mapa real da Terra. Crie sua nação, forme alianças, declare guerras, conquiste territórios. No GeoAnarchy, quem controla são os jogadores.',
   },
 
   common: {
@@ -19,8 +19,9 @@ export const pt = {
     menu: 'Menu',
     nav: [
       { id: 'inicio', label: 'Início' },
-      { id: 'servidor', label: 'O servidor' },
+      { id: 'anarquia', label: 'Anarquia' },
       { id: 'mapa', label: 'O mapa' },
+      { id: 'realismo', label: 'Realismo' },
       { id: 'entrar', label: 'Como entrar' },
       { id: 'duvidas', label: 'Dúvidas' },
     ],
@@ -33,19 +34,17 @@ export const pt = {
   },
 
   hero: {
-    announceTag: 'Ao vivo',
-    announce: 'Veja o mapa em tempo real',
-    title: ['Funde um país', 'Dispute a Terra'],
-    lead: 'Um servidor brasileiro de Minecraft survival no mapa real da Terra. Crie seu país, conquiste território, forme alianças, negocie e declare guerra. Aqui ninguém pede permissão.',
+    facts: ['Minecraft survival', 'Java e Bedrock', `Terra ${w.scale}`],
+    title: ['Geopolítica', 'Sem regras'],
+    lead: 'Um servidor de Minecraft brasileiro que se passa no mapa real da Terra. Crie sua nação, forme alianças, declare guerras, conquiste territórios. No GeoAnarchy, quem controla são os jogadores.',
     ctaCopy: 'Copiar IP',
     ctaMap: 'Abrir o mapa',
-    facts: ['Java e Bedrock', 'Survival', `Terra em escala ${w.scale}`],
-    next: 'O servidor',
+    next: 'Anarquia',
   },
 
   liveMap: {
     label: 'Mapa ao vivo do servidor GeoAnarchy',
-    caption: 'Ao vivo: este é o mapa real do servidor',
+    caption: 'Ao vivo: o mapa real do servidor',
     live: 'Ao vivo',
     loading: 'Carregando o mapa…',
     activate: 'Clique para explorar',
@@ -56,60 +55,68 @@ export const pt = {
     foot: `Terra · ${w.scale}`,
   },
 
-  server: {
-    chapter: 'O servidor',
-    title: ['Anarquia política', 'de verdade'],
-    lead: 'Um país pode atacar outro por qualquer motivo. Nenhuma guerra precisa de justificativa de roleplay nem de aprovação da staff: quem decide como responder são os outros jogadores.',
-    pillars: [
+  anarchy: {
+    chapter: 'Anarquia',
+    title: ['Uma verdadeira', 'anarquia política.'],
+    lead: 'Um país pode atacar o outro quando quiser. Cada país pode ter o nome que quiser, onde quiser, ter suas próprias leis e filosofias. O servidor não impõe nenhuma regra de roleplay.',
+    paths: [
       {
-        icon: 'flag',
-        title: 'Funde seu país',
-        body: 'Escolha um lugar do mundo real, dê um nome ao seu país e comece a construir. Sozinho ou com amigos, a bandeira é sua.',
+        question: 'Quer um país focado em guerra e caos?',
+        answer: 'No GeoAnarchy você pode.',
       },
       {
-        icon: 'territory',
-        title: 'Conquiste território',
-        body: 'Reivindique terras e expanda suas fronteiras pelo mapa da Terra. O que é seu, você precisa conseguir manter.',
-      },
-      {
-        icon: 'handshake',
-        title: 'Alianças e comércio',
-        body: 'Negocie com vizinhos, feche acordos e forme blocos. Diplomacia é feita pelos jogadores, do jeito que eles quiserem.',
-      },
-      {
-        icon: 'swords',
-        title: 'Guerra sem burocracia',
-        body: 'Declarar guerra não exige motivo nem pedido à staff. Cada ataque tem consequência: o resto do mundo está olhando.',
+        question: 'Quer estabelecer ordem e paz no servidor inteiro, criando instituições e unindo países?',
+        answer: 'No GeoAnarchy tudo isso é possível e permitido.',
       },
     ],
-    illustrationNote: 'Ilustração',
   },
 
   world: {
     chapter: 'O mapa',
-    title: ['A Terra inteira', `em escala ${w.scale}`],
-    lead: 'O mundo do servidor é o planeta: continentes, oceanos e ilhas no lugar certo. Cada bloco representa cerca de um quilômetro do mundo real.',
-    checks: [
-      'Todos os continentes em um único mundo',
-      'Subterrâneo novo sob todo o mapa, com minérios',
-      'Fora da borda do mapa só existe o vazio',
-    ],
+    title: ['Baseado no', 'mundo real.'],
+    lead: 'O mundo do servidor é uma réplica do mundo real: continentes, terreno, mares e biomas. Cada bloco no servidor representa aproximadamente 1 km.',
     open: 'Abrir o mapa ao vivo',
+    figureLabel: 'Mapa-múndi desenhado em blocos, com os limites do mundo do servidor em coordenadas do jogo.',
+    sheet: `Terra · ${w.scale}`,
+    origin: 'X 0 · Z 0',
+    axisX: [n(w.minX), n(w.minX / 2), '0', n((w.maxX + 1) / 2), n(w.maxX)],
+    axisZ: [n(w.minZ), '0', n(w.maxZ)],
     facts: [
       { value: `${n(w.width)} × ${n(w.depth)}`, label: 'blocos de leste a oeste e de norte a sul' },
-      { value: w.scale, label: 'escala: 1 bloco ≈ 1 km' },
+      { value: '1 bloco ≈ 1 km', label: `escala ${w.scale}` },
       { value: n(w.chunks), label: 'chunks jogáveis' },
     ],
-    boundsLabel: 'Limites do mapa',
-    bounds: [
-      `X ${n(w.minX)} a ${n(w.maxX)}`,
-      `Z ${n(w.minZ)} a ${n(w.maxZ)}`,
+  },
+
+  realism: {
+    chapter: 'Realismo',
+    title: ['Um servidor', 'realista.'],
+    lead: 'No nosso servidor, a fundação inteira é o próprio mapa e os jogadores.',
+    points: [
+      {
+        label: 'Economia',
+        body: 'No GeoAnarchy, toda a economia é controlada por jogadores, sem loja do servidor.',
+      },
+      {
+        label: 'Viagem',
+        body: 'No GeoAnarchy, também não temos nenhum comando de teleporte. Precisa atacar um país longe? Precisará organizar a logística de uma longa viagem, passando por desertos, mares, montanhas e mais.',
+      },
     ],
+    route: {
+      label: 'Uma viagem longa no mapa: do seu país até o alvo, cruzando mar, deserto e montanhas.',
+      from: 'Seu país',
+      to: 'Alvo',
+      sea: 'Mar',
+      desert: 'Deserto',
+      mountains: 'Montanhas',
+    },
+    commandsLabel: 'Não existe aqui',
+    commands: ['/tpa', '/home', '/warp'],
   },
 
   join: {
     chapter: 'Como entrar',
-    title: ['Entre em', 'um minuto'],
+    title: ['Quer participar?'],
     lead: 'O mesmo mundo para quem joga no Java Edition ou no Bedrock Edition. Copie o endereço e conecte.',
     java: {
       name: 'Java Edition',
@@ -134,11 +141,15 @@ export const pt = {
     items: [
       {
         q: 'O que é o GeoAnarchy?',
-        a: 'É um servidor brasileiro de Minecraft survival em um mapa real da Terra. Os jogadores criam países, conquistam território, formam alianças, fazem comércio e guerreiam entre si.',
+        a: 'É um servidor de Minecraft brasileiro que se passa no mapa real da Terra. Os jogadores criam nações, formam alianças, declaram guerras e conquistam territórios.',
       },
       {
         q: 'Preciso de permissão para declarar guerra?',
-        a: 'Não. A marca do servidor é a anarquia política: um país pode atacar outro por qualquer motivo, sem justificativa de roleplay e sem aprovação da staff. Como o mundo reage é com os outros jogadores.',
+        a: 'Não. Um país pode atacar o outro quando quiser, e o servidor não impõe nenhuma regra de roleplay.',
+      },
+      {
+        q: 'Tem teleporte ou loja do servidor?',
+        a: 'Não. Não existe nenhum comando de teleporte, e toda a economia é controlada pelos jogadores, sem loja do servidor.',
       },
       {
         q: 'Dá para jogar no celular?',
@@ -146,7 +157,7 @@ export const pt = {
       },
       {
         q: 'Qual é o tamanho do mapa?',
-        a: `O mundo tem ${n(w.width)} por ${n(w.depth)} blocos, a Terra em escala ${w.scale}. Fora desse retângulo existe apenas o vazio.`,
+        a: `O mundo tem ${n(w.width)} por ${n(w.depth)} blocos, e cada bloco representa aproximadamente 1 km do mundo real.`,
       },
       {
         q: 'O mapa do site é mesmo ao vivo?',
@@ -161,7 +172,7 @@ export const pt = {
   },
 
   footer: {
-    tagline: 'Minecraft survival no mapa real da Terra, com países, alianças e guerras decididas pelos jogadores.',
+    tagline: 'Um servidor de Minecraft brasileiro no mapa real da Terra. Quem controla são os jogadores.',
     serverTitle: 'Servidor',
     communityTitle: 'Comunidade',
     liveMap: 'Mapa ao vivo',

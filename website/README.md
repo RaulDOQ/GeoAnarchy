@@ -23,9 +23,26 @@ Run these inside `website/` (Node 22.12 or newer):
 |---|---|
 | `src/config/site.ts` | Server addresses, the map address and its parameters, the Discord invite, world size. Change a value here and every page follows. |
 | `src/content/pt.ts` | Every text on the site. |
-| `src/styles/tokens.css` | Colours, type, spacing and motion values (white, blue and green theme). |
-| `src/components/home/` | The page sections: hero, live map window, server, map facts, how to join, questions, closing. |
+| `src/styles/tokens.css` | Colours, type, spacing and motion values. The look is flat: white paper, ink lines, one blue and one green. |
+| `src/components/Logo.astro` | The logo. It holds a stand-in mark until the real logo file is added. |
+| `src/components/home/` | The page sections: hero and live map window, anarchy, the block map sheet, realism and its journey map, how to join, questions, closing. |
 | `src/scripts/` | Browser scripts: live map loading and pointer guard, window tilt, scroll entrances, copy buttons. |
+| `src/assets/earth.png` | The block world map (144 x 72 pixels, one per 2.5 degrees), shown enlarged with sharp edges. |
+| `scripts/make-pixel-earth.mjs` | Draws `earth.png` from Natural Earth land data. Its header explains the options. |
+
+## The block map
+
+The world map on the page is a real map: `scripts/make-pixel-earth.mjs` tests every
+2.5-degree cell of the Earth against Natural Earth coastlines and paints the land cells
+green and the polar ice white. The result of that test is saved in
+`scripts/earth-mask.txt`, so changing the colours is instant:
+
+| Command | What it does |
+|---|---|
+| `npm run make:earth` | Repaints `src/assets/earth.png` from the saved mask |
+| `npm run make:earth -- --remask` | Works the land mask out again first (about two minutes) |
+
+The sea colour is not in the image: it is `--ocean` in `src/styles/tokens.css`.
 
 ## The live map
 

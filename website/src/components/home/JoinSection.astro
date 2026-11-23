@@ -1,7 +1,6 @@
 ---
 // "Como entrar": the addresses for Java and Bedrock, each with a copy button, and the
 // three steps to connect.
-import Icon from '../Icon.astro';
 import CopyField from '../CopyField.astro';
 import SectionHead from './SectionHead.astro';
 import { site } from '../../config/site';
@@ -12,16 +11,13 @@ const c = pt.join;
 
 <section class="stage" id="entrar">
   <div class="container">
-    <SectionHead num="03" chapter={c.chapter} title={c.title} lead={c.lead} />
+    <SectionHead num="04" chapter={c.chapter} title={c.title} lead={c.lead} />
 
     <div class="editions">
-      <article class="edition card" data-in="settle" style="--d: 100ms">
+      <article class="edition" data-in="settle" style="--d: 100ms">
         <header>
-          <span class="icon-chip"><Icon name="java" /></span>
-          <div>
-            <h3>{c.java.name}</h3>
-            <p>{c.java.note}</p>
-          </div>
+          <h3>{c.java.name}</h3>
+          <p>{c.java.note}</p>
         </header>
         <div class="fields">
           <CopyField label={c.java.addressLabel} value={site.java.address} />
@@ -31,13 +27,10 @@ const c = pt.join;
         </ol>
       </article>
 
-      <article class="edition card" data-in="settle" style="--d: 170ms">
+      <article class="edition" data-in="settle" style="--d: 170ms">
         <header>
-          <span class="icon-chip green"><Icon name="bedrock" /></span>
-          <div>
-            <h3>{c.bedrock.name}</h3>
-            <p>{c.bedrock.note}</p>
-          </div>
+          <h3>{c.bedrock.name}</h3>
+          <p>{c.bedrock.note}</p>
         </header>
         <div class="fields two">
           <CopyField label={c.bedrock.addressLabel} value={site.bedrock.address} />
@@ -52,30 +45,35 @@ const c = pt.join;
 </section>
 
 <style>
+  /* Two columns that share one frame, split by a rule. */
   .editions {
+    border: 1px solid var(--ink);
+    border-radius: var(--radius-panel);
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
     display: grid;
+    overflow: hidden;
   }
   .edition {
     align-content: start;
     gap: 1.5rem;
-    padding: 1.75rem;
+    padding: 1.9rem;
     display: grid;
   }
+  .edition + .edition {
+    border-left: 1px solid var(--ink);
+  }
   header {
-    align-items: center;
-    gap: .9rem;
-    display: flex;
+    gap: .45rem;
+    display: grid;
   }
   h3 {
-    letter-spacing: -.02em;
-    font-size: 1.1875rem;
+    letter-spacing: -.03em;
+    font-size: 1.5rem;
   }
   header p {
     color: var(--color-text-muted);
-    margin-top: .2rem;
-    font-size: .875rem;
+    font: 400 .78125rem/1.4 var(--font-mono);
+    letter-spacing: -.01em;
   }
   .fields {
     gap: .6rem;
@@ -86,40 +84,42 @@ const c = pt.join;
   }
   ol {
     counter-reset: step;
-    gap: .7rem;
+    border-top: 1px solid var(--line-strong);
     list-style: none;
-    display: grid;
   }
   li {
     counter-increment: step;
+    border-bottom: 1px solid var(--line-strong);
     color: var(--color-text-soft);
-    align-items: center;
-    gap: .75rem;
+    align-items: baseline;
+    gap: 1rem;
+    padding: .8rem 0;
     font-size: .9375rem;
     line-height: 1.4;
     display: flex;
   }
+  li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
   li:before {
-    content: counter(step);
-    box-shadow: var(--edge);
-    color: var(--color-text-muted);
-    font: 500 .6875rem/1 var(--font-mono);
-    background: var(--color-surface);
-    border-radius: .4rem;
+    content: "0" counter(step);
+    color: var(--blue);
+    font: 500 .75rem/1 var(--font-mono);
     flex: none;
-    place-items: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    display: grid;
   }
   @media (width <= 900px) {
     .editions {
       grid-template-columns: minmax(0, 1fr);
     }
+    .edition + .edition {
+      border-top: 1px solid var(--ink);
+      border-left: 0;
+    }
   }
   @media (width <= 520px) {
     .edition {
-      padding: 1.25rem;
+      padding: 1.3rem;
     }
     .fields.two {
       grid-template-columns: minmax(0, 1fr);
