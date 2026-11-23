@@ -10,7 +10,7 @@
     "build": "node scripts/detect-map.mjs && npm run check && astro build",
     "preview": "astro preview",
     "check": "astro check && tsc -p worker && npm test",
-    "test": "node --test worker/snapshots.test.ts worker/copy.test.ts"
+    "test": "node --test worker/snapshots.test.ts worker/copy.test.ts src/config/store.test.ts"
   },
   "dependencies": {
     "@cloudflare/puppeteer": "2.0.1",
