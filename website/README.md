@@ -39,10 +39,10 @@ Run these inside `website/` (Node 22.12 or newer):
 | `src/styles/tokens.css` | Colours, type, spacing and motion values (white, blue and green theme). |
 | `src/components/Logo.astro`, `Wordmark.astro` | The logo with the block Earth (header) and the name on its own (hero, closing section, footer, 404 page). |
 | `src/components/PageHead.astro`, `Editions.astro` | The top of every page other than the home page, and the Java and Bedrock join cards (home page and GeoWiki). |
-| `src/components/home/` | The home page's sections: hero and live map window, anarchy, the block map sheet, realism and its journey map, how to join, questions. `Closing.astro` ends every page. |
-| `src/scripts/` | Browser scripts: the live map card (what it shows, zoom and move), its tilt, scroll entrances, copy buttons. |
-| `worker/` | The Worker: map snapshots every 20 minutes and the addresses that serve them. |
-| `scripts/detect-map.mjs` | Works out the live map's framing before each build. |
+| `src/components/home/` | The home page's sections: hero, the live map, anarchy, realism and its journey map, how to join, questions. `Closing.astro` ends every page. |
+| `src/scripts/` | Browser scripts: the live map (drawing it, zoom and move), scroll entrances, copy buttons. |
+| `worker/` | The Worker: map snapshots every 30 minutes and the addresses that serve them. |
+| `scripts/detect-map.mjs` | Finds and checks the live map's tiles before each build. |
 | `src/assets/earth.png` | The block world map (144 x 72 pixels, one per 2.5 degrees), shown enlarged with sharp edges. |
 | `src/assets/logo.webp`, `logo-small.webp`, `wordmark.webp` | The logo artwork, trimmed: the full logo in two sizes and the name alone. `public/favicon.png`, `public/apple-touch-icon.png` and `public/og.png` (the picture shown when the site's link is shared) come from the same artwork. |
 | `scripts/make-pixel-earth.mjs` | Draws `earth.png` from Natural Earth land data. Its header explains the options. |
@@ -63,41 +63,49 @@ The sea colour is not in the image: it is `--color-ocean` in `src/styles/tokens.
 
 ## The live map
 
-The hero shows the server's Dynmap site (`mapa.geoanarchy.net`) in a plain card: the
-name above it, the map, and one line under it saying whether the map is live.
+The first section of the home page is the live map: large, with the limits of the world
+along its edges, rising into view as the visitor scrolls down from the hero.
 
-- **It fits.** The map is shown in a frame of exactly the world's size at one Dynmap
-  zoom level, scaled to the card, so the whole world fills the card with no border.
-  `scripts/detect-map.mjs` works out that frame before every build by asking the map
-  for its settings; if the map cannot be reached it uses
-  `src/config/map-view.default.json`. `/api/map-view.json` on the live site shows what
-  the last build used.
-- **Only the map.** Dynmap's own controls are switched off, and the visitor never
-  touches Dynmap: a pad over the card takes the pointer and `src/scripts/live-map.ts`
-  moves and enlarges the whole map. It can be zoomed in from the full view (click, then
-  wheel and drag; two fingers on a phone; `+`, `−`, arrows and `Esc` on a keyboard), never
-  out past it and never off the world. Until the map is clicked, the wheel scrolls the page.
-- **Fallback.** Under the live map lies the newest snapshot, visible while the map loads.
-  The page asks the map site for a small picture first; if that fails, the live map is
-  not loaded, the snapshot stays and the line under the card gives its time. It tries
-  again every minute.
+- **The page draws the map itself.** `src/scripts/live-map.ts` fetches the map's own
+  picture tiles from the server's Dynmap site (`mapa.geoanarchy.net`) and paints them on
+  a canvas, snapped to whole pixels, at the level of detail the current zoom needs. So
+  there are no lines between tiles, no Dynmap controls and no player markers, and the
+  map can be zoomed in down to single blocks.
+- **Finding the tiles.** `scripts/detect-map.mjs` runs before every build. It asks the map
+  for its settings, works out where the world lies and how tiles are named (the same
+  arithmetic as Dynmap's own page), and fetches a few tiles to check. Only when they
+  answer does the page use them. `/api/map-view.json` on the live site shows what the
+  last build found.
+- **If the tiles are not verified** (the map was down during the build, or its settings
+  changed in a way the script does not understand), the page shows Dynmap's own page in a
+  frame instead, scaled so the world fills the card. It works the same way for the
+  visitor, but zooms less far.
+- **Using it.** A pad over the card takes the pointer: click, then wheel and drag; two
+  fingers on a phone; `+`, `−`, arrows and `Esc` on a keyboard. The map can be zoomed in
+  from the full view, never out past it or off the world. Until it is clicked, the wheel
+  scrolls the page.
+- **Staying current.** While the map is on screen in a visible tab, the tiles in view are
+  fetched again every five minutes.
+- **Fallback.** Under the map lies the newest snapshot, visible while the map loads. The
+  page asks the map site for a small picture first; if that fails, nothing live is
+  loaded, the snapshot stays and the line under the card gives its time. It tries again
+  every minute.
 
 ### Snapshots
 
-The Worker in `worker/` takes the snapshots. Every 20 minutes (the cron trigger in
-`wrangler.jsonc`) it opens the map in Cloudflare's hosted browser at the same framing,
-waits for the tiles and stores a JPEG in Cloudflare KV. It keeps the newest three and
+The Worker in `worker/` takes the snapshots. Every 30 minutes (the cron trigger in
+`wrangler.jsonc`) it opens Dynmap's page in Cloudflare's hosted browser, framed so the
+world fills the picture, waits for the tiles and stores a JPEG in Cloudflare KV. It keeps the newest three and
 deletes older ones. If the map is down it stores nothing, so the last good picture stays.
 
 | Address | What it is |
 |---|---|
 | `/api/map-snapshot.json` | When the newest snapshot was taken, and its address |
 | `/api/map-snapshot/<time>.jpg` | That picture |
-| `/api/map-view.json` | How the map was framed at the last build |
+| `/api/map-view.json` | What the last build found out about the map (tiles, framing) |
 
 On Cloudflare's free plan the hosted browser may run 10 minutes a day; a snapshot takes
-a few seconds, so 72 a day fit, without much room. If snapshots stop late in the day,
-that allowance ran out: change the cron line to `*/30 * * * *`, or use a paid plan.
+a few seconds, so the 48 a day fit comfortably.
 
 `npm test` runs the snapshot tests (storage, deleting old ones, the addresses).
 `npx wrangler dev` runs the built site with the Worker locally.

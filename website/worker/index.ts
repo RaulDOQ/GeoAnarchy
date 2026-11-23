@@ -1,16 +1,18 @@
 // The website's Worker. The site itself is static files (dist/), served without running
 // this code. The Worker does two things for the live map's fallback picture:
-//   - every 20 minutes (the cron trigger in wrangler.jsonc) it takes a snapshot of the
+//   - every 30 minutes (the cron trigger in wrangler.jsonc) it takes a snapshot of the
 //     live map and stores it, deleting the ones that are too old;
 //   - it answers /api/map-snapshot.json and /api/map-snapshot/<time>.jpg (and
 //     /api/map-view.json, which says how the map was framed at the last build).
 // Any other address that is not a file goes back to the static files, which answer with
 // the 404 page.
-import { mapEmbedUrl } from '../src/config/site.ts';
-import view from '../src/generated/map-view.json';
+import { mapEmbedUrl, type MapView } from '../src/config/site.ts';
+import generated from '../src/generated/map-view.json';
 import { captureMap } from './capture.ts';
 import { handleSnapshotRequest } from './routes.ts';
 import { saveSnapshot } from './snapshots.ts';
+
+const view: MapView = generated;
 
 interface Env {
   ASSETS: Fetcher;

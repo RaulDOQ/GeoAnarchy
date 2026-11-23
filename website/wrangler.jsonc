@@ -2,7 +2,7 @@
 //
 // The site is static: `npm run build` writes it to dist/ and Cloudflare serves those
 // files without running any code. The small Worker in worker/ only looks after the
-// live map's fallback picture: every 20 minutes it takes a snapshot of the map with
+// live map's fallback picture: every 30 minutes it takes a snapshot of the map with
 // Cloudflare's hosted browser and keeps the newest few in KV.
 //
 // Nothing here needs setting up by hand: the KV namespace is created on the first
@@ -25,8 +25,8 @@
   // Where the snapshots are kept (worker/snapshots.ts). No id: Cloudflare creates the
   // namespace on the first deploy and remembers it.
   "kv_namespaces": [{ "binding": "SNAPSHOTS" }],
-  // A snapshot every 20 minutes.
-  "triggers": { "crons": ["*/20 * * * *"] },
+  // A snapshot every 30 minutes.
+  "triggers": { "crons": ["*/30 * * * *"] },
   // Keeps the Worker's log lines (for example "map snapshot saved") in the dashboard.
   "observability": { "enabled": true },
   // Cloudflare builds every branch other than main as a Preview (`npx wrangler preview`),

@@ -1,5 +1,5 @@
 // Map snapshots: pictures of the live map kept in Cloudflare KV, so the website has
-// something to show when the map itself is down. A new one is taken every 20 minutes
+// something to show when the map itself is down. A new one is taken every 30 minutes
 // (index.ts); only the newest few are kept.
 //
 // Keys:
@@ -16,7 +16,7 @@ export interface SnapshotStore {
   list(options: { prefix: string }): Promise<{ keys: { name: string }[] }>;
 }
 
-/** How many snapshots stay: the newest, and two before it (one hour at 20 minutes). */
+/** How many snapshots stay: the newest, and two before it (one hour at 30 minutes). */
 export const KEEP = 3;
 
 const PREFIX = 'snapshot:';
