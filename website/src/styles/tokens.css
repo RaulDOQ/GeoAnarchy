@@ -46,6 +46,7 @@
   --grad-earth: linear-gradient(96deg, #1766e0 2%, #0e8fb4 46%, #12a05c 96%);
 
   --font-sans: "Inter Variable", "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  /* Only for what a player types: the server address, the port, commands. */
   --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
 
   --text-xs: .75rem;

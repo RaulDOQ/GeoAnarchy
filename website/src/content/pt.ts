@@ -63,7 +63,7 @@ export const pt = {
 
   anarchy: {
     chapter: 'Anarquia',
-    title: ['Uma verdadeira', 'anarquia política.'],
+    title: ['Uma verdadeira', 'anarquia política'],
     lead: 'Um país pode atacar o outro quando quiser. Cada país pode ter o nome que quiser, onde quiser, ter suas próprias leis e filosofias. O servidor não impõe nenhuma regra de roleplay.',
     paths: [
       {
@@ -79,7 +79,7 @@ export const pt = {
 
   world: {
     chapter: 'O mapa',
-    title: ['Baseado no', 'mundo real.'],
+    title: ['Baseado no', 'mundo real'],
     lead: 'O mundo do servidor é uma réplica do mundo real: continentes, terreno, mares e biomas. Cada bloco no servidor representa aproximadamente 1 km.',
     open: 'Abrir o mapa ao vivo',
     figureLabel: 'Mapa-múndi desenhado em blocos, com os limites do mundo do servidor em coordenadas do jogo.',
@@ -96,7 +96,7 @@ export const pt = {
 
   realism: {
     chapter: 'Realismo',
-    title: ['Um servidor', 'realista.'],
+    title: ['Um servidor', 'realista'],
     lead: 'No nosso servidor, a fundação inteira é o próprio mapa e os jogadores.',
     points: [
       {
@@ -122,7 +122,7 @@ export const pt = {
 
   vanilla: {
     chapter: 'Vanilla',
-    title: ['Servidor sem', '“Modern slop”.'],
+    title: ['Servidor sem', '“Modern slop”'],
     lead: 'No GeoAnarchy, a experiência é vanilla: o Minecraft que você já conhece.',
     // The things other servers add and this one does not, shown crossed out.
     goneLabel: 'Não existe aqui',

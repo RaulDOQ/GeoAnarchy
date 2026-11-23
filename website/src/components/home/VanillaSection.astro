@@ -15,7 +15,7 @@ const c = pt.vanilla;
 
     <div class="split">
       <div class="slab" data-in="settle" style="--d: 100ms">
-        <p class="mono-label">{c.goneLabel}</p>
+        <p class="label">{c.goneLabel}</p>
         <ul class="gone">
           {
             c.gone.map((item, i) => (
@@ -32,7 +32,7 @@ const c = pt.vanilla;
         {
           c.points.map((point, i) => (
             <div class="point" data-in="settle" style={`--d: ${170 + i * 70}ms`}>
-              <p class="mono-label">{point.label}</p>
+              <p class="label">{point.label}</p>
               <p class="body">{point.body}</p>
             </div>
           ))

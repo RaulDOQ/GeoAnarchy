@@ -42,13 +42,13 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
         {
           c.points.map((point, i) => (
             <div class="point" data-in="settle" style={`--d: ${100 + i * 70}ms`}>
-              <p class="mono-label">{point.label}</p>
+              <p class="label">{point.label}</p>
               <p class="body">{point.body}</p>
             </div>
           ))
         }
         <p class="commands" data-in="settle" style="--d: 240ms">
-          <span class="mono-label">{c.commandsLabel}</span>
+          <span class="label">{c.commandsLabel}</span>
           {c.commands.map((command) => <s>{command}</s>)}
         </p>
       </div>
@@ -109,7 +109,7 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
     padding: .5rem .35rem 0;
     display: flex;
   }
-  .commands .mono-label {
+  .commands .label {
     margin-right: .35rem;
   }
   s {
@@ -194,10 +194,11 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
   }
   .tag {
     color: var(--color-text);
-    font: 500 .6875rem/1 var(--font-mono);
-    letter-spacing: .06em;
-    text-transform: uppercase;
+    letter-spacing: -.005em;
     white-space: nowrap;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1;
     background: #fff;
     border-radius: .4rem;
     padding: .4rem .55rem;
@@ -235,7 +236,7 @@ const region = [crop.x / mapWidth, crop.y / mapHeight, (crop.x + crop.w) / mapWi
   }
   @media (width <= 560px) {
     .tag {
-      font-size: .5625rem;
+      font-size: .625rem;
       padding: .3rem .4rem;
     }
   }
