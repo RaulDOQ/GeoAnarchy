@@ -232,14 +232,38 @@ export const pt = {
   },
 
   // "Loja". Nothing is on sale yet, so the page only says so.
+  // "Loja". The plans and prices are in src/config/store.ts; this is the text around them.
   store: {
     meta: {
       title: 'Loja | GeoAnarchy',
-      description: 'A loja do GeoAnarchy ainda não abriu.',
+      description: 'Os planos do GeoAnarchy: Geo+, Geo Ultra e Geo Ultra+, pagos por mês, a cada 3 meses ou a cada 6 meses.',
     },
     chapter: 'Loja',
-    title: ['A loja ainda', 'não abriu'],
-    lead: 'Acompanhe as novidades no Discord.',
+    title: ['Escolha', 'seu plano'],
+    lead: 'Três planos, pagos por mês, a cada 3 meses ou a cada 6 meses. Quanto mais meses, menor o preço.',
+    // The switch over the plans: how often to pay. One name per period in
+    // src/config/store.ts, in the same order.
+    periodLabel: 'Forma de pagamento',
+    periods: ['Mensal', '3 meses', '6 meses'],
+    perMonth: 'por mês',
+    // Under the price. {total} is what is charged each time, {months} how many months
+    // that pays for, {full} the same months without the discount.
+    billedMonthly: 'Cobrado todo mês',
+    billed: '{total} a cada {months} meses',
+    instead: 'em vez de {full}',
+    // What each plan gives, by the plan's id in src/config/store.ts: one line of text
+    // per benefit. While a list is empty the card says that the benefits come later.
+    benefitsLabel: 'Benefícios',
+    benefitsSoon: 'Os benefícios deste plano serão anunciados em breve.',
+    benefits: {
+      'geo-plus': [],
+      'geo-ultra': [],
+      'geo-ultra-plus': [],
+    } as Record<string, readonly string[]>,
+    status: {
+      title: 'Os planos ainda não estão à venda',
+      body: 'Avisaremos no Discord quando as assinaturas abrirem.',
+    },
     cta: 'Entrar no Discord',
     note: {
       title: 'E dentro do jogo?',
