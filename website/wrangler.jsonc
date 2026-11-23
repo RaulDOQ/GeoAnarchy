@@ -10,5 +10,9 @@
     // Unknown addresses get the site's 404 page; /pagina and /pagina/ both work.
     "not_found_handling": "404-page",
     "html_handling": "auto-trailing-slash"
-  }
+  },
+  // Cloudflare builds every branch other than main as a Preview (`npx wrangler preview`),
+  // and that command refuses to run without this block. It can stay empty: the Preview
+  // uses the same static files as the live site.
+  "previews": {}
 }
