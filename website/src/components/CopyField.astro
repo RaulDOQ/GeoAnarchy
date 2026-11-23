@@ -1,0 +1,97 @@
+---
+// One address the visitor can copy: a label, the value in mono type and a copy button.
+import Icon from './Icon.astro';
+import { pt } from '../content/pt';
+
+interface Props {
+  label: string;
+  value: string;
+}
+
+const { label, value } = Astro.props;
+const c = pt.common;
+---
+
+<div class="copy-field">
+  <div class="copy-text">
+    <span class="mono-label">{label}</span>
+    <code>{value}</code>
+  </div>
+  <button class="copy-btn" type="button" data-copy={value} aria-label={`${c.copy}: ${value}`}>
+    <span class="idle"><Icon name="copy" />{c.copy}</span>
+    <span class="done" aria-hidden="true"><Icon name="check" />{c.copied}</span>
+  </button>
+</div>
+
+<style>
+  .copy-field {
+    box-shadow: var(--edge);
+    background: var(--color-bg-tint);
+    border-radius: .85rem;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: .7rem .7rem .7rem 1rem;
+    display: flex;
+  }
+  .copy-text {
+    gap: .45rem;
+    min-width: 0;
+    display: grid;
+  }
+  code {
+    font: 500 1.0625rem/1.2 var(--font-mono);
+    letter-spacing: -.01em;
+    color: var(--color-text);
+    overflow-wrap: anywhere;
+  }
+  .copy-btn {
+    cursor: pointer;
+    height: 2.25rem;
+    color: var(--color-text);
+    background: var(--color-surface);
+    box-shadow: 0 0 0 1px var(--color-hairline-strong), 0 2px 5px -3px #0a1b2e40;
+    border: 0;
+    border-radius: .6rem;
+    flex: none;
+    padding: 0 .8rem;
+    font-size: .8125rem;
+    font-weight: 600;
+    transition: background-color .2s, color .2s, box-shadow .2s, transform .16s var(--ease-out);
+    display: inline-grid;
+  }
+  .copy-btn:hover {
+    background: var(--color-surface-2);
+  }
+  .copy-btn:active {
+    transform: scale(.96);
+  }
+  .copy-btn > span {
+    grid-area: 1 / 1;
+    justify-content: center;
+    align-items: center;
+    gap: .4rem;
+    transition: opacity .2s, transform .35s var(--spring-snappy);
+    display: inline-flex;
+  }
+  .copy-btn :global(svg) {
+    width: .9rem;
+    height: .9rem;
+  }
+  .copy-btn .done {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  .copy-btn:global(.is-copied) {
+    color: var(--color-green-strong);
+    box-shadow: 0 0 0 1px var(--color-green-ring), 0 2px 5px -3px #0a1b2e40;
+  }
+  .copy-btn:global(.is-copied) .idle {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  .copy-btn:global(.is-copied) .done {
+    opacity: 1;
+    transform: none;
+  }
+</style>

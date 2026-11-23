@@ -1,0 +1,74 @@
+---
+import '@fontsource-variable/inter/opsz.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/sections.css';
+import '../styles/motion.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../config/site';
+import { pt } from '../content/pt';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const c = pt.common;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {/* While the site is in development it stays out of search engines (config/site.ts). */}
+    {site.inDevelopment && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="pt_BR" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {/* Runs before the page paints: the `js` class turns the entrance animations on. */}
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{c.skip}</a>
+    {site.inDevelopment && <div class="dev-banner" role="note">{c.devBanner}</div>}
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <div class="toast" data-site-toast role="status" aria-live="polite" data-copied={c.copiedToast} data-failed={c.copyFailedToast}></div>
+    <script>
+      import { initReveal } from '../scripts/reveal';
+      import { initCopy } from '../scripts/copy';
+      initReveal();
+      initCopy();
+    </script>
+  </body>
+</html>
+
+<style>
+  .dev-banner {
+    padding: .4rem var(--page-gutter);
+    color: var(--color-warning);
+    letter-spacing: -.005em;
+    text-align: center;
+    background: var(--color-warning-soft);
+    font-size: .78125rem;
+    font-weight: 500;
+  }
+</style>

@@ -1,0 +1,213 @@
+---
+// "O mapa": the world drawn in blocks on a map sheet. The numbers along the edges are
+// the real limits of the server's world, in game coordinates (config/site.ts).
+import Icon from '../Icon.astro';
+import PixelEarth from './PixelEarth.astro';
+import SectionHead from './SectionHead.astro';
+import { site } from '../../config/site';
+import { pt } from '../../content/pt';
+
+const c = pt.world;
+---
+
+<section class="stage" id="mapa">
+  <div class="container">
+    <SectionHead num="02" chapter={c.chapter} title={c.title} lead={c.lead}>
+      <a class="learn" href={site.map.url} target="_blank" rel="noopener">{c.open}<Icon name="arrowRight" /></a>
+    </SectionHead>
+
+    <figure class="sheet" data-in="settle" style="--d: 100ms">
+      <div class="axis-x" aria-hidden="true">
+        <span class="axis-name">X</span>
+        {c.axisX.map((value) => <span>{value}</span>)}
+      </div>
+      <div class="axis-z" aria-hidden="true">
+        <span class="axis-name">Z</span>
+        {c.axisZ.map((value) => <span>{value}</span>)}
+      </div>
+      <div class="sheet-bg card" aria-hidden="true"></div>
+      <div class="map">
+        <PixelEarth label={c.figureLabel} id="seams-world">
+          <span class="cross h" aria-hidden="true"></span>
+          <span class="cross v" aria-hidden="true"></span>
+          <span class="tag origin" aria-hidden="true">{c.origin}</span>
+          <span class="tag title" aria-hidden="true">{c.sheet}</span>
+        </PixelEarth>
+      </div>
+      <figcaption>
+        {
+          c.facts.map((fact) => (
+            <p>
+              <strong>{fact.value}</strong>
+              <span>{fact.label}</span>
+            </p>
+          ))
+        }
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  :global(.stage-side) .learn {
+    margin-top: 1.1rem;
+  }
+  /* X along the top, Z down the left side of the map, and one card behind the map and
+     the facts under it. */
+  .sheet {
+    grid-template: "corner x" auto "z map" auto ". facts" auto / 1.6rem minmax(0, 1fr);
+    display: grid;
+  }
+  .sheet-bg {
+    grid-area: 2 / 2 / 4 / 3;
+  }
+  .map {
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    grid-area: map;
+    position: relative;
+    overflow: hidden;
+  }
+  .axis-x,
+  .axis-z {
+    color: var(--color-text-faint);
+    font: 500 .6875rem/1 var(--font-mono);
+    letter-spacing: .02em;
+    justify-content: space-between;
+    display: flex;
+    position: relative;
+  }
+  .axis-x {
+    grid-area: x;
+    padding: 0 .9rem .6rem;
+  }
+  .axis-z {
+    grid-area: z;
+    writing-mode: vertical-rl;
+    padding: .9rem 0 .9rem .6rem;
+    transform: rotate(180deg);
+    flex-direction: row-reverse;
+  }
+  .axis-name {
+    color: var(--color-blue-strong);
+    position: absolute;
+  }
+  .axis-x .axis-name {
+    right: calc(100% + .65rem);
+  }
+  .axis-z .axis-name {
+    display: none;
+  }
+  /* The first and last labels sit at the map's edges; the others are centred on their line. */
+  .axis-x span:not(.axis-name):nth-child(3),
+  .axis-x span:not(.axis-name):nth-child(4),
+  .axis-x span:not(.axis-name):nth-child(5) {
+    flex: 1;
+    text-align: center;
+  }
+  .axis-x span:nth-child(2),
+  .axis-x span:nth-child(6) {
+    flex: .5;
+  }
+  .axis-x span:nth-child(6) {
+    text-align: right;
+  }
+  .cross {
+    background: #ffffff73;
+    position: absolute;
+  }
+  .cross.h {
+    height: 1px;
+    top: 50%;
+    left: 0;
+    right: 0;
+  }
+  .cross.v {
+    width: 1px;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+  }
+  .tag {
+    color: var(--color-text);
+    font: 500 .6875rem/1 var(--font-mono);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: #fff;
+    border-radius: .4rem;
+    padding: .4rem .55rem;
+    position: absolute;
+    box-shadow: 0 6px 14px -6px #0a1b2e80;
+  }
+  .origin {
+    top: calc(50% + .5rem);
+    left: calc(50% + .5rem);
+  }
+  .title {
+    bottom: .8rem;
+    left: .8rem;
+  }
+  figcaption {
+    grid-area: facts;
+    grid-template-columns: 1.35fr 1fr 1fr;
+    display: grid;
+    position: relative;
+  }
+  figcaption p {
+    gap: .7rem;
+    padding: 1.9rem 2rem 2rem;
+    display: grid;
+  }
+  figcaption strong {
+    font: 500 clamp(1.5rem, .95rem + 1.5vw, 2.25rem)/1.05 var(--font-mono);
+    letter-spacing: -.045em;
+    color: #0000;
+    white-space: nowrap;
+    background: var(--grad-earth);
+    -webkit-background-clip: text;
+    background-clip: text;
+    padding-bottom: .08em;
+  }
+  figcaption span {
+    color: var(--color-text-muted);
+    font-size: .9375rem;
+    line-height: 1.45;
+  }
+  @media (width <= 800px) {
+    .sheet {
+      grid-template-columns: 1.2rem minmax(0, 1fr);
+    }
+    .axis-x,
+    .axis-z {
+      font-size: .5625rem;
+    }
+    .axis-x {
+      padding-inline: .4rem;
+    }
+    .axis-z {
+      padding-block: .4rem;
+      padding-left: .45rem;
+    }
+    .axis-x .axis-name {
+      right: calc(100% + .35rem);
+    }
+    .tag {
+      font-size: .5625rem;
+      padding: .3rem .4rem;
+    }
+    .origin {
+      top: calc(50% + .3rem);
+      left: calc(50% + .3rem);
+    }
+    .title {
+      display: none;
+    }
+    figcaption {
+      grid-template-columns: 1fr;
+      padding-block: .5rem;
+    }
+    figcaption p {
+      padding: 1rem 1.4rem;
+    }
+  }
+</style>

@@ -1,0 +1,430 @@
+---
+// The floating header bar. The site is one page, so the tabs are links to its sections:
+// a pill follows the section on screen and a soft highlight slides to the pointed tab.
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { site } from '../config/site';
+import { pt } from '../content/pt';
+
+const c = pt.common;
+---
+
+<header class="nav" data-site-nav>
+  <div class="nav-inner">
+    <a class="brand" href="#inicio" aria-label={site.name}>
+      <span class="brand-mark"><Logo height={42} /></span>
+      <span>{site.name}</span>
+    </a>
+    <nav class="tabs" aria-label={c.navLabel} data-nav-tabs>
+      <span class="tab-pill" aria-hidden="true"></span>
+      <span class="tab-hover" aria-hidden="true"></span>
+      {c.nav.map((item) => <a class="tab" href={`#${item.id}`} data-section={item.id}>{item.label}</a>)}
+    </nav>
+    <div class="nav-actions">
+      <a class="discord" href={site.discordUrl} target="_blank" rel="noopener">{c.discord}</a>
+      <a class="nav-control nav-cta" href="#entrar">
+        {c.play}
+        <Icon name="arrowUpRight" class="ne" />
+      </a>
+      {/* On phones the sections move into this menu (a <details> opens without JavaScript). */}
+      <details class="mobile-menu" data-closable>
+        <summary class="nav-control" aria-label={c.menu}><span></span><span></span></summary>
+        <nav aria-label={c.navLabel}>
+          {c.nav.map((item, i) => <a href={`#${item.id}`} style={`--i: ${i}`}>{item.label}</a>)}
+          <div class="mobile-actions" style={`--i: ${c.nav.length}`}>
+            <a href={site.discordUrl} target="_blank" rel="noopener">{c.discord}</a>
+            <a class="mobile-play" href="#entrar">{c.play} ↗</a>
+          </div>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-nav]');
+  const tabs = header?.querySelector<HTMLElement>('[data-nav-tabs]');
+  const pill = tabs?.querySelector<HTMLElement>('.tab-pill');
+  const hover = tabs?.querySelector<HTMLElement>('.tab-hover');
+  if (header && tabs && pill && hover) {
+    const links = [...tabs.querySelectorAll<HTMLAnchorElement>('.tab')];
+    const sections = links
+      .map((link) => document.getElementById(link.dataset.section ?? ''))
+      .filter((el): el is HTMLElement => !!el);
+    let active: HTMLAnchorElement | null = null;
+    let hoverShown = false;
+
+    const place = (el: HTMLElement, link: HTMLElement) => {
+      el.style.width = `${link.offsetWidth}px`;
+      el.style.transform = `translateX(${link.offsetLeft}px)`;
+    };
+
+    const setActive = (link: HTMLAnchorElement | null, instant = false) => {
+      if (link === active && !instant) return;
+      active?.removeAttribute('aria-current');
+      active = link;
+      if (!link) {
+        pill.classList.remove('on');
+        return;
+      }
+      link.setAttribute('aria-current', 'true');
+      pill.classList.toggle('instant', instant || !pill.classList.contains('on'));
+      place(pill, link);
+      void pill.offsetWidth;
+      pill.classList.remove('instant');
+      pill.classList.add('on');
+    };
+
+    const moveHover = (link: HTMLElement | null) => {
+      if (!link || link === active) {
+        hover.classList.remove('on');
+        hoverShown = false;
+        return;
+      }
+      hover.classList.toggle('instant', !hoverShown);
+      place(hover, link);
+      void hover.offsetWidth;
+      hover.classList.remove('instant');
+      hover.classList.add('on');
+      hoverShown = true;
+    };
+
+    // The section on screen: the last one whose top has passed a line a third of the
+    // way down the window.
+    const spy = () => {
+      const line = window.innerHeight * 0.34;
+      let current = sections[0] ?? null;
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= line) current = section;
+      }
+      setActive(links.find((link) => link.dataset.section === current?.id) ?? null);
+    };
+
+    links.forEach((link) => {
+      link.addEventListener('pointerenter', () => moveHover(link));
+      link.addEventListener('focus', () => moveHover(link));
+    });
+    tabs.addEventListener('pointerleave', () => moveHover(null));
+    tabs.addEventListener('focusout', (e) => {
+      if (!tabs.contains(e.relatedTarget as Node)) moveHover(null);
+    });
+
+    let frame = 0;
+    const onScroll = () => {
+      frame = 0;
+      header.classList.toggle('is-scrolled', window.scrollY > 8);
+      spy();
+    };
+    const fit = () => {
+      document.documentElement.style.setProperty('--nav-offset', `${header.offsetHeight}px`);
+      if (active) setActive(active, true);
+    };
+    window.addEventListener('scroll', () => (frame ||= requestAnimationFrame(onScroll)), { passive: true });
+    window.addEventListener('resize', fit);
+    document.fonts?.ready.then(fit);
+    onScroll();
+    fit();
+  }
+
+  // Menus close on an outside click, on Escape and on following a link.
+  document.querySelectorAll<HTMLDetailsElement>('details[data-closable]').forEach((menu) => {
+    document.addEventListener('click', (e) => {
+      if (menu.open && !menu.contains(e.target as Node)) menu.open = false;
+    });
+    menu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    });
+    menu.querySelectorAll('nav a').forEach((a) => a.addEventListener('click', () => (menu.open = false)));
+  });
+</script>
+
+<style>
+  .nav {
+    --ctl-h: 2rem;
+    z-index: 50;
+    padding: .75rem var(--page-gutter) 0;
+    pointer-events: none;
+    position: sticky;
+    top: 0;
+  }
+  .nav-inner {
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    pointer-events: auto;
+    background: #ffffffc7;
+    border-radius: .95rem;
+    max-width: 75rem;
+    height: 3.25rem;
+    margin: 0 auto;
+    padding: 0 .5rem 0 .55rem;
+    transition: background-color .3s ease-out, box-shadow .3s ease-out;
+    display: flex;
+    position: relative;
+    box-shadow:
+      inset 0 0 0 1px #0a1b2e14,
+      0 10px 30px -18px #0a1b2e40;
+  }
+  .nav.is-scrolled .nav-inner {
+    background: #ffffffeb;
+    box-shadow:
+      inset 0 0 0 1px #0a1b2e1a,
+      0 16px 36px -18px #0a1b2e5c;
+  }
+  .nav-control {
+    height: var(--ctl-h);
+    border-radius: .55rem;
+    align-items: center;
+    transition: background-color .2s, box-shadow .2s, color .2s, transform .16s var(--ease-out);
+    display: inline-flex;
+  }
+  .brand {
+    letter-spacing: -.04em;
+    white-space: nowrap;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    display: inline-flex;
+  }
+  .brand-mark {
+    place-items: center;
+    display: grid;
+  }
+  .brand:hover .brand-mark {
+    animation: logo-nod .9s var(--spring-smooth);
+  }
+  @keyframes logo-nod {
+    35% {
+      transform: rotate(-7deg) scale(1.06);
+    }
+    70% {
+      transform: rotate(4deg);
+    }
+  }
+  .tabs {
+    isolation: isolate;
+    gap: .125rem;
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .tab {
+    height: var(--ctl-h);
+    letter-spacing: -.006em;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    transition: color .2s;
+    border-radius: .55rem;
+    align-items: center;
+    padding: 0 .8rem;
+    font-size: .875rem;
+    font-weight: 500;
+    display: flex;
+    position: relative;
+  }
+  .tab:hover,
+  .tab:focus-visible,
+  .tab[aria-current] {
+    color: var(--color-text);
+  }
+  .tab-pill,
+  .tab-hover {
+    height: var(--ctl-h);
+    opacity: 0;
+    transition:
+      transform .5s var(--spring-smooth),
+      width .5s var(--spring-smooth),
+      opacity .18s;
+    border-radius: .55rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .tab-pill {
+    z-index: -1;
+    background: linear-gradient(#ffffff, #f1f6fb);
+    box-shadow:
+      inset 0 0 0 1px #0a1b2e1c,
+      0 1px 2px #0a1b2e14,
+      0 4px 10px -6px #0a1b2e40;
+  }
+  .tab-hover {
+    z-index: -2;
+    background: #0a1b2e0b;
+  }
+  .tab-pill.on,
+  .tab-hover.on {
+    opacity: 1;
+  }
+  .tab-pill.instant,
+  .tab-hover.instant {
+    transition: opacity .18s;
+  }
+  .nav-actions {
+    align-items: center;
+    gap: .5rem;
+    display: flex;
+  }
+  .discord {
+    color: var(--color-text-soft);
+    white-space: nowrap;
+    padding: 0 .6rem;
+    font-size: .875rem;
+    font-weight: 500;
+    transition: color .2s;
+  }
+  .discord:hover {
+    color: var(--color-blue-strong);
+  }
+  .nav-cta {
+    color: #fff;
+    white-space: nowrap;
+    background: linear-gradient(#17304d, #0a1b2e);
+    gap: .5rem;
+    padding: 0 .7rem 0 .85rem;
+    font-size: .875rem;
+    font-weight: 600;
+    box-shadow:
+      inset 0 1px #ffffff2e,
+      0 0 0 1px #0a1b2e,
+      0 4px 10px -4px #0a1b2e80;
+  }
+  .nav-cta:hover {
+    background: linear-gradient(#1d3b5e, #0f2338);
+  }
+  .nav-cta:active {
+    transform: scale(.97);
+  }
+  .nav-cta :global(.ne) {
+    stroke-width: 1.8px;
+    width: 14px;
+    height: 14px;
+    transition: transform .45s var(--spring-snappy);
+  }
+  .nav-cta:hover :global(.ne) {
+    transform: translate(2px, -2px);
+  }
+  .mobile-menu {
+    display: none;
+  }
+  .mobile-menu summary {
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 2.25rem;
+    padding: 0;
+    list-style: none;
+    box-shadow: inset 0 0 0 1px #0a1b2e21;
+  }
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .mobile-menu summary span {
+    width: 15px;
+    height: 1.5px;
+    transition: transform .45s var(--spring-snappy);
+    background: var(--color-text);
+    border-radius: 1px;
+  }
+  .mobile-menu[open] summary span:first-child {
+    transform: translateY(3.25px) rotate(45deg);
+  }
+  .mobile-menu[open] summary span:last-child {
+    transform: translateY(-3.25px) rotate(-45deg);
+  }
+  .mobile-menu nav {
+    transform-origin: top;
+    animation: pop-in .32s var(--spring-snappy);
+    background: #fffffffa;
+    border-radius: .95rem;
+    flex-direction: column;
+    gap: 2px;
+    padding: .4rem;
+    display: flex;
+    position: absolute;
+    top: calc(100% + .5rem);
+    left: 0;
+    right: 0;
+    box-shadow: inset 0 0 0 1px #0a1b2e1a, 0 30px 60px -24px #0a1b2e73;
+  }
+  @keyframes pop-in {
+    0% {
+      opacity: 0;
+      transform: scale(.97) translateY(-4px);
+    }
+  }
+  .mobile-menu nav > a,
+  .mobile-actions {
+    animation: item-in .42s var(--spring-snappy) both;
+    animation-delay: calc(var(--i, 0) * 30ms + 40ms);
+  }
+  @keyframes item-in {
+    0% {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+  .mobile-menu nav > a {
+    color: var(--color-text-soft);
+    border-radius: .65rem;
+    padding: .8rem .9rem;
+    font-size: .95rem;
+    font-weight: 500;
+  }
+  .mobile-menu nav > a:active {
+    background: var(--color-surface-2);
+  }
+  .mobile-actions {
+    border-top: 1px solid var(--color-hairline);
+    gap: .4rem;
+    margin-top: .35rem;
+    padding-top: .45rem;
+    display: flex;
+  }
+  .mobile-actions a {
+    text-align: center;
+    color: var(--color-text);
+    background: var(--color-surface-2);
+    border-radius: .65rem;
+    flex: 1;
+    padding: .75rem .9rem;
+    font-size: .9rem;
+    font-weight: 600;
+  }
+  .mobile-actions .mobile-play {
+    color: #fff;
+    background: var(--color-text);
+  }
+  @media (width <= 1120px) {
+    .tab {
+      padding-inline: .55rem;
+    }
+  }
+  @media (width <= 980px) {
+    .tabs,
+    .discord,
+    .nav-cta {
+      display: none;
+    }
+    .mobile-menu {
+      display: block;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .brand:hover .brand-mark,
+    .mobile-menu nav,
+    .mobile-menu nav > a,
+    .mobile-actions {
+      animation: none;
+    }
+  }
+</style>

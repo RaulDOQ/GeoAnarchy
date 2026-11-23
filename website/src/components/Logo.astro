@@ -1,0 +1,25 @@
+---
+// The GeoAnarchy logo (the block Earth with the name). Small sizes use a small file.
+import large from '../assets/logo.webp';
+import small from '../assets/logo-small.webp';
+
+interface Props {
+  /** Height in CSS pixels; the width follows the artwork. */
+  height?: number;
+  /** Leave empty when the name is written next to the logo. */
+  alt?: string;
+}
+
+const { height = 40, alt = '' } = Astro.props;
+const file = height > 56 ? large : small;
+const width = Math.round((height * file.width) / file.height);
+---
+
+<img class="logo" src={file.src} width={width} height={height} alt={alt} decoding="async" />
+
+<style>
+  .logo {
+    flex: none;
+    max-width: none;
+  }
+</style>

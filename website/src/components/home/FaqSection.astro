@@ -1,0 +1,66 @@
+---
+import { site } from '../../config/site';
+import { pt } from '../../content/pt';
+
+const c = pt.faq;
+---
+
+<section class="stage" id="duvidas">
+  <div class="container faq-stage">
+    <div class="faq-head">
+      <p class="chapter" data-in="settle"><span class="num">05</span><span>{c.chapter}</span></p>
+      <h2 class="stage-title" data-in="lines" style="--d: 60ms">
+        {c.title.map((line) => <span class="line"><span class="grad">{line}</span></span>)}
+      </h2>
+      <p class="stage-lead" data-in="settle" style="--d: 180ms">
+        {c.lead}{' '}
+        <a class="inline" href={site.discordUrl} target="_blank" rel="noopener">{c.more}</a>
+      </p>
+    </div>
+    <div class="qa-rows" data-in="settle" style="--d: 120ms">
+      {
+        c.items.map((item, i) => (
+          <details open={i === 0}>
+            <summary>{item.q}<span class="pm" aria-hidden="true" /></summary>
+            <p>{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-stage {
+    grid-template-columns: .8fr 1.2fr;
+    align-items: start;
+    gap: 4rem;
+    display: grid;
+  }
+  .faq-head {
+    top: calc(var(--nav-offset) + 2rem);
+    justify-items: start;
+    gap: 1.25rem;
+    display: grid;
+    position: sticky;
+  }
+  .inline {
+    color: var(--color-blue-strong);
+    text-underline-offset: 3px;
+    font-weight: 500;
+    text-decoration: underline #1766e059;
+    transition: text-decoration-color .2s;
+  }
+  .inline:hover {
+    text-decoration-color: var(--color-blue);
+  }
+  @media (width <= 900px) {
+    .faq-stage {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem;
+    }
+    .faq-head {
+      position: static;
+    }
+  }
+</style>

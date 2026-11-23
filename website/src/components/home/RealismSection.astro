@@ -1,0 +1,204 @@
+---
+// "Realismo": no server shop and no teleport. The figure is a cut of the block map
+// with one long journey drawn on it: by sea, across a desert and over mountains.
+import PixelEarth from './PixelEarth.astro';
+import SectionHead from './SectionHead.astro';
+import { pt } from '../../content/pt';
+
+const c = pt.realism;
+
+// The cut, in map pixels (2.5 degrees each): 75°W to 45°E, 60°N to 30°S.
+const crop = { x: 42, y: 12, w: 48, h: 36 };
+// The journey, in pixels of the cut: north-east Brazil, the Atlantic, West Africa, the
+// Sahara, the Mediterranean, the Alps, central Europe.
+const route: [number, number][] = [
+  [14.5, 27.5],
+  [23.5, 16.5],
+  [29.5, 13.5],
+  [32.5, 9.5],
+  [33.5, 5.5],
+  [36.5, 3.5],
+];
+const start = route[0];
+const end = route[route.length - 1];
+const points = route.map(([x, y]) => `${x},${y}`).join(' ');
+const at = (x: number, y: number) => `left: ${((x / crop.w) * 100).toFixed(2)}%; top: ${((y / crop.h) * 100).toFixed(2)}%`;
+---
+
+<section class="stage" id="realismo">
+  <div class="container">
+    <SectionHead num="03" chapter={c.chapter} title={c.title} lead={c.lead} />
+
+    <div class="split">
+      <div class="points">
+        {
+          c.points.map((point, i) => (
+            <div class="point" data-in="settle" style={`--d: ${100 + i * 70}ms`}>
+              <p class="mono-label">{point.label}</p>
+              <p class="body">{point.body}</p>
+            </div>
+          ))
+        }
+        <p class="commands" data-in="settle" style="--d: 240ms">
+          <span class="mono-label">{c.commandsLabel}</span>
+          {c.commands.map((command) => <s>{command}</s>)}
+        </p>
+      </div>
+
+      <figure class="journey" data-in="settle" style="--d: 140ms">
+        <PixelEarth label={c.route.label} crop={crop} id="seams-journey">
+          <svg class="route" viewBox={`0 0 ${crop.w} ${crop.h}`} preserveAspectRatio="none" aria-hidden="true">
+            <polyline class="under" points={points}></polyline>
+            <polyline class="over" points={points}></polyline>
+            {route.slice(1, -1).map(([x, y]) => <rect class="stop" x={x - 0.3} y={y - 0.3} width=".6" height=".6" />)}
+            <rect class="end" x={start[0] - 0.55} y={start[1] - 0.55} width="1.1" height="1.1"></rect>
+            <rect class="end" x={end[0] - 0.55} y={end[1] - 0.55} width="1.1" height="1.1"></rect>
+          </svg>
+          <span class="tag right" style={at(13.4, 27.5)} aria-hidden="true">{c.route.from}</span>
+          <span class="tag" style={at(19, 22)} aria-hidden="true">{c.route.sea}</span>
+          <span class="tag" style={at(26.5, 15)} aria-hidden="true">{c.route.desert}</span>
+          <span class="tag right" style={at(32.6, 5.5)} aria-hidden="true">{c.route.mountains}</span>
+          <span class="tag left strong" style={at(37.6, 3.5)} aria-hidden="true">{c.route.to}</span>
+        </PixelEarth>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .split {
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+    align-items: start;
+    gap: 1rem;
+    display: grid;
+  }
+  .points {
+    gap: 1rem;
+    display: grid;
+  }
+  .point {
+    background: var(--grad-surface);
+    box-shadow: var(--edge), var(--shadow-card);
+    border-radius: var(--radius-xl);
+    gap: .8rem;
+    padding: 1.6rem 1.6rem 1.7rem;
+    display: grid;
+  }
+  .point .mono-label {
+    color: var(--color-blue-strong);
+  }
+  .body {
+    color: var(--color-text-soft);
+    letter-spacing: -.01em;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+  /* Teleport commands, crossed out. */
+  .commands {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem .35rem 0;
+    display: flex;
+  }
+  .commands .mono-label {
+    margin-right: .35rem;
+  }
+  s {
+    box-shadow: var(--edge);
+    color: var(--color-text-muted);
+    font: 500 .8125rem/1 var(--font-mono);
+    background: var(--color-surface-2);
+    border-radius: 999px;
+    padding: .45rem .7rem;
+    text-decoration: line-through var(--color-text) 1.5px;
+  }
+  .journey {
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-window);
+    overflow: hidden;
+  }
+  .route {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+  .route polyline {
+    fill: none;
+    stroke-linejoin: round;
+  }
+  .under {
+    stroke: var(--color-ink);
+    stroke-opacity: .45;
+    stroke-width: .62px;
+  }
+  .over {
+    stroke: #fff;
+    stroke-width: .26px;
+    stroke-dasharray: .8 .55;
+  }
+  .stop {
+    fill: #fff;
+    stroke: var(--color-ink);
+    stroke-width: .12px;
+  }
+  .end {
+    fill: #fff;
+    stroke: var(--color-ink);
+    stroke-width: .2px;
+  }
+  .tag {
+    color: var(--color-text);
+    font: 500 .6875rem/1 var(--font-mono);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    background: #fff;
+    border-radius: .4rem;
+    padding: .4rem .55rem;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 6px 14px -6px #0a1b2e80;
+  }
+  .tag.right {
+    transform: translate(-100%, -50%);
+  }
+  .tag.left {
+    transform: translate(0, -50%);
+  }
+  .tag.strong {
+    color: #fff;
+    background: var(--color-ink);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .over {
+      animation: march 1.6s linear infinite;
+    }
+    @keyframes march {
+      to {
+        stroke-dashoffset: -1.35px;
+      }
+    }
+  }
+  @media (width <= 900px) {
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .journey {
+      margin-top: .75rem;
+    }
+  }
+  @media (width <= 560px) {
+    .point {
+      padding: 1.3rem;
+    }
+    .body {
+      font-size: 1rem;
+    }
+    .tag {
+      font-size: .5625rem;
+      padding: .3rem .4rem;
+    }
+  }
+</style>

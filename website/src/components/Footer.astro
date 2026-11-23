@@ -1,0 +1,123 @@
+---
+import Logo from './Logo.astro';
+import { site } from '../config/site';
+import { pt } from '../content/pt';
+
+const { common, footer: f, join, world, faq } = pt;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="#inicio">
+        <Logo height={52} />
+        <span>{site.name}</span>
+      </a>
+      <p>{f.tagline}</p>
+    </div>
+    <nav class="footer-col" aria-label={f.serverTitle}>
+      <p class="footer-title">{f.serverTitle}</p>
+      <a href="#entrar">{join.chapter}</a>
+      <a href="#mapa">{world.chapter}</a>
+      <a href="#duvidas">{faq.chapter}</a>
+    </nav>
+    <nav class="footer-col" aria-label={f.communityTitle}>
+      <p class="footer-title">{f.communityTitle}</p>
+      <a href={site.discordUrl} target="_blank" rel="noopener">{common.discord}</a>
+      <a href={site.map.url} target="_blank" rel="noopener">{f.liveMap}</a>
+    </nav>
+  </div>
+  <div class="container footer-meta">
+    <span>{site.name} · {year}</span>
+    <a class="status" href={site.map.url} target="_blank" rel="noopener"><i></i>{f.status} {site.map.host}</a>
+  </div>
+  <p class="container disclaimer">{f.disclaimer}</p>
+</footer>
+
+<style>
+  .footer {
+    background: linear-gradient(#f4f8fc00, var(--color-bg-tint) 9rem);
+    margin-top: clamp(5rem, 2rem + 6vw, 9rem);
+    padding-block: 6rem 2.5rem;
+    position: relative;
+  }
+  .footer-grid {
+    gap: var(--space-6);
+    grid-template-columns: minmax(0, 2.4fr) repeat(2, minmax(0, 1fr));
+    display: grid;
+  }
+  .brand {
+    letter-spacing: -.04em;
+    align-items: center;
+    gap: .6rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    display: inline-flex;
+  }
+  .footer-brand p {
+    max-width: 22rem;
+    margin-top: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: .875rem;
+    line-height: 1.55;
+  }
+  .footer-title {
+    color: var(--color-text);
+    margin-bottom: .9rem;
+    font-size: .8125rem;
+    font-weight: 600;
+  }
+  .footer-col {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .6rem;
+    display: flex;
+  }
+  .footer-col a {
+    color: var(--color-text-muted);
+    font-size: .875rem;
+    transition: color .15s;
+  }
+  .footer-col a:hover {
+    color: var(--color-blue-strong);
+  }
+  .footer-meta {
+    justify-content: space-between;
+    gap: var(--space-3);
+    color: var(--color-text-faint);
+    flex-wrap: wrap;
+    margin-top: 4.5rem;
+    font-size: .8125rem;
+    display: flex;
+  }
+  .status {
+    align-items: center;
+    gap: .5rem;
+    transition: color .15s;
+    display: inline-flex;
+  }
+  .status:hover {
+    color: var(--color-text);
+  }
+  .status i {
+    background: var(--color-green);
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+    box-shadow: 0 0 0 3px var(--color-green-soft);
+  }
+  .disclaimer {
+    color: var(--color-text-faint);
+    margin-top: 1rem;
+    font-size: .75rem;
+  }
+  @media (width <= 760px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer-brand {
+      grid-column: 1/-1;
+    }
+  }
+</style>

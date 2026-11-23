@@ -1,0 +1,23 @@
+---
+// A section's opening: chapter line (number and name), a title whose lines rise in one
+// after the other, and the lead text on the right.
+interface Props {
+  num: string;
+  chapter: string;
+  title: readonly string[];
+  lead: string;
+}
+
+const { num, chapter, title, lead } = Astro.props;
+---
+
+<header class="stage-head">
+  <p class="chapter" data-in="settle"><span class="num">{num}</span><span>{chapter}</span></p>
+  <h2 class="stage-title" data-in="lines" style="--d: 60ms">
+    {title.map((line) => <span class="line"><span class="grad">{line}</span></span>)}
+  </h2>
+  <div class="stage-side" data-in="settle" style="--d: 180ms">
+    <p class="stage-lead">{lead}</p>
+    <slot />
+  </div>
+</header>
