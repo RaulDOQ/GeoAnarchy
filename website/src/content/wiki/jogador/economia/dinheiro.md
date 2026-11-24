@@ -21,12 +21,12 @@ A carteira guarda todas as moedas que você tem: Geos e moedas de países. Para 
 Se você só tem Geos, aparece uma linha. Se tem outras moedas, aparece a lista, com o valor aproximado de cada uma em Geos:
 
 ```text
-[GeoEconomy] Your money:
+[GeoEconomy] Seu dinheiro:
  - 1,200.00 Geos
- - 5,000.00 Pesos (worth about 480.00 Geos)
+ - 5,000.00 Pesos (vale cerca de 480.00 Geos)
 ```
 
-Para ver o dinheiro de outro jogador, use `/bal Nome`. Os atalhos `/balance` e `/money` fazem a mesma coisa.
+Para ver o dinheiro de outro jogador, use `/bal Nome`. Os atalhos `/saldo`, `/dinheiro`, `/balance` e `/money` fazem a mesma coisa.
 
 ## Pagar outro jogador
 
@@ -52,7 +52,8 @@ Regras do pagamento:
 | Você digita | Significa |
 |---|---|
 | `250` | 250 |
-| `12.5` | 12 e 50 centavos |
+| `12.5` ou `12,5` | 12 e 50 centavos |
+| `1.234,56` ou `1,234.56` | 1.234 e 56 centavos |
 | `1,000` | 1.000 (mil) |
 | `3k` | 3.000 |
 | `2.5m` | 2.500.000 |

@@ -57,11 +57,11 @@ Antes de anunciar o mercado para o servidor:
 
 | Mensagem | Motivo |
 |---|---|
-| `needs its own currency to build a market` | O país não criou uma moeda própria |
-| `already has the most markets it can have` | O país já tem um mercado |
-| `A country's market has to be inside its own land` | Você está fora do território do país |
-| `That is too close to the ... market` | Há outro mercado a menos de 25 blocos |
-| `Building a market costs ...` | Faltam Geos no banco do país |
-| `The name must be 2 to 24 characters` | Nome curto ou longo demais |
+| `precisa de moeda própria para construir um mercado` | O país não criou uma moeda própria |
+| `já tem o máximo de mercados permitido` | O país já tem um mercado |
+| `O mercado de um país precisa ficar dentro do território dele` | Você está fora do território do país |
+| `Isso é perto demais do mercado ...` | Há outro mercado a menos de 25 blocos |
+| `Construir um mercado custa ...` | Faltam Geos no banco do país |
+| `O nome precisa ter de 2 a 24 caracteres` | Nome curto ou longo demais |
 
 Quando o comando é recusado, nada é cobrado.

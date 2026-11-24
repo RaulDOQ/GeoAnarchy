@@ -38,6 +38,18 @@ A primeira linha é o banco, em Geos. As seguintes são as outras moedas, com o 
 
 > **Atenção:** se você gastar todo o banco com a moeda e o mercado, pode faltar dinheiro para a manutenção. Deixe uma folga.
 
+### Quanto custa ter um país
+
+| | Valor |
+|---|---|
+| Fundar o país | 20.000 Geos, pagos por quem funda. Vem com 9 chunks |
+| Cada chunk a mais | 1.000 Geos |
+| Manutenção | 200 Geos por chunk, **todo dia às 15:00** |
+
+> **Exemplo:** um país com 30 chunks paga 6.000 Geos por dia. Se o banco não tiver esse valor, o país perde os chunks mais novos até a conta fechar. O país em si não é apagado.
+
+Um país novo não paga manutenção nos primeiros 2 dias. Os níveis 5, 7 e 9 do país deixam a manutenção 10% mais barata cada um.
+
 ## O tesouro: as outras moedas
 
 Quando você cria a sua moeda, o tesouro recebe 100.000 unidades dela. Depois disso, entra dinheiro no tesouro quando:
@@ -73,7 +85,7 @@ Para pagar um soldado, um construtor ou um aliado na moeda do país, saque do te
 
 ## Fique de olho no saldo
 
-O mercado do país paga os vendedores com o tesouro. **Se o tesouro zerar, o mercado para de comprar** e os jogadores veem a mensagem `has run out of money`.
+O mercado do país paga os vendedores com o tesouro. **Se o tesouro zerar, o mercado para de comprar** e os jogadores veem a mensagem `ficou sem dinheiro`.
 
 Um mercado que compra muito e vende pouco esvazia o tesouro. Veja como equilibrar em [Gerenciar o mercado](/wiki/pais/economia/gerenciar-mercado/).
 

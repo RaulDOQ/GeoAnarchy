@@ -20,7 +20,7 @@ Existem três motivos possíveis:
 
 ### Vendi 64 itens e recebi menos do que eu esperava. Foi erro?
 
-Não. Cada unidade vendida enche um pouco o estoque e baixa o preço da próxima. O valor que aparece no menu para "1 unidade" é o da primeira. O valor certo para todas está na linha `You carry ... worth ...`. Veja [Como os preços funcionam](/wiki/economia/precos/).
+Não. Cada unidade vendida enche um pouco o estoque e baixa o preço da próxima. O valor que aparece no menu para "1 unidade" é o da primeira. O valor certo para todas está na linha `Você tem ... vale ...`. Veja [Como os preços funcionam](/wiki/economia/precos/).
 
 ### Por que comprar é mais caro do que vender?
 

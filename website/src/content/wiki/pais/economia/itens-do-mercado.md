@@ -15,12 +15,12 @@ Isso é uma decisão do país. Cada item da lista é algo que o **tesouro vai pa
 É o jeito mais fácil.
 
 1. Vá até o mercado e digite `/market`.
-2. Clique no botão **Manage items** (gerenciar itens), na linha de baixo. Só quem governa a economia do país vê esse botão.
+2. Clique no botão **Gerenciar itens**, na linha de baixo. Só quem governa a economia do país vê esse botão.
 3. O menu passa a mostrar **todos os itens** que existem na economia do servidor.
 4. Clique num item para adicionar. Clique de novo para tirar.
-5. Clique em **Done** (pronto) para voltar à lista de preços.
+5. Clique em **Pronto** para voltar à lista de preços.
 
-Passe o mouse em cima de um item para ver a situação dele: `Traded at this market` (o mercado negocia) ou `Not traded at this market` (não negocia). Use o botão **Category** para filtrar por tipo: minérios, comida, madeira e assim por diante.
+Passe o mouse em cima de um item para ver a situação dele: `Negociado neste mercado` ou `Não negociado neste mercado`. Use o botão **Categoria** para filtrar por tipo: minérios, comida, madeira e assim por diante.
 
 ## Pelo comando
 

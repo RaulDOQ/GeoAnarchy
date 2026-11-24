@@ -36,7 +36,7 @@ Cada unidade é paga pelo preço daquele instante. Quando você vende a primeira
 
 > **Exemplo:** a Maria chega num mercado vazio com 64 diamantes. O primeiro vale 300 Geos. O último vale 259. No total ela recebe cerca de **17.800 Geos**, e não 19.200 (64 × 300).
 
-O menu já mostra o valor certo para a quantidade que você carrega, na linha `You carry ... worth ...`.
+O menu já mostra o valor certo para a quantidade que você carrega, na linha `Você tem ... vale ...`.
 
 Vender tudo de uma vez ou aos poucos, um clique de cada vez, dá o mesmo resultado. Não existe truque de dividir a venda.
 
@@ -50,7 +50,7 @@ Por isso vender e comprar de volta no mesmo mercado sempre dá prejuízo. O lucr
 
 ## Quando o mercado fica cheio
 
-Um mercado para de comprar um item quando chega a **10 vezes o estoque normal** dele. Com diamantes, isso é 8.000 unidades. Aparece `Full: not buying more right now`.
+Um mercado para de comprar um item quando chega a **10 vezes o estoque normal** dele. Com diamantes, isso é 8.000 unidades. Aparece `Cheio: não está comprando mais agora`.
 
 Ele volta a comprar quando o estoque baixar: porque alguém comprou, ou pelo desgaste explicado a seguir.
 

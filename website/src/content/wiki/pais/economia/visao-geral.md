@@ -16,8 +16,8 @@ Nada disso é obrigatório. Um país pode existir só com Geos, ou [adotar a moe
 
 ## Quem pode mexer na economia do país
 
-- **O dono do país**, sempre.
-- **Membros de um cargo que tenha a permissão "Manage economy"**. O dono liga essa permissão no menu de cargos do país (`/lands menu`). Nenhum cargo vem com ela ligada.
+- **O dono do país** (o cargo Fundador), sempre.
+- **Membros de um cargo que tenha a permissão "Gerenciar economia"**. O dono liga essa permissão no menu de cargos do país (`/lands menu`). Nenhum cargo vem com ela ligada.
 
 Quem tem essa permissão pode imprimir dinheiro e sacar do tesouro. Dê só a quem você confia.
 

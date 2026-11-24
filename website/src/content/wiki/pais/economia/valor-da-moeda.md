@@ -70,7 +70,7 @@ Mostra a taxa atual, o total da moeda, quanto foi impresso na semana e quem usa 
 
 No menu `/economy`:
 
-- **Currencies** mostra a variação do valor em 24 horas e em 7 dias, e quanto há na reserva.
-- **Economy** mostra a **inflação** de cada moeda em 24 horas e em 7 dias.
+- **Moedas** mostra a variação do valor em 24 horas e em 7 dias, e quanto há na reserva.
+- **Economia** mostra a **inflação** de cada moeda em 24 horas e em 7 dias.
 
 > **Dica:** olhe a inflação da sua moeda antes de imprimir. Se ela já está subindo, imprimir mais vai piorar.

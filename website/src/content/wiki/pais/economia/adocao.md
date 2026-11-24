@@ -91,8 +91,8 @@ Depois que um país adotou a sua moeda, só ele pode deixar de usá-la. O que vo
 
 | Mensagem | Motivo |
 |---|---|
-| `has its own currency, so it can't adopt another` | O seu país já criou uma moeda |
-| `Every country already uses the world currency` | Você tentou adotar o Geo, que todos já usam |
-| `no longer has a country behind it` | O país dono da moeda deixou de existir |
-| `Your country already uses the ...` | O seu país já adotou essa moeda |
-| `There is no request from ...` | Não há pedido desse país. Confira em `/currency requests` |
+| `tem moeda própria, então não pode adotar outra` | O seu país já criou uma moeda |
+| `Todo país já usa a moeda mundial` | Você tentou adotar o Geo, que todos já usam |
+| `não tem mais um país por trás` | O país dono da moeda deixou de existir |
+| `Seu país já usa a moeda ...` | O seu país já adotou essa moeda |
+| `Não há pedido de ...` | Não há pedido desse país. Confira em `/currency requests` |

@@ -65,6 +65,6 @@ Quanto mais se imprime, menos cada impressão rende. É a mesma conta do mundo r
 
 | Mensagem | Motivo |
 |---|---|
-| `That is over this week's limit` | O valor passa do que ainda pode ser impresso. A mensagem diz quanto resta |
-| `doesn't have its own currency` | O país não criou uma moeda (ou só adotou a de outro) |
-| `You don't run a country's economy` | Você não é o dono nem tem a permissão |
+| `Isso passa do limite desta semana` | O valor passa do que ainda pode ser impresso. A mensagem diz quanto resta |
+| `não tem moeda própria` | O país não criou uma moeda (ou só adotou a de outro) |
+| `Você não comanda a economia de nenhum país` | Você não é o dono nem tem a permissão |

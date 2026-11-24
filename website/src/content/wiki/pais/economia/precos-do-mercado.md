@@ -16,7 +16,7 @@ O mercado do país **segue o mercado continental mais próximo**. O ponto de par
 
 O mercado usa um preço **suavizado** do continente, que acompanha o real com cerca de 30 minutos de atraso. Assim ninguém consegue encher ou esvaziar o continente por um instante só para mexer no seu mercado.
 
-Para saber qual continente o seu mercado segue, veja em `/market list`: a linha `Follows the ... market`.
+Para saber qual continente o seu mercado segue, veja em `/market list`: a linha `Segue o mercado ...`.
 
 ## 2. O ajuste do país
 

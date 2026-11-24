@@ -36,12 +36,12 @@ Mostra os detalhes de uma moeda:
 
 | No jogo | Quer dizer |
 |---|---|
-| `Issued by Espanha` | O país que criou e controla a moeda |
+| `Emitida por Espanha` | O país que criou e controla a moeda |
 | `1 Geo = 10.32 Pesos` | A taxa de câmbio de agora |
-| `Supply: 300,000.00 Pesos` | Quanto dessa moeda existe no total |
-| `printed in the last 7 days` | Quanto o país imprimiu na última semana |
-| `Can still be printed this week` | Quanto o país ainda pode imprimir nesta semana |
-| `Used by: Espanha, Argentina` | Os países que usam a moeda |
+| `Total: 300,000.00 Pesos` | Quanto dessa moeda existe no total |
+| `impresso nos últimos 7 dias` | Quanto o país imprimiu na última semana |
+| `Ainda pode ser impresso nesta semana` | Quanto o país ainda pode imprimir nesta semana |
+| `Usada por: Espanha, Argentina` | Os países que usam a moeda |
 
 O menu `/economy` mostra as mesmas informações, com a variação das últimas 24 horas e dos últimos 7 dias.
 

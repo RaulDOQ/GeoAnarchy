@@ -17,11 +17,11 @@ O câmbio funciona de **qualquer lugar**: você não precisa estar num mercado.
 2. O jogo mostra quanto você vai receber:
 
    ```text
-   Exchange 100.00 Geos for 985.07 Pesos (fee 1.00 Geo, 1 Geo = 9.85 Pesos)
-   [Confirm] or type /exchange confirm within 30 seconds.
+   Trocar 100.00 Geos por 985.07 Pesos (taxa 1.00 Geo, 1 Geo = 9.85 Pesos)
+   [Confirmar] ou digite /exchange confirm em até 30 segundos.
    ```
 
-3. Clique em **[Confirm]** ou digite `/exchange confirm`. Você tem 30 segundos.
+3. Clique em **[Confirmar]** ou digite `/exchange confirm`. Você tem 30 segundos.
 
 Nada acontece enquanto você não confirmar. Se a cotação não agradar, é só não confirmar.
 
@@ -78,12 +78,12 @@ Por baixo, a troca passa pelo Geo: os Pesos viram Geos e os Geos viram Francos. 
 
 | Mensagem | O que aconteceu |
 |---|---|
-| `You don't have enough` | Você não tem aquele valor na moeda que quer entregar |
-| `That amount is too small to exchange` | O valor é pequeno demais para render pelo menos um centavo |
-| `Those are the same currency` | Você escreveu a mesma moeda duas vezes |
-| `There is no currency with the code ...` | O código não existe. Confira em `/currency list` |
-| `Nothing to confirm` | Passaram os 30 segundos, ou você já confirmou. Peça a cotação de novo |
-| `You can't hold that much` | Você passaria do limite de saldo |
+| `Você não tem o suficiente` | Você não tem aquele valor na moeda que quer entregar |
+| `Esse valor é pequeno demais para trocar` | O valor é pequeno demais para render pelo menos um centavo |
+| `Essas são a mesma moeda` | Você escreveu a mesma moeda duas vezes |
+| `Não existe moeda com o código ...` | O código não existe. Confira em `/currency list` |
+| `Nada para confirmar` | Passaram os 30 segundos, ou você já confirmou. Peça a cotação de novo |
+| `Você não pode guardar tanto` | Você passaria do limite de saldo |
 
 ## Dá para lucrar com câmbio?
 

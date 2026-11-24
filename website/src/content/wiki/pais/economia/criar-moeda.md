@@ -68,13 +68,13 @@ O servidor inteiro recebe um aviso de que o seu país criou uma moeda.
 
 | Mensagem | Motivo |
 |---|---|
-| `already has its own currency` | O país já criou uma moeda |
-| `The code must be 3 to 5 letters` | Código curto, longo ou com números |
-| `The code ... is already taken` | Já existe uma moeda com esse código |
-| `Names must be 2 to 16 letters` | Nome com números, símbolos ou tamanho errado |
-| `That name is too close to an existing currency` | Já existe uma moeda com esse nome |
-| `Creating a currency costs ...` | Faltam Geos no banco do país. Deposite com `/lands deposit` |
-| `You don't run a country's economy` | Você não é o dono nem tem a permissão |
+| `já tem a sua própria moeda` | O país já criou uma moeda |
+| `O código precisa ter de 3 a 5 letras` | Código curto, longo ou com números |
+| `O código ... já está em uso` | Já existe uma moeda com esse código |
+| `Os nomes precisam ter de 2 a 16 letras` | Nome com números, símbolos ou tamanho errado |
+| `Esse nome é parecido demais com uma moeda que já existe` | Já existe uma moeda com esse nome |
+| `Criar uma moeda custa ...` | Faltam Geos no banco do país. Deposite com `/lands deposit` |
+| `Você não comanda a economia de nenhum país` | Você não é o dono nem tem a permissão |
 
 Quando o comando é recusado, nada é cobrado.
 

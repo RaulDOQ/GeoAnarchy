@@ -25,8 +25,8 @@ Abre a lista de itens que aquele mercado negocia. Clique num item para negociar:
 
 Na linha de baixo do menu:
 
-- **Category** (categoria): filtra por tipo de item. Clique para ir à próxima, botão direito para voltar.
-- **Sell everything** (vender tudo): vende de uma vez tudo o que você carrega e o mercado aceita. Itens danificados, renomeados e encantados ficam com você.
+- **Categoria**: filtra por tipo de item. Clique para ir à próxima, botão direito para voltar.
+- **Vender tudo**: vende de uma vez tudo o que você carrega e o mercado aceita. Itens danificados, renomeados e encantados ficam com você.
 - O ícone do meio mostra a moeda do mercado, o imposto e quanto dinheiro você tem.
 
 ## Lendo um item
@@ -35,13 +35,13 @@ Passe o mouse em cima de um item para ver:
 
 | No jogo | Quer dizer |
 |---|---|
-| `Sell for 9.20 Geos` | Quanto o mercado paga por 1 unidade agora |
-| `Buy for 10.58 Geos` | Quanto custa comprar 1 unidade agora |
-| `Buy: none in stock` | O mercado não tem esse item para vender |
-| `In stock: 1,240 (normal 3,000)` | Quantos o mercado tem, e quanto seria o estoque normal |
-| `You carry 64: worth 560.12 Geos` | Quanto você recebe se vender todos os que carrega |
-| `Full: not buying more right now` | O mercado está cheio desse item e não compra mais por enquanto |
-| `Raw material` | Matéria-prima: comprar custa mais que o normal |
+| `Venda por 9.20 Geos` | Quanto o mercado paga por 1 unidade agora |
+| `Compre por 10.58 Geos` | Quanto custa comprar 1 unidade agora |
+| `Compra: sem estoque` | O mercado não tem esse item para vender |
+| `Em estoque: 1,240 (normal 3,000)` | Quantos o mercado tem, e quanto seria o estoque normal |
+| `Você tem 64: vale 560.12 Geos` | Quanto você recebe se vender todos os que carrega |
+| `Cheio: não está comprando mais agora` | O mercado está cheio desse item e não compra mais por enquanto |
+| `Matéria-prima` | Matéria-prima: comprar custa mais que o normal |
 
 O preço muda a cada venda e a cada compra. O valor de "vender todos" já leva isso em conta. Entenda o motivo em [Como os preços funcionam](/wiki/economia/precos/).
 
@@ -57,6 +57,8 @@ Para quem prefere digitar:
 | `/sell diamond 10` | Vende 10 diamantes |
 | `/buy diamond` | Compra 1 diamante |
 | `/buy diamond 32` | Compra 32 diamantes |
+
+`/vender`, `/comprar` e `/mercado` são os mesmos comandos em português: `/vender hand`, `/comprar diamond 32`.
 
 Os nomes dos itens são os do Minecraft em inglês, com `_` no lugar do espaço: `iron_ingot`, `oak_log`, `cooked_beef`. Aperte **Tab** enquanto digita para o jogo completar o nome.
 
@@ -75,14 +77,14 @@ A mensagem final sempre diz quantos itens foram negociados e por quanto.
 
 | Mensagem | O que aconteceu | O que fazer |
 |---|---|---|
-| `You aren't at a market` | Você está fora do ponto de venda | Entre no anel de partículas |
-| `The ... market doesn't trade ...` | Esse mercado não negocia esse item | Venda em outro mercado |
-| `Markets don't trade ...` | Nenhum mercado negocia esse item | Não é um item vendável |
-| `You don't carry any plain ...` | O item está danificado, renomeado ou encantado | Só itens limpos são aceitos |
-| `The ... market is full of ...` | O mercado já tem demais desse item | Espere, ou leve para outro mercado |
-| `The ... market has run out of money` | É um mercado de país e o tesouro acabou | Volte depois, ou venda em outro |
-| `The ... market has no ... in stock` | Não tem esse item para comprar | Procure em outro mercado |
-| `You can't afford that` | Falta dinheiro **na moeda do mercado** | Confira com `/bal`. Num mercado de país, troque Geos pela moeda dele |
-| `That is worth less than 0.01` | O que você vendeu vale menos de um centavo | Venda mais unidades de uma vez |
-| `Your inventory is full` | Não cabe mais nada | Libere espaço |
-| `The ... market is closed` | O dono fechou o mercado | Volte depois |
+| `Você não está em um mercado` | Você está fora do ponto de venda | Entre no anel de partículas |
+| `O mercado ... não negocia ...` | Esse mercado não negocia esse item | Venda em outro mercado |
+| `Os mercados não negociam ...` | Nenhum mercado negocia esse item | Não é um item vendável |
+| `Você não tem ... comum` | O item está danificado, renomeado ou encantado | Só itens limpos são aceitos |
+| `O mercado ... está cheio de ...` | O mercado já tem demais desse item | Espere, ou leve para outro mercado |
+| `O mercado ... ficou sem dinheiro` | É um mercado de país e o tesouro acabou | Volte depois, ou venda em outro |
+| `O mercado ... não tem ... no estoque` | Não tem esse item para comprar | Procure em outro mercado |
+| `Você não tem dinheiro para isso` | Falta dinheiro **na moeda do mercado** | Confira com `/bal`. Num mercado de país, troque Geos pela moeda dele |
+| `Isso vale menos de 0.01` | O que você vendeu vale menos de um centavo | Venda mais unidades de uma vez |
+| `Seu inventário está cheio` | Não cabe mais nada | Libere espaço |
+| `O mercado ... está fechado` | O dono fechou o mercado | Volte depois |

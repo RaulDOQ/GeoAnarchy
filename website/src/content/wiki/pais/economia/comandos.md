@@ -4,7 +4,7 @@ summary: Todos os comandos para quem governa a economia de um país.
 order: 13
 ---
 
-Estes comandos só funcionam para o **dono do país** e para membros de um cargo com a permissão **Manage economy**. O que está entre `< >` é obrigatório e o que está entre `[ ]` é opcional.
+Estes comandos só funcionam para o **dono do país** e para membros de um cargo com a permissão **Gerenciar economia**. O que está entre `< >` é obrigatório e o que está entre `[ ]` é opcional.
 
 Os comandos de jogador (pagar, vender, comprar, trocar) estão na [Wiki do Jogador](/wiki/economia/comandos/).
 
@@ -44,7 +44,7 @@ Os comandos de jogador (pagar, vender, comprar, trocar) estão na [Wiki do Jogad
 | Comando | O que faz | Observação |
 |---|---|---|
 | `/market create <nome>` | Constrói o mercado onde você está | 25.000 Geos, dentro do território |
-| `/market item <item> <on\|off>` | Adiciona ou tira um item da lista | Também pelo botão **Manage items** |
+| `/market item <item> <on\|off>` | Adiciona ou tira um item da lista | Também pelo botão **Gerenciar itens** |
 | `/market tax <porcentagem>` | Define o imposto | De 0 a 10 |
 | `/market price <item> <porcentagem>` | Ajusta o preço de um item | De 50 a 200; 100 é o normal |
 | `/market take <item> <quantidade>` | Retira itens do estoque | Estando no ponto de venda |
@@ -67,6 +67,13 @@ Os comandos de jogador (pagar, vender, comprar, trocar) estão na [Wiki do Jogad
 | Ajuste de preço por item | De 50% a 200% |
 | Distância entre mercados | Pelo menos 25 blocos |
 | Taxa de câmbio | 1% por troca |
+| Fundar o país | 20.000 Geos |
+| Cada chunk a mais | 1.000 Geos |
+| Manutenção | 200 Geos por chunk, todo dia às 15:00 |
+
+## Em português
+
+Os comandos também atendem por nomes em português: `/tesouro` é o `/treasury`, `/moeda` é o `/currency` e `/mercado` é o `/market`. O que vem depois continua igual: `/tesouro deposit 5000 PESO`, `/moeda print 1000`.
 
 ## Se você governa mais de um país
 

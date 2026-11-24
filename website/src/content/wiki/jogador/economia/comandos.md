@@ -16,7 +16,7 @@ O que está entre `< >` é obrigatório e o que está entre `[ ]` é opcional. N
 | `/pay <jogador> <valor> <moeda>` | Paga em outra moeda, por exemplo `/pay Maria 100 PESO` |
 | `/baltop [moeda] [página]` | Mostra os mais ricos |
 
-`/balance` e `/money` são o mesmo que `/bal`.
+`/balance`, `/money`, `/saldo` e `/dinheiro` são o mesmo que `/bal`.
 
 ## Mercados
 
@@ -48,6 +48,24 @@ Os nomes dos itens são em inglês, como no Minecraft: `diamond`, `iron_ingot`, 
 | Comando | O que faz |
 |---|---|
 | `/economy` | Abre o menu com carteira, moedas, mercados e números da economia |
+
+## Em português
+
+Cada comando também atende por um nome em português. O que vem depois do comando continua igual: `/vender hand`, `/cambio 100 GEO PESO`, `/mercado list`.
+
+| Comando | Também funciona |
+|---|---|
+| `/bal` | `/saldo`, `/dinheiro` |
+| `/pay` | `/pagar` |
+| `/baltop` | `/ricos` |
+| `/market` | `/mercado` |
+| `/sell` | `/vender` |
+| `/buy` | `/comprar` |
+| `/exchange` | `/cambio` |
+| `/currency` | `/moeda` |
+| `/economy` | `/economia` |
+
+Os valores aceitam vírgula: `/pagar Maria 12,5` envia 12 Geos e 50 centavos.
 
 ## Comandos que não existem aqui
 

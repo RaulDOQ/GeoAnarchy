@@ -4,7 +4,7 @@ summary: O que acontece com a moeda, o tesouro e o mercado quando um país é ap
 order: 12
 ---
 
-Um país acaba quando o dono o apaga, ou quando ele é removido por falta de pagamento da manutenção. A economia dele não some junto: uma parte fica, outra não.
+Um país acaba quando o dono o apaga, ou quando o servidor o remove porque o dono ficou tempo demais sem entrar e nenhum membro ativo pôde assumir. Faltar dinheiro para a manutenção tira chunks do país, mas não o apaga. A economia dele não some junto: uma parte fica, outra não.
 
 ## O que acontece
 
