@@ -1,0 +1,108 @@
+---
+// The frame of every wiki page: the head with the switch between the two wikis, then the
+// side menu beside whatever the page puts inside. A wiki's front page gets the site's
+// large page head; an article gets a small one, so the text starts near the top.
+import Base from '../../layouts/Base.astro';
+import PageHead from '../PageHead.astro';
+import Closing from '../home/Closing.astro';
+import WikiSwitch from './WikiSwitch.astro';
+import WikiSidebar from './WikiSidebar.astro';
+import { wikiMenu, type WikiId } from '../../config/wiki';
+import { pt } from '../../content/pt';
+import '../../styles/wiki.css';
+
+interface Props {
+  wiki: WikiId;
+  title: string;
+  description: string;
+  /** The address of this page, to mark it in the side menu. */
+  current?: string;
+  /** True on an article page. */
+  article?: boolean;
+}
+
+const { wiki, title, description, current, article = false } = Astro.props;
+const c = pt.wiki;
+const head = wiki === 'pais' ? c.country : c;
+const groups = await wikiMenu(wiki, current);
+---
+
+<Base title={title} description={description} page="wiki">
+  {
+    article ? (
+      <header class="wiki-top container">
+        <p class="wiki-chip">
+          <i />
+          {c.chapter}
+        </p>
+        <WikiSwitch wiki={wiki} />
+      </header>
+    ) : (
+      <PageHead chapter={c.chapter} title={head.title} lead={head.lead}>
+        <WikiSwitch wiki={wiki} />
+      </PageHead>
+    )
+  }
+
+  <div class="container wiki">
+    <WikiSidebar groups={groups} />
+    <div class="wiki-main">
+      <slot />
+    </div>
+  </div>
+
+  <Closing />
+</Base>
+
+<style>
+  .wiki-top {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    padding-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+    display: flex;
+  }
+  /* The same chip as the large page head's. */
+  .wiki-chip {
+    height: 2rem;
+    box-shadow: var(--edge), 0 2px 6px -3px #0a1b2e2e;
+    color: var(--color-text-soft);
+    background: var(--color-surface);
+    border-radius: 999px;
+    align-items: center;
+    gap: .55rem;
+    padding: 0 .85rem 0 .7rem;
+    font-size: .84375rem;
+    font-weight: 500;
+    display: inline-flex;
+  }
+  .wiki-chip i {
+    background: var(--color-blue);
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+  }
+  .wiki {
+    grid-template-columns: 15.5rem minmax(0, 1fr);
+    align-items: start;
+    gap: 3rem;
+    padding-top: 3.5rem;
+    display: grid;
+  }
+  .wiki-top + .wiki {
+    padding-top: 2.25rem;
+  }
+  .wiki-main {
+    min-width: 0;
+  }
+  @media (width <= 900px) {
+    .wiki {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem;
+    }
+    .wiki-top + .wiki {
+      padding-top: 1.5rem;
+    }
+  }
+</style>

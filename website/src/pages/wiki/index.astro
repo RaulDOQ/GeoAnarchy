@@ -1,110 +1,59 @@
 ---
-// "GeoWiki": the first three articles on one page, with an index beside them. They
-// repeat what the home page says (how to join, the world, how the server works); more
-// pages come later.
-import Base from '../../layouts/Base.astro';
-import PageHead from '../../components/PageHead.astro';
+// "GeoWiki", the players' wiki: its front page. The first three articles are here, on
+// one page (how to join, the world, how the server works), followed by the way into the
+// economy articles, which are pages of their own (src/content/wiki/jogador).
+import WikiLayout from '../../components/wiki/WikiLayout.astro';
+import WikiTopics from '../../components/wiki/WikiTopics.astro';
 import Editions from '../../components/Editions.astro';
 import Icon from '../../components/Icon.astro';
-import Closing from '../../components/home/Closing.astro';
 import { site } from '../../config/site';
+import { wikiBase } from '../../config/wiki';
 import { pt } from '../../content/pt';
 
 const c = pt.wiki;
-const articles = [c.join, c.world, c.rules];
 ---
 
-<Base title={c.meta.title} description={c.meta.description} page="wiki">
-  <PageHead chapter={c.chapter} title={c.title} lead={c.lead} />
+<WikiLayout wiki="jogador" title={c.meta.title} description={c.meta.description} current={wikiBase.jogador}>
+  <div class="articles">
+    <article id={c.join.id}>
+      <h2 data-in="settle">{c.join.title}</h2>
+      <p class="intro" data-in="settle" style="--d: 60ms">{c.join.intro}</p>
+      <Editions />
+    </article>
 
-  <div class="container wiki">
-    <nav class="index card" aria-label={c.indexLabel} data-in="settle">
-      <p class="label">{c.indexLabel}</p>
-      {articles.map((article, i) => <a href={`#${article.id}`}><span>0{i + 1}</span>{article.title}</a>)}
-      <p class="more">{pt.common.soon}</p>
-    </nav>
+    <article id={c.world.id}>
+      <h2 data-in="settle">{c.world.title}</h2>
+      <p class="intro" data-in="settle" style="--d: 60ms">{c.world.intro}</p>
+      <dl class="rows card" data-in="settle" style="--d: 100ms">
+        {
+          c.world.rows.map((row) => (
+            <div>
+              <dt>{row.label}</dt>
+              <dd>{row.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <a class="learn" href={site.map.url} target="_blank" rel="noopener" data-in="settle" style="--d: 140ms">{pt.world.open}<Icon name="arrowRight" /></a>
+    </article>
 
-    <div class="articles">
-      <article id={c.join.id}>
-        <h2 data-in="settle">{c.join.title}</h2>
-        <p class="intro" data-in="settle" style="--d: 60ms">{c.join.intro}</p>
-        <Editions />
-      </article>
+    <article id={c.rules.id}>
+      <h2 data-in="settle">{c.rules.title}</h2>
+      <p class="intro" data-in="settle" style="--d: 60ms">{c.rules.intro}</p>
+      <ul class="checks rules card" data-in="settle" style="--d: 100ms">
+        {c.rules.items.map((item) => <li>{item}</li>)}
+      </ul>
+    </article>
 
-      <article id={c.world.id}>
-        <h2 data-in="settle">{c.world.title}</h2>
-        <p class="intro" data-in="settle" style="--d: 60ms">{c.world.intro}</p>
-        <dl class="rows card" data-in="settle" style="--d: 100ms">
-          {
-            c.world.rows.map((row) => (
-              <div>
-                <dt>{row.label}</dt>
-                <dd>{row.value}</dd>
-              </div>
-            ))
-          }
-        </dl>
-        <a class="learn" href={site.map.url} target="_blank" rel="noopener" data-in="settle" style="--d: 140ms">{pt.world.open}<Icon name="arrowRight" /></a>
-      </article>
-
-      <article id={c.rules.id}>
-        <h2 data-in="settle">{c.rules.title}</h2>
-        <p class="intro" data-in="settle" style="--d: 60ms">{c.rules.intro}</p>
-        <ul class="checks rules card" data-in="settle" style="--d: 100ms">
-          {c.rules.items.map((item) => <li>{item}</li>)}
-        </ul>
-      </article>
-    </div>
+    <article id={c.economy.id}>
+      <h2 data-in="settle">{c.economy.title}</h2>
+      <p class="intro" data-in="settle" style="--d: 60ms">{c.economy.intro}</p>
+      <WikiTopics wiki="jogador" section="economia" />
+    </article>
   </div>
-
-  <Closing />
-</Base>
+</WikiLayout>
 
 <style>
-  .wiki {
-    grid-template-columns: 15rem minmax(0, 1fr);
-    align-items: start;
-    gap: 3rem;
-    padding-top: 3.5rem;
-    display: grid;
-  }
-  .index {
-    top: calc(var(--nav-offset) + 1.5rem);
-    gap: .15rem;
-    padding: 1.1rem .6rem .9rem;
-    display: grid;
-    position: sticky;
-  }
-  .index .label {
-    padding: 0 .6rem .7rem;
-  }
-  .index a {
-    color: var(--color-text-soft);
-    border-radius: .55rem;
-    align-items: baseline;
-    gap: .7rem;
-    padding: .55rem .6rem;
-    font-size: .9375rem;
-    font-weight: 500;
-    transition: background-color .2s, color .2s;
-    display: flex;
-  }
-  .index a:hover {
-    color: var(--color-text);
-    background: var(--color-surface-hover);
-  }
-  .index a span {
-    color: var(--color-blue-strong);
-    font-variant-numeric: tabular-nums;
-    font-size: .71875rem;
-    font-weight: 600;
-    line-height: 1;
-  }
-  .more {
-    color: var(--color-text-faint);
-    padding: .6rem .6rem 0;
-    font-size: .8125rem;
-  }
   .articles {
     gap: 4.5rem;
     display: grid;
@@ -168,13 +117,6 @@ const articles = [c.join, c.world, c.rules];
     font-size: 1rem;
   }
   @media (width <= 900px) {
-    .wiki {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 2.5rem;
-    }
-    .index {
-      position: static;
-    }
     .articles {
       gap: 3.5rem;
     }

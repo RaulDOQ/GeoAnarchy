@@ -1,0 +1,147 @@
+---
+// One page per wiki article (the Markdown files in src/content/wiki). A players' article
+// lives at /wiki/<section>/<article>/, a founders' one at /wiki/pais/<section>/<article>/.
+import { render } from 'astro:content';
+import WikiLayout from '../../components/wiki/WikiLayout.astro';
+import Icon from '../../components/Icon.astro';
+import {
+  allWikiArticles,
+  articleHref,
+  articlePath,
+  articleSectionTitle,
+  articleWiki,
+  wikiNeighbours,
+  type WikiArticle,
+} from '../../config/wiki';
+import { pt } from '../../content/pt';
+
+export async function getStaticPaths() {
+  return (await allWikiArticles()).map((article) => ({
+    params: { path: articlePath(article) },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: WikiArticle;
+}
+
+const { article } = Astro.props;
+const c = pt.wiki;
+const wiki = articleWiki(article);
+const { Content } = await render(article);
+const { previous, next } = await wikiNeighbours(article);
+---
+
+<WikiLayout
+  wiki={wiki}
+  title={c.articleTitle.replace('{title}', article.data.title)}
+  description={article.data.summary}
+  current={articleHref(article)}
+  article
+>
+  <article class="prose">
+    <p class="kicker">{c.wikis[wiki].label} · {articleSectionTitle(article)}</p>
+    <h1>{article.data.title}</h1>
+    <p class="summary">{article.data.summary}</p>
+    <Content />
+  </article>
+
+  <nav class="pager" aria-label={`${c.previous} / ${c.next}`}>
+    {
+      previous ? (
+        <a class="card" href={articleHref(previous)}>
+          <span class="label">
+            <Icon name="arrowLeft" />
+            {c.previous}
+          </span>
+          <span class="name">{previous.data.title}</span>
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      next && (
+        <a class="card next" href={articleHref(next)}>
+          <span class="label">
+            {c.next}
+            <Icon name="arrowRight" />
+          </span>
+          <span class="name">{next.data.title}</span>
+        </a>
+      )
+    }
+  </nav>
+</WikiLayout>
+
+<style>
+  .kicker {
+    color: var(--color-blue-strong);
+    font-size: .875rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  h1 {
+    color: var(--color-text);
+    letter-spacing: -.04em;
+    margin-top: .7rem;
+    font-size: clamp(2.1rem, 1.5rem + 2.2vw, 3rem);
+    line-height: 1.05;
+  }
+  .summary {
+    color: var(--color-text-muted);
+    letter-spacing: -.01em;
+    margin-top: 1.1rem;
+    font-size: 1.15rem;
+    line-height: 1.55;
+  }
+  .summary + :global(*) {
+    margin-top: 2rem;
+  }
+  .pager {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1rem;
+    max-width: 44rem;
+    margin-top: 4rem;
+    display: grid;
+  }
+  .pager a {
+    gap: .45rem;
+    padding: 1.05rem 1.2rem 1.15rem;
+    transition: box-shadow .25s, transform .25s var(--ease-out);
+    display: grid;
+  }
+  .pager a:hover {
+    box-shadow: var(--edge-strong), var(--shadow-lift);
+    transform: translateY(-2px);
+  }
+  .pager .next {
+    text-align: right;
+    justify-items: end;
+  }
+  .pager .label {
+    align-items: center;
+    gap: .35rem;
+    display: inline-flex;
+  }
+  .pager .label :global(svg) {
+    width: .85rem;
+    height: .85rem;
+  }
+  .pager .name {
+    color: var(--color-text);
+    letter-spacing: -.015em;
+    font-size: 1.03125rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  @media (width <= 520px) {
+    .pager {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .pager > span {
+      display: none;
+    }
+  }
+</style>

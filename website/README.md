@@ -11,7 +11,9 @@ JavaScript that any static host can serve.
 | `/` | `src/pages/index.astro` | Home: the pitch, the live map, the server's ideas, how to join, questions |
 | `/sobre/` | `src/pages/sobre/index.astro` | Sobre nós. The server's story and team are still to be written. |
 | `/loja/` | `src/pages/loja/index.astro` | Loja. The monthly goal (what keeps the server running, and how much is missing), then the three plans with a switch for paying every month, every 3 months or every 6 months. They cannot be bought yet; the page says so. |
-| `/wiki/` | `src/pages/wiki/index.astro` | GeoWiki: how to join, the world, how the server works |
+| `/wiki/` | `src/pages/wiki/index.astro` | GeoWiki, the players' wiki: how to join, the world, how the server works, and the list of economy articles |
+| `/wiki/pais/` | `src/pages/wiki/pais/index.astro` | The country founders' wiki: who it is for, and its list of economy articles |
+| `/wiki/<section>/<article>/`, `/wiki/pais/<section>/<article>/` | `src/pages/wiki/[...path].astro` | One page per wiki article (see "The GeoWiki" below) |
 | any other | `src/pages/404.astro` | Page not found |
 
 The header tabs are the list `common.nav` in `src/content/pt.ts`: add a page there and it
@@ -36,7 +38,10 @@ Run these inside `website/` (Node 22.12 or newer):
 |---|---|
 | `src/config/site.ts` | Server addresses, the map address and its parameters, the Discord invite, world size. Change a value here and every page follows. |
 | `src/config/store.ts` | The store: the monthly goal and how much has come in (kept by hand until payments are connected), the plans, their monthly prices, and the discounts for paying 3 or 6 months at once. The "Loja" page works everything out from these. |
-| `src/content/pt.ts` | Every text on the site. |
+| `src/content/pt.ts` | Every text on the site, except the wiki's long articles. |
+| `src/content/wiki/` | The GeoWiki's articles, as Markdown files (see "The GeoWiki" below). |
+| `src/config/wiki.ts`, `src/content.config.ts` | How the articles become addresses, the side menu and the "previous / next" links. |
+| `src/components/wiki/`, `src/styles/wiki.css` | The wiki's frame (the switch between the two wikis, the side menu, the lists of articles) and the look of an article's text. |
 | `src/styles/tokens.css` | Colours, type, spacing and motion values (white, blue and green theme). |
 | `src/components/Logo.astro`, `Wordmark.astro` | The logo with the block Earth (header) and the name on its own (hero, closing section, footer, 404 page). |
 | `src/components/PageHead.astro`, `Editions.astro` | The top of every page other than the home page, and the Java and Bedrock join cards (home page and GeoWiki). |
@@ -46,6 +51,51 @@ Run these inside `website/` (Node 22.12 or newer):
 | `scripts/detect-map.mjs` | Finds and checks the live map's tiles before each build. |
 | `src/assets/anarchy-chaos.webp`, `anarchy-order.webp` | The pictures in the two "Anarquia" panels. Replace a file to change a picture; without a file the panel shows blocks. |
 | `src/assets/logo.webp`, `logo-small.webp`, `wordmark.webp` | The logo artwork, trimmed: the full logo in two sizes and the name alone. `public/favicon.png`, `public/apple-touch-icon.png` and `public/og.png` (the picture shown when the site's link is shared) come from the same artwork. |
+
+## The GeoWiki
+
+There are two wikis, and a switch at the top of every wiki page goes from one to the other:
+
+- **Wiki do Jogador** (`/wiki/`), for everyone who plays.
+- **Wiki do País** (`/wiki/pais/`), for country founders and whoever runs a country's economy.
+
+Each wiki has a side menu with its sections. The first one, "Economia", explains the
+server's economy (the GeoEconomy plugin): 11 articles for players and 13 for founders.
+
+**An article is one Markdown file:**
+
+```
+src/content/wiki/<wiki>/<section>/<article>.md
+src/content/wiki/jogador/economia/dinheiro.md   ->  /wiki/economia/dinheiro/
+src/content/wiki/pais/economia/criar-moeda.md   ->  /wiki/pais/economia/criar-moeda/
+```
+
+It starts with three lines of settings, then the text:
+
+```md
+---
+title: Dinheiro e carteira
+summary: One or two sentences shown under the title and in the lists.
+order: 2
+---
+
+## A heading
+
+Text, lists, tables and `commands`.
+
+> **Exemplo:** a quote becomes a tinted note.
+```
+
+- **To add an article**, add a file. It appears in the side menu, in the list on the
+  wiki's front page and in the "previous / next" links, in the place its `order` gives it.
+- **To add a section**, add a folder, give it a name in `src/content/pt.ts`
+  (`wiki.sections`) and a position in `src/config/wiki.ts` (`sectionOrder`).
+- Links between articles are written in full: `[Câmbio](/wiki/economia/cambio/)`.
+- Inside a table, write `\|` for a `|` that belongs to a command.
+
+The numbers in the articles (fees, limits, prices) are the plugin's settings at the time of
+writing. If `config.yml` or `items.yml` of GeoEconomy changes on the server, the articles
+that quote those numbers need the same change.
 
 ## The live map
 

@@ -282,16 +282,67 @@ export const pt = {
     },
   },
 
-  // "GeoWiki". Three first articles, all taken from what the site already says.
+  // "GeoWiki". Two wikis: one for players (this text, plus the articles in
+  // src/content/wiki/jogador) and one for country founders (`country` below, plus
+  // src/content/wiki/pais). The long articles are Markdown files; the texts around them
+  // are here.
   wiki: {
     meta: {
       title: 'GeoWiki | GeoAnarchy',
-      description: 'O guia do GeoAnarchy: como entrar, o mundo do servidor e como ele funciona.',
+      description: 'O guia do GeoAnarchy: como entrar, o mundo do servidor, como ele funciona e a economia.',
     },
     chapter: 'GeoWiki',
     title: ['O guia do', 'GeoAnarchy'],
-    lead: 'O essencial para começar. Mais páginas em breve.',
-    indexLabel: 'Nesta página',
+    lead: 'O essencial para jogar: como entrar, o mundo do servidor e a economia.',
+    // The side menu.
+    indexLabel: 'Nesta wiki',
+    // The switch between the two wikis, at the top of every wiki page.
+    switchLabel: 'Escolha a wiki',
+    wikis: {
+      jogador: { label: 'Wiki do Jogador', note: 'Para quem joga' },
+      pais: { label: 'Wiki do País', note: 'Para fundadores de países' },
+    },
+    // The side menu's groups. `start` is the front page's own articles; the others are the
+    // folders in src/content/wiki/<wiki>/.
+    sections: {
+      start: 'Começando',
+      economia: 'Economia',
+    },
+    // An article page: its browser title, and the links at its end.
+    articleTitle: '{title} | GeoWiki',
+    previous: 'Anterior',
+    next: 'Próximo',
+    // The list of economy articles on each wiki's front page.
+    economy: {
+      id: 'economia',
+      title: 'Economia',
+      intro: 'O Geo, as moedas dos países, o câmbio e os mercados: como o dinheiro funciona no servidor.',
+    },
+    // The founders' wiki.
+    country: {
+      meta: {
+        title: 'Wiki do País | GeoWiki',
+        description: 'O guia para quem fundou um país no GeoAnarchy: moeda própria, tesouro, impressão de dinheiro e mercado.',
+      },
+      title: ['O guia do', 'fundador'],
+      lead: 'Para quem fundou um país ou quer fundar um: moeda própria, tesouro e mercado.',
+      intro: {
+        id: 'para-quem',
+        title: 'Para quem é esta wiki',
+        body: 'Esta wiki é para os donos de países e para os membros que cuidam da economia do país. Se você só quer jogar, comprar e vender, a Wiki do Jogador tem tudo o que você precisa.',
+        needsLabel: 'Antes de começar',
+        needs: [
+          'Você precisa ter um país, criado com /lands create.',
+          'Só o dono do país mexe na economia dele. O dono pode dar essa permissão a um cargo no menu de cargos do país (a permissão aparece como “Manage economy”).',
+          'O Geo do país fica no banco do país. Use /lands deposit para guardar dinheiro lá.',
+        ],
+      },
+      economy: {
+        id: 'economia',
+        title: 'Economia do país',
+        intro: 'Do banco do país até um mercado funcionando: leia na ordem se for a sua primeira vez.',
+      },
+    },
     join: {
       id: 'como-entrar',
       title: 'Como entrar',

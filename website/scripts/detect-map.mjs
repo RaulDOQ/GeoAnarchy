@@ -14,6 +14,7 @@
 // the values in src/config/map-view.default.json are used, so a build never fails
 // because of the map.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 
 // MAP_URL lets a test point this at a stand-in map.
 const MAP_URL = process.env.MAP_URL ?? 'https://mapa.geoanarchy.net/';
@@ -142,7 +143,9 @@ async function detect() {
 //   node scripts/detect-map.mjs            ask the live map, fall back to the defaults
 //   node scripts/detect-map.mjs --offline  after `npm install`: write the defaults if
 //                                          there is no file yet, so checks can run
-if (import.meta.url === `file://${process.argv[1]}`) {
+// (pathToFileURL makes the comparison work on Windows too, where the path is C:\... and
+// the module's address is file:///C:/...)
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const target = new URL('map-view.json', outDir);
   const offline = process.argv.includes('--offline');
   if (!(offline && existsSync(target))) {

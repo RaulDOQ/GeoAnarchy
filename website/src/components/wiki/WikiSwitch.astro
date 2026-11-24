@@ -1,0 +1,107 @@
+---
+// The switch at the top of every wiki page: the players' wiki or the country founders'
+// wiki. Each choice is a link to that wiki's front page.
+import Icon from '../Icon.astro';
+import { wikiBase, type WikiId } from '../../config/wiki';
+import { pt } from '../../content/pt';
+
+interface Props {
+  /** The wiki being shown. */
+  wiki: WikiId;
+}
+
+const { wiki } = Astro.props;
+const c = pt.wiki;
+const choices = [
+  { id: 'jogador', icon: 'player', ...c.wikis.jogador },
+  { id: 'pais', icon: 'flag', ...c.wikis.pais },
+] as const;
+---
+
+<nav class="wiki-switch" aria-label={c.switchLabel}>
+  {
+    choices.map((choice) => (
+      <a href={wikiBase[choice.id]} aria-current={choice.id === wiki ? 'true' : undefined}>
+        <Icon name={choice.icon} />
+        <span class="text">
+          <span class="name">{choice.label}</span>
+          <span class="note">{choice.note}</span>
+        </span>
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  /* Two choices side by side, the chosen one raised (the same look as the store's switch). */
+  .wiki-switch {
+    box-shadow: var(--edge);
+    background: var(--color-surface-2);
+    border-radius: 1.15rem;
+    gap: .25rem;
+    max-width: 100%;
+    padding: .3rem;
+    display: inline-flex;
+  }
+  a {
+    color: var(--color-text-muted);
+    border-radius: .9rem;
+    align-items: center;
+    gap: .7rem;
+    min-width: 0;
+    padding: .55rem 1.1rem .55rem .8rem;
+    transition: color .2s, background-color .2s, box-shadow .2s;
+    display: inline-flex;
+  }
+  a:hover {
+    color: var(--color-text);
+  }
+  a[aria-current] {
+    color: var(--color-text);
+    background: var(--color-surface);
+    box-shadow: var(--edge), 0 3px 8px -4px #0a1b2e59;
+  }
+  a :global(svg) {
+    color: var(--color-text-faint);
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    transition: color .2s;
+  }
+  a[aria-current] :global(svg) {
+    color: var(--color-blue);
+  }
+  .text {
+    gap: .2rem;
+    min-width: 0;
+    display: grid;
+  }
+  .name {
+    letter-spacing: -.01em;
+    white-space: nowrap;
+    font-size: .9375rem;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  .note {
+    color: var(--color-text-faint);
+    white-space: nowrap;
+    font-size: .78125rem;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+  @media (width <= 520px) {
+    .wiki-switch {
+      display: flex;
+    }
+    a {
+      flex: 1;
+      justify-content: center;
+      padding: .6rem .7rem;
+    }
+    a :global(svg),
+    .note {
+      display: none;
+    }
+  }
+</style>

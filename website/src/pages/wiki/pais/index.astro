@@ -1,0 +1,70 @@
+---
+// The country founders' wiki: its front page. It says who the wiki is for and what a
+// founder needs first, then lists the economy articles (src/content/wiki/pais).
+import WikiLayout from '../../../components/wiki/WikiLayout.astro';
+import WikiTopics from '../../../components/wiki/WikiTopics.astro';
+import { wikiBase } from '../../../config/wiki';
+import { pt } from '../../../content/pt';
+
+const c = pt.wiki.country;
+---
+
+<WikiLayout wiki="pais" title={c.meta.title} description={c.meta.description} current={wikiBase.pais}>
+  <div class="articles">
+    <article id={c.intro.id}>
+      <h2 data-in="settle">{c.intro.title}</h2>
+      <p class="intro" data-in="settle" style="--d: 60ms">{c.intro.body}</p>
+      <div class="needs card" data-in="settle" style="--d: 100ms">
+        <p class="label">{c.intro.needsLabel}</p>
+        <ul class="checks">
+          {c.intro.needs.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </article>
+
+    <article id={c.economy.id}>
+      <h2 data-in="settle">{c.economy.title}</h2>
+      <p class="intro" data-in="settle" style="--d: 60ms">{c.economy.intro}</p>
+      <WikiTopics wiki="pais" section="economia" />
+    </article>
+  </div>
+</WikiLayout>
+
+<style>
+  .articles {
+    gap: 4.5rem;
+    display: grid;
+  }
+  article {
+    justify-items: start;
+    gap: 1rem;
+    display: grid;
+  }
+  article > :global(*) {
+    width: 100%;
+  }
+  h2 {
+    letter-spacing: -.035em;
+    font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.25rem);
+  }
+  .intro {
+    color: var(--color-text-muted);
+    max-width: 38rem;
+    margin-bottom: .75rem;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  .needs {
+    gap: 1rem;
+    padding: 1.4rem 1.6rem 1.5rem;
+    display: grid;
+  }
+  .needs :global(li) {
+    font-size: 1rem;
+  }
+  @media (width <= 900px) {
+    .articles {
+      gap: 3.5rem;
+    }
+  }
+</style>
