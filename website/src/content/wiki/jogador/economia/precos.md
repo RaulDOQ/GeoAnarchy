@@ -98,7 +98,7 @@ Um mercado de país funciona do mesmo jeito, com três diferenças:
 
 ## Resumo para ganhar mais
 
-- Venda onde o item está em falta. Use `/mercado list` e clique num mercado para ver os preços de longe.
+- Venda onde o item está em falta. Use `/mercado lista` e clique num mercado para ver os preços de longe.
 - Funda os minérios e cozinhe a carne antes de vender.
 - Um mercado vazio paga o triplo. Ser o primeiro a abastecer um mercado novo compensa.
 - Se o preço despencou, espere: nos mercados continentais ele se recupera sozinho.

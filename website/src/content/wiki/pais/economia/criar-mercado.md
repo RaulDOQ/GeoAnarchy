@@ -29,17 +29,17 @@ Dá para [mudar o lugar depois](/wiki/pais/economia/gerenciar-mercado/), sem pag
 Vá até o ponto escolhido e digite:
 
 ```text
-/mercado create Madrid
+/mercado criar Madrid
 ```
 
-O nome pode ter de 2 a 24 caracteres e pode ter espaços: `/mercado create Porto de Lisboa`.
+O nome pode ter de 2 a 24 caracteres e pode ter espaços: `/mercado criar Porto de Lisboa`.
 
 ## O que acontece
 
 - Os 25.000 Geos saem do banco do país.
 - O mercado passa a existir, **aberto** e negociando na **moeda do país**.
 - Aparece um anel de partículas na borda do ponto de venda, e quem entra recebe um aviso.
-- O mercado aparece em `/mercado list` para o servidor inteiro.
+- O mercado aparece em `/mercado lista` para o servidor inteiro.
 - O mercado passa a **seguir o mercado continental mais próximo**: os preços dele partem dos preços desse continente. Veja [Como o mercado define os preços](/wiki/pais/economia/precos-do-mercado/).
 
 > **Importante:** um mercado novo **não negocia nenhum item** e tem o estoque vazio. O próximo passo é [escolher os itens](/wiki/pais/economia/itens-do-mercado/).

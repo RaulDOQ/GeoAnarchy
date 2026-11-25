@@ -36,7 +36,7 @@ Boas rotas aparecem e somem o tempo todo. Vale olhar os preços com frequência.
 
 ## Como planejar
 
-1. **Veja os preços sem sair de casa.** Digite `/mercado list` e clique em cada mercado. O menu mostra os preços de compra e de venda mesmo de longe.
+1. **Veja os preços sem sair de casa.** Digite `/mercado lista` e clique em cada mercado. O menu mostra os preços de compra e de venda mesmo de longe.
 2. **Compare o preço de compra de um com o de venda do outro.** Só compensa se o mercado de destino pagar mais do que o de origem cobra.
 3. **Olhe o estoque.** Um mercado com pouco estoque não tem muito para vender. Um mercado quase cheio vai pagar pouco.
 4. **Confira se o destino negocia o item.** Cada mercado tem a própria lista. Chegar com um item que ele não aceita é viagem perdida.

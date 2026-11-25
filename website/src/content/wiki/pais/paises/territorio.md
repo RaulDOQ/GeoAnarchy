@@ -1,14 +1,14 @@
 ---
 title: Território e manutenção
 summary: Comprar chunks, colônias, a manutenção diária, impostos e aluguel de terrenos.
-order: 3
+order: 4
 ---
 
 ## Comprar território
 
 Cada chunk custa **1.000 Geos**, pago pelo banco do país. Fique no chunk e use **/pais claim**.
 
-O tamanho máximo depende do nível: **100 chunks** na Tribo, até **1.500** na Superpotência (veja [Fundar e evoluir](/wiki/paises/fundar-e-evoluir/)).
+O tamanho máximo depende do nível: **100 chunks** na Tribo, até **1.500** na Superpotência (veja [Fundar e evoluir](/wiki/pais/paises/fundar-e-evoluir/)).
 
 ## Colônias
 

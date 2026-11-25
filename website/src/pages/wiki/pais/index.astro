@@ -1,6 +1,6 @@
 ---
 // The country founders' wiki: its front page. It says who the wiki is for and what a
-// founder needs first, then lists the economy articles (src/content/wiki/pais).
+// founder needs first, then lists the country and economy articles (src/content/wiki/pais).
 import WikiLayout from '../../../components/wiki/WikiLayout.astro';
 import WikiTopics from '../../../components/wiki/WikiTopics.astro';
 import { wikiBase } from '../../../config/wiki';
@@ -20,6 +20,12 @@ const c = pt.wiki.country;
           {c.intro.needs.map((item) => <li>{item}</li>)}
         </ul>
       </div>
+    </article>
+
+    <article id={c.countries.id}>
+      <h2 data-in="settle">{c.countries.title}</h2>
+      <p class="intro" data-in="settle" style="--d: 60ms">{c.countries.intro}</p>
+      <WikiTopics wiki="pais" section="paises" />
     </article>
 
     <article id={c.economy.id}>

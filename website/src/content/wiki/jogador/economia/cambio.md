@@ -18,17 +18,17 @@ O câmbio funciona de **qualquer lugar**: você não precisa estar num mercado.
 
    ```text
    Trocar 100.00 Geos por 985.07 Pesos (taxa 1.00 Geo, 1 Geo = 9.85 Pesos)
-   [Confirmar] ou digite /cambio confirm em até 30 segundos.
+   [Confirmar] ou digite /cambio confirmar em até 30 segundos.
    ```
 
-3. Clique em **[Confirmar]** ou digite `/cambio confirm`. Você tem 30 segundos.
+3. Clique em **[Confirmar]** ou digite `/cambio confirmar`. Você tem 30 segundos.
 
 Nada acontece enquanto você não confirmar. Se a cotação não agradar, é só não confirmar.
 
 Para ver as taxas de todas as moedas de uma vez:
 
 ```text
-/cambio rates
+/cambio taxas
 ```
 
 ## A taxa de 1%
@@ -81,7 +81,7 @@ Por baixo, a troca passa pelo Geo: os Pesos viram Geos e os Geos viram Francos. 
 | `Você não tem o suficiente` | Você não tem aquele valor na moeda que quer entregar |
 | `Esse valor é pequeno demais para trocar` | O valor é pequeno demais para render pelo menos um centavo |
 | `Essas são a mesma moeda` | Você escreveu a mesma moeda duas vezes |
-| `Não existe moeda com o código ...` | O código não existe. Confira em `/moeda list` |
+| `Não existe moeda com o código ...` | O código não existe. Confira em `/moeda lista` |
 | `Nada para confirmar` | Passaram os 30 segundos, ou você já confirmou. Peça a cotação de novo |
 | `Você não pode guardar tanto` | Você passaria do limite de saldo |
 

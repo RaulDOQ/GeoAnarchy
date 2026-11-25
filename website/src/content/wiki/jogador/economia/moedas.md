@@ -23,7 +23,7 @@ Todas ficam na mesma carteira. O `/saldo` mostra cada uma e quanto ela vale em G
 ## Ver as moedas que existem
 
 ```text
-/moeda list
+/moeda lista
 ```
 
 Mostra todas as moedas, quantas unidades 1 Geo compra e qual país emitiu cada uma.

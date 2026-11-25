@@ -51,14 +51,14 @@ Para quem prefere digitar:
 
 | Comando | O que faz |
 |---|---|
-| `/vender hand` | Vende a pilha que está na sua mão |
-| `/vender all` | Vende tudo o que você carrega e o mercado aceita |
+| `/vender mao` | Vende a pilha que está na sua mão |
+| `/vender tudo` | Vende tudo o que você carrega e o mercado aceita |
 | `/vender diamond` | Vende todos os seus diamantes |
 | `/vender diamond 10` | Vende 10 diamantes |
 | `/comprar diamond` | Compra 1 diamante |
 | `/comprar diamond 32` | Compra 32 diamantes |
 
-`/vender`, `/comprar` e `/mercado` são os mesmos comandos em português: `/vender hand`, `/comprar diamond 32`.
+`/vender`, `/comprar` e `/mercado` são os mesmos comandos em português: `/vender mao`, `/comprar diamond 32`.
 
 Os nomes dos itens são os do Minecraft em inglês, com `_` no lugar do espaço: `iron_ingot`, `oak_log`, `cooked_beef`. Aperte **Tab** enquanto digita para o jogo completar o nome.
 

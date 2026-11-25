@@ -17,7 +17,7 @@ export const wikiBase: Record<WikiId, string> = {
 /** The order of the sections in each wiki's side menu. A new folder also needs a name in pt.ts (`wiki.sections`). */
 const sectionOrder: Record<WikiId, readonly string[]> = {
   jogador: ['geral', 'economia', 'paises', 'encantamentos', 'vip'],
-  pais: ['economia'],
+  pais: ['paises', 'economia'],
 };
 
 interface Place {
@@ -82,6 +82,8 @@ export interface WikiLink {
 export interface WikiGroup {
   title: string;
   links: WikiLink[];
+  /** True when the side menu shows this group expanded: it holds the page being read (on a front page, the first group). */
+  open: boolean;
 }
 
 /** The side menu of a wiki. `current` is the address of the page being shown. */
@@ -97,17 +99,25 @@ export async function wikiMenu(wiki: WikiId, current?: string): Promise<WikiGrou
         href: `${wikiBase.jogador}#${article.id}`,
         current: false,
       })),
+      open: false,
     });
   }
   for (const article of await wikiArticles(wiki)) {
     const title = articleSectionTitle(article);
     let group = groups.find((candidate) => candidate.title === title);
     if (!group) {
-      group = { title, links: [] };
+      group = { title, links: [], open: false };
       groups.push(group);
     }
     const href = articleHref(article);
     group.links.push({ label: article.data.title, href, current: href === current });
+  }
+  // Only the section being read starts expanded; the others show just their title until clicked.
+  for (const group of groups) {
+    group.open = group.links.some((link) => link.current);
+  }
+  if (groups.length > 0 && !groups.some((group) => group.open)) {
+    groups[0].open = true;
   }
   return groups;
 }

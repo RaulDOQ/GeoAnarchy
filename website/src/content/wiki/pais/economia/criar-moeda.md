@@ -13,13 +13,13 @@ order: 3
 ## O comando
 
 ```text
-/moeda create <CÓDIGO> <nome> <plural> [símbolo]
+/moeda criar <CÓDIGO> <nome> <plural> [símbolo]
 ```
 
 Exemplo:
 
 ```text
-/moeda create PESO Peso Pesos $
+/moeda criar PESO Peso Pesos $
 ```
 
 | Parte | Regra | Exemplo |

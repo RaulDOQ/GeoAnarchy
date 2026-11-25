@@ -26,7 +26,7 @@ A economia do GeoAnarchy é feita pelos jogadores. Três coisas a tornam diferen
 Todo jogador começa com 0 Geos. O caminho mais simples para ganhar os primeiros:
 
 1. Junte itens: minérios, comida, madeira, drops de mobs.
-2. Veja onde ficam os mercados com `/mercado list`. O menu mostra as coordenadas e a distância de cada um.
+2. Veja onde ficam os mercados com `/mercado lista`. O menu mostra as coordenadas e a distância de cada um.
 3. Vá até o mercado mais próximo. Você chegou quando aparecer um aviso acima da sua barra de itens e um anel de partículas no chão.
 4. Digite `/mercado` e clique nos itens que quer vender.
 5. Confira o seu saldo com `/saldo`.
@@ -40,7 +40,7 @@ Todo jogador começa com 0 Geos. O caminho mais simples para ganhar os primeiros
 | `/saldo` | Ver o seu dinheiro |
 | `/pagar Maria 250` | Pagar outro jogador |
 | `/mercado` | Vender e comprar, estando num mercado |
-| `/mercado list` | Ver todos os mercados |
+| `/mercado lista` | Ver todos os mercados |
 | `/cambio 100 GEO PESO` | Trocar uma moeda por outra |
 | `/economia` | Abrir o menu da economia |
 

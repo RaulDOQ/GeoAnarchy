@@ -29,7 +29,7 @@ Para vender num mercado de país você recebe na moeda dele. Para comprar, preci
 ## Como achar um mercado
 
 ```text
-/mercado list
+/mercado lista
 ```
 
 Abre um menu com todos os mercados, do mais perto para o mais longe. Passe o mouse em cima de um mercado para ver:

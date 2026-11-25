@@ -4,12 +4,12 @@ summary: Imposto, preços por item, estoque, abrir e fechar, mudar de lugar e ma
 order: 9
 ---
 
-Os comandos desta página valem para o mercado do país que você governa. Só `/mercado take` exige que você esteja no ponto de venda.
+Os comandos desta página valem para o mercado do país que você governa. Só `/mercado retirar` exige que você esteja no ponto de venda.
 
 ## Imposto
 
 ```text
-/mercado tax 5
+/mercado imposto 5
 ```
 
 O imposto vai de **0 a 10%** e vale para toda negociação:
@@ -17,14 +17,14 @@ O imposto vai de **0 a 10%** e vale para toda negociação:
 - quem **vende** recebe um pouco menos;
 - quem **compra** paga um pouco mais.
 
-A diferença fica com o tesouro. Com `/mercado tax 0` não há imposto.
+A diferença fica com o tesouro. Com `/mercado imposto 0` não há imposto.
 
 > **Cuidado:** imposto alto espanta os comerciantes. Se o mercado vizinho cobra menos, é para lá que eles vão.
 
 ## Preço por item
 
 ```text
-/mercado price wheat 150
+/mercado preco wheat 150
 ```
 
 Faz o mercado negociar aquele item a uma porcentagem do preço normal. O valor vai de **50 a 200**.
@@ -37,14 +37,14 @@ Faz o mercado negociar aquele item a uma porcentagem do preço normal. O valor v
 
 O ajuste vale para a compra e para a venda ao mesmo tempo.
 
-> **Exemplo:** a Espanha está construindo muralhas e define `/mercado price obsidian 180`. Jogadores do servidor inteiro passam a levar obsidiana para Madri, porque lá rende quase o dobro.
+> **Exemplo:** a Espanha está construindo muralhas e define `/mercado preco obsidian 180`. Jogadores do servidor inteiro passam a levar obsidiana para Madri, porque lá rende quase o dobro.
 
 ## Retirar itens do estoque
 
 Tudo o que os jogadores vendem ao mercado fica no estoque, e o estoque é do país. Para pegar itens para uso do país:
 
 ```text
-/mercado take obsidian 64
+/mercado retirar obsidian 64
 ```
 
 Você precisa estar **no ponto de venda** e ter espaço no inventário.
@@ -56,8 +56,8 @@ Retirar itens diminui o estoque. Com menos estoque, o preço daquele item no mer
 ## Abrir e fechar
 
 ```text
-/mercado close
-/mercado open
+/mercado fechar
+/mercado abrir
 ```
 
 Com o mercado fechado, ninguém vende nem compra. O estoque e as configurações ficam guardados. Útil durante uma guerra, ou enquanto você reorganiza a lista de itens.
@@ -67,7 +67,7 @@ Com o mercado fechado, ninguém vende nem compra. O estoque e as configurações
 Vá até o novo ponto, **dentro do território do país**, e digite:
 
 ```text
-/mercado move
+/mercado mover
 ```
 
 O centro do mercado passa a ser onde você está. Não custa nada, e o estoque vai junto.
@@ -75,7 +75,7 @@ O centro do mercado passa a ser onde você está. Não custa nada, e o estoque v
 ## Remover o mercado
 
 ```text
-/mercado remove confirm
+/mercado remover confirmar
 ```
 
 > **Atenção:** remover apaga o mercado **e todo o estoque dele**. Os 25.000 Geos da construção não voltam. Retire antes os itens que quiser guardar.
@@ -91,11 +91,11 @@ O mercado paga os vendedores com o tesouro. Se ele zerar, o mercado para de comp
 
 **O que fazer:**
 
-- **Baixe o preço** dos itens que mais entram, com `/mercado price`.
+- **Baixe o preço** dos itens que mais entram, com `/mercado preco`.
 - **Tire da lista** os itens que estão drenando o tesouro.
 - **Aumente o imposto** um pouco.
 - **Venda o estoque.** Um mercado com estoque cheio e preço baixo atrai compradores, e eles pagam ao tesouro.
-- **Deposite** no tesouro com `/tesouro deposit`.
+- **Deposite** no tesouro com `/tesouro depositar`.
 - **Imprima**, em último caso. Veja o custo em [Imprimir dinheiro](/wiki/pais/economia/imprimir-dinheiro/).
 
 ## O estoque do país não some
@@ -108,10 +108,10 @@ O lado ruim: um item encalhado continua barato até alguém dar um destino a ele
 
 | Comando | O que faz |
 |---|---|
-| `/mercado tax <0 a 10>` | Define o imposto |
-| `/mercado price <item> <50 a 200>` | Ajusta o preço de um item |
-| `/mercado item <item> <on\|off>` | Adiciona ou tira um item da lista |
-| `/mercado take <item> <quantidade>` | Retira itens do estoque |
-| `/mercado open` e `/mercado close` | Abre e fecha o mercado |
-| `/mercado move` | Muda o centro para onde você está |
-| `/mercado remove confirm` | Remove o mercado e o estoque |
+| `/mercado imposto <0 a 10>` | Define o imposto |
+| `/mercado preco <item> <50 a 200>` | Ajusta o preço de um item |
+| `/mercado item <item> <ligar\|desligar>` | Adiciona ou tira um item da lista |
+| `/mercado retirar <item> <quantidade>` | Retira itens do estoque |
+| `/mercado abrir` e `/mercado fechar` | Abre e fecha o mercado |
+| `/mercado mover` | Muda o centro para onde você está |
+| `/mercado remover confirmar` | Remove o mercado e o estoque |

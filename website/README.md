@@ -12,7 +12,7 @@ JavaScript that any static host can serve.
 | `/sobre/` | `src/pages/sobre/index.astro` | Sobre nós: the three ideas of the home page, then the server's story (2024 to 2026) as a timeline. Texts in `pt.about`. |
 | `/loja/` | `src/pages/loja/index.astro` | Loja. The monthly goal (what keeps the server running, and how much is missing), then the three plans with a switch for paying every month, every 3 months or every 6 months. They cannot be bought yet; the page says so. |
 | `/wiki/` | `src/pages/wiki/index.astro` | GeoWiki, the players' wiki: how to join, the world, how the server works, and the lists of its sections' articles |
-| `/wiki/pais/` | `src/pages/wiki/pais/index.astro` | The country founders' wiki: who it is for, and its list of economy articles |
+| `/wiki/pais/` | `src/pages/wiki/pais/index.astro` | The country founders' wiki: who it is for, and its lists of country and economy articles |
 | `/wiki/<section>/<article>/`, `/wiki/pais/<section>/<article>/` | `src/pages/wiki/[...path].astro` | One page per wiki article (see "The GeoWiki" below) |
 | any other | `src/pages/404.astro` | Page not found |
 
@@ -57,20 +57,30 @@ Run these inside `website/` (Node 22.12 or newer):
 There are two wikis, and a switch at the top of every wiki page goes from one to the other:
 
 - **Wiki do Jogador** (`/wiki/`), for everyone who plays.
-- **Wiki do País** (`/wiki/pais/`), for country founders and whoever runs a country's economy.
+- **Wiki do País** (`/wiki/pais/`), for country founders and whoever helps run a country.
 
-Each wiki has a side menu with its sections. The players' wiki has five, in this order
+Each wiki has a side menu with its sections. Each section is a group that opens to show its
+articles: the one being read starts open, the others closed (`open` in `wikiMenu`). The
+players' wiki has five sections, in this order
 (`sectionOrder` in `src/config/wiki.ts`):
 
 | Folder | Section | What it covers |
 |---|---|---|
 | `geral` | Mundo e regras | The closed Nether and End, and the banned items |
 | `economia` | Economia | The GeoEconomy plugin: money, markets, prices, currencies, exchange, Nether and End items |
-| `paises` | Países | Countries (the Lands plugin): founding, the 10 levels, territory and upkeep, wars |
+| `paises` | Países | Countries (the Lands plugin) for players: what a country is, joining one, what members, allies and foreigners can do |
 | `encantamentos` | Encantamentos | The GeoEnchantments plugin: tomes, applying, essences, merging, all 40 enchantments |
 | `vip` | VIP e skins | The GeoUltra plugin: the three plans, /geomenu, skins |
 
-The founders' wiki has one section, "Economia" (13 articles).
+The founders' wiki has two:
+
+| Folder | Section | What it covers |
+|---|---|---|
+| `paises` | Países | Founding and running a country: the tutorial, roles, the 10 levels, territory and upkeep, wars |
+| `economia` | Economia | A country's currency, treasury and market (13 articles) |
+
+The founders' country articles lived in the players' wiki until 2026-11-25; `redirects` in
+`astro.config.mjs` sends their old addresses to the new ones.
 
 The numbers in these articles copy the server's settings (prices, levels, chances). When a
 plugin's settings change, its articles need the same change.

@@ -1,7 +1,7 @@
 ---
 title: Fundar e evoluir
 summary: Quanto custa criar um país, os 10 níveis, o que cada um custa e o que ele dá.
-order: 2
+order: 3
 ---
 
 ## Criar um país
@@ -15,7 +15,7 @@ Fundar um país custa **20.000 Geos**. Use:
 - O país já nasce com os **9 chunks** em volta de você (um quadrado de 3 × 3), sem custo extra.
 - Ele começa no nível **Tribo**, com até **100 chunks** e **20 membros**.
 
-O passo a passo completo, com todos os comandos, está no [Tutorial](/wiki/paises/tutorial/).
+O passo a passo completo, com todos os comandos, está no [Tutorial](/wiki/pais/paises/tutorial/).
 
 ## Os 10 níveis
 

@@ -8,7 +8,7 @@ order: 11
 
 ### Por que não consigo vender de onde estou?
 
-Porque só dá para vender **dentro do ponto de venda** de um mercado. Use `/mercado list` para ver onde eles ficam e vá até um. Você chegou quando aparecer o aviso acima da barra de itens.
+Porque só dá para vender **dentro do ponto de venda** de um mercado. Use `/mercado lista` para ver onde eles ficam e vá até um. Você chegou quando aparecer o aviso acima da barra de itens.
 
 ### O mercado não aceita o meu item. Por quê?
 
@@ -32,7 +32,7 @@ Nos mercados continentais, sim. A cada meia hora, parte do estoque em excesso so
 
 ### Quero comprar um item, mas o mercado não tem.
 
-O mercado só vende o que os jogadores venderam para ele. Procure em outro mercado com `/mercado list`, ou espere alguém abastecer aquele.
+O mercado só vende o que os jogadores venderam para ele. Procure em outro mercado com `/mercado lista`, ou espere alguém abastecer aquele.
 
 ## Dinheiro
 
@@ -56,9 +56,9 @@ Os mercados continentais pagam em Geos por tudo o que compram. O primeiro dinhei
 
 ### Tenho Pesos, mas quero comprar num mercado que usa Geos.
 
-Troque no câmbio: `/cambio 500 PESO GEO`, depois `/cambio confirm`. Veja [Câmbio](/wiki/economia/cambio/).
+Troque no câmbio: `/cambio 500 PESO GEO`, depois `/cambio confirmar`. Veja [Câmbio](/wiki/economia/cambio/).
 
-### Por que recebi menos do que a taxa mostrada em `/cambio rates`?
+### Por que recebi menos do que a taxa mostrada em `/cambio taxas`?
 
 A taxa mostrada é a de uma troca muito pequena. A sua própria troca move a taxa, e quanto maior o valor, pior a cotação. Além disso há 1% de taxa. A cotação que aparece antes de confirmar é sempre o valor exato.
 

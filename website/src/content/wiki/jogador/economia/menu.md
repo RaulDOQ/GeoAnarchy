@@ -29,7 +29,7 @@ Um ícone para cada moeda do servidor. Passe o mouse para ver:
 
 ## Mercados
 
-A mesma lista do `/mercado list`: todos os mercados, do mais perto para o mais longe, com coordenadas, distância, moeda e nível de preços.
+A mesma lista do `/mercado lista`: todos os mercados, do mais perto para o mais longe, com coordenadas, distância, moeda e nível de preços.
 
 Clique num mercado para ver a lista de preços dele. De longe você só consegue olhar. Para negociar, é preciso estar lá.
 

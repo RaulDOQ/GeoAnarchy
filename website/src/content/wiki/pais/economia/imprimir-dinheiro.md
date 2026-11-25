@@ -7,7 +7,7 @@ order: 4
 ## O comando
 
 ```text
-/moeda print 30000
+/moeda imprimir 30000
 ```
 
 O dinheiro novo vai direto para o **tesouro do país**. Só o país que criou a moeda pode imprimir. Um país que apenas adotou a moeda não pode.
@@ -15,7 +15,7 @@ O dinheiro novo vai direto para o **tesouro do país**. Só o país que criou a 
 Para ver quanto ainda dá para imprimir, digite só:
 
 ```text
-/moeda print
+/moeda imprimir
 ```
 
 ## O limite: 10% por semana

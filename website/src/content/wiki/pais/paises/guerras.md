@@ -1,7 +1,7 @@
 ---
 title: Guerras
 summary: Como declarar uma guerra, o que pode ser feito durante ela, como se ganha e o que o vencedor leva.
-order: 4
+order: 5
 ---
 
 ## Declarar

@@ -25,9 +25,9 @@ Os comandos de vender e comprar só funcionam dentro do ponto de venda de um mer
 | Comando | O que faz |
 |---|---|
 | `/mercado` | Abre o menu do mercado onde você está |
-| `/mercado list` | Lista todos os mercados, com coordenadas e preços |
-| `/vender hand` | Vende a pilha que está na sua mão |
-| `/vender all` | Vende tudo o que você carrega e o mercado aceita |
+| `/mercado lista` | Lista todos os mercados, com coordenadas e preços |
+| `/vender mao` | Vende a pilha que está na sua mão |
+| `/vender tudo` | Vende tudo o que você carrega e o mercado aceita |
 | `/vender <item> [quantidade]` | Vende um item. Sem a quantidade, vende todos |
 | `/comprar <item> [quantidade]` | Compra um item. Sem a quantidade, compra 1 |
 
@@ -38,9 +38,9 @@ Os nomes dos itens são em inglês, como no Minecraft: `diamond`, `iron_ingot`, 
 | Comando | O que faz |
 |---|---|
 | `/cambio <valor> <de> <para>` | Pede a cotação de uma troca, por exemplo `/cambio 100 GEO PESO` |
-| `/cambio confirm` | Confirma a troca cotada |
-| `/cambio rates` | Mostra a taxa de todas as moedas |
-| `/moeda list` | Lista todas as moedas |
+| `/cambio confirmar` | Confirma a troca cotada |
+| `/cambio taxas` | Mostra a taxa de todas as moedas |
+| `/moeda lista` | Lista todas as moedas |
 | `/moeda info <código>` | Mostra os detalhes de uma moeda |
 
 ## Menu
@@ -65,7 +65,7 @@ Cada comando também funciona com o nome em inglês, que é o mesmo de outros se
 | `/moeda` | `/currency` |
 | `/economia` | `/economy` |
 
-O que vem depois do comando, como `hand`, `all`, `list` e `confirm`, é igual nos dois.
+As palavras depois do comando também funcionam em inglês: `/sell all` é o mesmo que `/vender tudo`, e `/exchange confirm` é o mesmo que `/cambio confirmar`. Acentos não fazem diferença: `/vender mão` e `/vender mao` funcionam.
 
 Os valores aceitam vírgula: `/pagar Maria 12,5` envia 12 Geos e 50 centavos.
 

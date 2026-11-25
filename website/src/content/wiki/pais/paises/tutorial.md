@@ -1,7 +1,7 @@
 ---
 title: "Tutorial: o seu primeiro país"
 summary: Passo a passo, com os comandos. Fundar, comprar território, chamar membros, subir de nível e declarar guerra.
-order: 1.5
+order: 1
 ---
 
 Este tutorial vai do zero até um país funcionando. O exemplo é o **Pedro**, que quer fundar **Portugal** em Lisboa.
@@ -46,7 +46,7 @@ Quase tudo do país é pago pelo **banco do país**, não pelo seu bolso: territ
 ```
 
 - `deposit` guarda o seu dinheiro no banco, `balance` mostra quanto tem e `withdraw` saca.
-- Só saca quem tem essa permissão no cargo. O Fundador sempre pode.
+- Depositar e sacar dependem do cargo. No começo só o Fundador pode; ele libera para outros cargos no menu de cargos.
 - Se o banco não tiver o bastante para comprar um chunk, o jogo tira o que falta do seu dinheiro.
 
 ## 4. Comprar território
@@ -63,7 +63,7 @@ Cada chunk novo custa **1.000 Geos**.
 
 > **Exemplo:** o Pedro digita `/pais claim radius 2` no centro de Lisboa. Isso pega um quadrado de 5 × 5 chunks em volta dele. Ele só paga pelos chunks que o país ainda não tinha.
 
-Antes de comprar muito, lembre que **cada chunk custa 200 Geos por dia** de manutenção, cobrados do banco todo dia às 15:00. Com os 9 chunks iniciais, são 1.800 Geos por dia. Veja [Território e manutenção](/wiki/paises/territorio/).
+Antes de comprar muito, lembre que **cada chunk custa 200 Geos por dia** de manutenção, cobrados do banco todo dia às 15:00. Com os 9 chunks iniciais, são 1.800 Geos por dia. Veja [Território e manutenção](/wiki/pais/paises/territorio/).
 
 O país começa com até **100 chunks** e pode ter até **6 partes separadas**: o território principal e 5 colônias.
 
@@ -87,7 +87,7 @@ A Maria recebe um convite no chat. Para aceitar, ela clica no convite ou digita:
 | `/pais invites decline <país>` | Recusa um convite |
 | `/pais leave` | Sai do país |
 
-Para mudar o cargo de alguém (Civil, Admin), abra o menu do país com `/pais` e vá em membros. Os cargos estão explicados em [O que é um país](/wiki/paises/o-que-e-um-pais/).
+Para mudar o cargo de alguém (Civil, Admin), abra o menu do país com `/pais` e vá em membros. Os cargos estão explicados em [Como um país funciona](/wiki/pais/paises/como-funciona/).
 
 ## 6. Subir de nível
 
@@ -97,7 +97,7 @@ Para mudar o cargo de alguém (Civil, Admin), abra o menu do país com `/pais` e
 
 O menu de níveis mostra quanto custa o próximo nível e o que ele dá. Clique em **Level up** para subir. O dinheiro sai do banco do país, e só o Fundador pode subir de nível.
 
-O nível 2 (Território) custa **30.000 Geos** e aumenta o limite para 150 chunks e 22 membros. A tabela completa está em [Fundar e evoluir](/wiki/paises/fundar-e-evoluir/).
+O nível 2 (Território) custa **30.000 Geos** e aumenta o limite para 150 chunks e 22 membros. A tabela completa está em [Fundar e evoluir](/wiki/pais/paises/fundar-e-evoluir/).
 
 ## 7. Aliados e inimigos
 
@@ -123,7 +123,7 @@ Os membros de um país aliado recebem o cargo **Aliado** no seu país.
 | `/pais war info captureflag` | Mostra a receita da bandeira de captura |
 | `/pais war menu` | Abre o menu da guerra, onde também dá para se render |
 
-A guerra começa **1 hora** depois de declarada. Como se ganha e o que o vencedor leva está em [Guerras](/wiki/paises/guerras/).
+A guerra começa **1 hora** depois de declarada. Como se ganha e o que o vencedor leva está em [Guerras](/wiki/pais/paises/guerras/).
 
 ## 9. A economia do país
 

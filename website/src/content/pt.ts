@@ -354,6 +354,8 @@ export const pt = {
     lead: 'O essencial para jogar: como entrar, as regras do mundo, a economia, os países, os encantamentos e o VIP.',
     // The side menu.
     indexLabel: 'Nesta wiki',
+    // The number beside each section of the side menu, read aloud as "12 artigos".
+    groupCount: '{n} artigos',
     // The switch between the two wikis, at the top of every wiki page.
     switchLabel: 'Escolha a wiki',
     wikis: {
@@ -384,7 +386,7 @@ export const pt = {
     countries: {
       id: 'paises',
       title: 'Países',
-      intro: 'Um tutorial passo a passo, os 10 níveis, território e manutenção, e como funcionam as guerras.',
+      intro: 'O que é um país, como entrar num, e o que você pode e não pode fazer no seu país, no dos aliados e no dos outros. Para fundar um país, veja a Wiki do País.',
     },
     enchantments: {
       id: 'encantamentos',
@@ -400,20 +402,25 @@ export const pt = {
     country: {
       meta: {
         title: 'Wiki do País | GeoWiki',
-        description: 'O guia para quem fundou um país no GeoAnarchy: moeda própria, tesouro, impressão de dinheiro e mercado.',
+        description: 'O guia para quem funda e governa um país no GeoAnarchy: o passo a passo, cargos, níveis, território, guerras, moeda própria, tesouro e mercado.',
       },
       title: ['O guia do', 'fundador'],
-      lead: 'Para quem fundou um país ou quer fundar um: moeda própria, tesouro e mercado.',
+      lead: 'Para quem fundou um país ou quer fundar um: o passo a passo, território, guerras, moeda própria, tesouro e mercado.',
       intro: {
         id: 'para-quem',
         title: 'Para quem é esta wiki',
-        body: 'Esta wiki é para os donos de países e para os membros que cuidam da economia do país. Se você só quer jogar, comprar e vender, a Wiki do Jogador tem tudo o que você precisa.',
+        body: 'Esta wiki é para quem quer fundar um país e para quem ajuda a governar um. Se você só quer entrar num país, comprar e vender, a Wiki do Jogador tem tudo o que você precisa.',
         needsLabel: 'Antes de começar',
         needs: [
-          'Você precisa ter um país, criado com /pais create.',
-          'Só o dono do país mexe na economia dele. O dono pode dar essa permissão a um cargo no menu de cargos do país (a permissão aparece como “Manage economy”).',
+          'Fundar um país custa 20.000 Geos. O Tutorial mostra cada passo, de /pais create até a primeira guerra.',
+          'Muita coisa fica só com o Fundador até ele liberar para um cargo, no menu de cargos do país: comprar território, mexer no banco, subir de nível e a economia (a permissão aparece como “Manage economy”).',
           'O Geo do país fica no banco do país. Use /pais bank deposit para guardar dinheiro lá.',
         ],
+      },
+      countries: {
+        id: 'paises',
+        title: 'Seu país',
+        intro: 'Fundar, os cargos, os 10 níveis, território e manutenção, e como funcionam as guerras.',
       },
       economy: {
         id: 'economia',
