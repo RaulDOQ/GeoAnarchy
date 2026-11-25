@@ -1,0 +1,202 @@
+# Textos do GeoAnarchy
+# Recarregue com /geoanarchy reload.
+#
+# "game" são os textos que aparecem no Minecraft. A formatação é MiniMessage
+# (https://docs.advntr.dev/minimessage/format.html) e os valores entram como <nome>.
+#
+# "discord" são os textos que aparecem no Discord. Use a formatação do próprio Discord
+# (**negrito**, `código`) e os valores entram como {nome}.
+#
+# Não mude os nomes entre < > e { }: é por eles que o plugin coloca o jogador, o país, o valor.
+# Um texto que faltar aqui usa o que vem dentro do plugin.
+
+game:
+  prefix: "<dark_gray>[<green>GeoAnarchy</green>]</dark_gray> "
+  players-only: "<prefix><red>Só jogadores podem usar este comando.</red>"
+  no-permission: "<prefix><red>Você não tem permissão para fazer isso.</red>"
+
+  # ---- Vincular ----
+  link-code: "<prefix><gray>Seu código: <white><bold><code></bold></white> <dark_gray>(clique para copiar)</dark_gray><newline><gray>No Discord, clique em <white>Vincular conta</white> ou use <white>/vincular</white> e digite o código. Ele vale por <minutes> minutos."
+  link-already: "<prefix><gray>Sua conta já está vinculada ao Discord. Para desfazer: <white>/desvincular</white>"
+  link-done: "<prefix><green>Conta vinculada ao Discord de <white><discord></white>.</green><newline><gray>Os avisos do seu país chegam por mensagem privada. Escolha quais com <white>/notificacoes</white> no Discord."
+  link-bot-off: "<prefix><yellow>O bot do Discord está desligado agora. Guarde o código e tente em alguns minutos, ou peça um novo depois."
+  link-tip: "<prefix><gray>Você fundou um país. Vincule o seu Discord com <white>/vincular</white> para ser avisado quando ele for atacado."
+  unlink-done: "<prefix><gray>O vínculo com o Discord foi desfeito."
+  unlink-none: "<prefix><gray>Sua conta não está vinculada ao Discord."
+  dm-closed: "<prefix><yellow>O bot não conseguiu te enviar mensagem privada no Discord. Abra as mensagens privadas do nosso servidor para receber os avisos."
+
+  # ---- /discord e /mapa ----
+  discord-invite: "<prefix><gray>Entre no nosso Discord: <white><underlined><url></underlined></white>"
+  map: "<prefix><gray>Mapa ao vivo: <white><underlined><url></underlined></white>"
+  discord-usage: "<prefix><gray>Uso: /discord, /discord vincular, /discord desvincular, /discord acoes <on|off>"
+  actions-on: "<prefix><green>Depósitos e pagamentos pelo Discord estão ligados para a sua conta."
+  actions-off: "<prefix><green>Depósitos e pagamentos pelo Discord estão desligados para a sua conta.</green> <gray>Ninguém consegue mexer no seu dinheiro pelo Discord."
+  actions-are-on: "<prefix><gray>Depósitos e pagamentos pelo Discord estão <green>ligados</green> para a sua conta. Para desligar: <white>/discord acoes off</white>"
+  actions-are-off: "<prefix><gray>Depósitos e pagamentos pelo Discord estão <red>desligados</red> para a sua conta. Para ligar: <white>/discord acoes on</white>"
+
+  # ---- O que foi feito pelo Discord ----
+  login-log-header: "<prefix><gray>Pelo Discord, desde a sua última visita, a sua conta:"
+  login-log-line: "<dark_gray> -</dark_gray> <white><text></white>"
+  pay-received: "<prefix><gray>Você recebeu <gold><amount></gold> de <white><player></white> <dark_gray>(enviado pelo Discord)</dark_gray>."
+
+  # ---- /ranks ----
+  ranks-header-time: "<prefix><gold>Quem mais jogou</gold>"
+  ranks-header-kills: "<prefix><gold>Quem mais matou jogadores</gold>"
+  ranks-line: "<gray><rank>.</gray> <white><player></white> <dark_gray>-</dark_gray> <gold><value></gold>"
+  ranks-empty: "<dark_gray> -</dark_gray> <gray>Ninguém ainda."
+
+  # ---- VIP ----
+  vip-usage: "<prefix><gray>Uso: /darvip <jogador> <meses>"
+  vip-bad-months: "<prefix><red>Os meses precisam ser um número de 1 a 120.</red>"
+  vip-unknown-player: "<prefix><red><white><player></white> nunca entrou no servidor.</red>"
+  vip-given: "<prefix><green><white><player></white> recebeu <months> mês(es) de VIP. Agora tem <total>.</green>"
+
+  # ---- Administração ----
+  admin-usage: "<prefix><gray>Uso: /geoanarchy reload ou /geoanarchy status"
+  reloaded: "<prefix><green>config.yml e messages.yml recarregados.</green> <gray>Trocar o token ou os canais do Discord pede um restart."
+  status: "<prefix><gold>GeoAnarchy</gold><newline><gray>Bot do Discord: <white><bot></white><newline>Contas vinculadas: <white><links></white><newline>Lands: <white><lands></white><newline>GeoEconomy: <white><economy></white>"
+
+discord:
+  error: "Algo deu errado. Tente de novo em instantes."
+  economy-off: "A economia do servidor não está disponível agora."
+  countries-off: "Os países não estão disponíveis agora."
+
+  status:
+    online: "🟢 Servidor ligado · Minecraft {version} · {players} jogador(es) online"
+
+  # ---- Vincular ----
+  link:
+    needed: "Seu Discord ainda não está vinculado a uma conta do Minecraft.\nEntre no servidor, digite `/vincular` e depois use `/vincular` aqui com o código."
+    window-title: "Vincular conta"
+    window-label: "Código que o jogo mostrou com /vincular"
+    done: "✅ Conta vinculada: **{player}**.\nUse `/notificacoes` para escolher os avisos que quer receber."
+    already: "Seu Discord já está vinculado à conta **{player}**. Para trocar, use `/desvincular` primeiro."
+    wrong: "Código errado ou vencido. No jogo, digite `/vincular` para receber um código novo."
+    locked: "Muitos códigos errados. Espere {minutes} minuto(s) e tente de novo."
+    none: "Seu Discord não está vinculado a nenhuma conta."
+    removed: "O vínculo com **{player}** foi desfeito."
+
+  # ---- Consultas ----
+  saldo:
+    title: "💰 Dinheiro de {player}"
+  pais:
+    title: "🏳️ Seu país"
+    none: "Você não fundou nem faz parte de nenhum país."
+    bank: "Banco"
+    upkeep: "Próxima manutenção"
+    upkeep-ok: "✅ o banco cobre"
+    upkeep-short: "⚠️ faltam {missing}"
+    land: "Território"
+    chunks: "{amount} chunks"
+    citizens: "Cidadãos ({amount})"
+    nobody-online: "Ninguém online agora."
+    online: "Online: {players}"
+    war: "Guerra"
+    founder: "Você é o fundador deste país."
+  guerra:
+    title: "⚔️ Guerras"
+    none: "Nenhum país seu está em guerra."
+    declared-on-us: "**{enemy}** declarou guerra. A luta começa {when}."
+    declared-by-us: "Guerra declarada contra **{enemy}**. A luta começa {when}."
+    running: "Em guerra contra **{enemy}**. Placar: {points} a {enemy-points}."
+    to-win: "Vence antes do fim quem chegar a {points} pontos."
+  preco:
+    title: "🏷️ Preço de {item}"
+    none: "Nenhum mercado negocia `{item}`.\nUse o nome do item como no Minecraft em inglês: `diamond`, `iron_ingot`, `oak_log`."
+    sell: "paga **{price}**"
+    buy: "cobra **{price}**"
+    stock: "estoque {amount}"
+    closed: "fechado"
+    not-now: "não compra agora"
+    no-stock: "sem estoque"
+    footer: "Os preços mudam a cada venda. Para negociar é preciso estar no mercado."
+
+  # ---- Ações com dinheiro ----
+  action:
+    disabled: "Depósitos e pagamentos pelo Discord estão desligados no servidor."
+    off-by-player: "Você desligou os depósitos e pagamentos pelo Discord. Para ligar de novo, use `/discord acoes on` no jogo."
+    bad-amount: "`{typed}` não é um valor válido. Exemplos: `2500`, `12,5`, `3k`."
+    not-enough: "Você não tem Geos suficientes. Sua carteira tem {balance}."
+    confirm-button: "Confirmar"
+    expired: "Esse pedido venceu. Use o comando de novo."
+    not-yours: "Esse botão é de outra pessoa."
+  deposit:
+    no-country: "Você não tem um país onde possa depositar. É preciso ser o fundador, ou ter no país a permissão de depositar no banco."
+    confirm: "Depositar **{amount}** no banco de **{country}**?\nSua carteira tem {balance}."
+    done: "✅ Depositado: **{amount}** no banco de **{country}**.\nSua carteira agora tem {balance}."
+    failed: "O depósito não foi concluído. Nada foi cobrado."
+  pay:
+    no-player: "Não existe jogador chamado `{player}` no servidor."
+    self: "Você não pode pagar a si mesmo."
+    limit: "Pelo Discord dá para enviar até {limit} por dia. Hoje você ainda pode enviar {left}."
+    confirm: "Enviar **{amount}** para **{player}**?\nSua carteira tem {balance}. Não dá para desfazer."
+    done: "✅ Enviado: **{amount}** para **{player}**.\nSua carteira agora tem {balance}."
+    receiver-full: "**{player}** não pode guardar tanto dinheiro."
+  # O que aparece no jogo, no próximo login, depois de "Pelo Discord, a sua conta:"
+  log:
+    deposit: "depositou {amount} no banco de {country}"
+    pay: "pagou {amount} para {player}"
+
+  # ---- /notificacoes ----
+  notify:
+    title: "🔔 Seus avisos"
+    intro: "Os avisos chegam por mensagem privada do bot. Aperte um botão para ligar ou desligar."
+    footer: "Botão verde = ligado · Botão cinza = desligado"
+    dm-closed: "Da última vez o bot não conseguiu te mandar mensagem privada. Abra as mensagens privadas deste servidor."
+    guerra:
+      name: "Guerra"
+      about: "guerra declarada, começo, fim e bandeiras capturadas."
+    manutencao:
+      name: "Manutenção"
+      about: "quando falta dinheiro no banco do país ou ele perde chunks."
+    diplomacia:
+      name: "Diplomacia"
+      about: "pedidos de aliança de outros países."
+    convites:
+      name: "Convites"
+      about: "quando você é convidado para um país."
+    cidadao:
+      name: "Países onde sou cidadão"
+      about: "receber os avisos também dos países que você não fundou."
+
+  # ---- Avisos por mensagem privada ----
+  # {when} vira uma hora que o Discord mostra no fuso de cada pessoa: "em 1 hora (21:15)".
+  alert:
+    footer: "GeoAnarchy · use /notificacoes para escolher seus avisos"
+    war-declared:
+      title: "⚔️ Guerra declarada"
+      defender: "**{attacker}** declarou guerra ao seu país, **{country}**.\nA luta começa {when}."
+      attacker: "O seu país, **{country}**, declarou guerra a **{defender}**.\nA luta começa {when}."
+      # Este vai para o canal público de guerras.
+      public: "⚔️ **{attacker}** declarou guerra a **{defender}**! A luta começa {when}."
+    war-started:
+      title: "⚔️ A guerra começou"
+      text: "A guerra entre **{attacker}** e **{defender}** começou."
+    war-ended:
+      title: "🏁 A guerra acabou"
+      won: "**{country}** venceu a guerra contra **{enemy}**."
+      lost: "**{country}** perdeu a guerra contra **{enemy}**."
+      surrendered-won: "**{enemy}** se rendeu. **{country}** venceu a guerra."
+      surrendered-lost: "**{country}** se rendeu a **{enemy}**."
+      draw: "A guerra entre **{attacker}** e **{defender}** terminou empatada."
+      admin: "A guerra entre **{attacker}** e **{defender}** foi encerrada pela administração."
+    flag:
+      title: "🚩 Bandeira capturada"
+      text: "**{enemy}** capturou uma bandeira no território de **{country}**."
+    upkeep-short:
+      title: "💰 Falta dinheiro para a manutenção"
+      text: "O banco de **{country}** tem {bank} e a próxima manutenção custa {upkeep}.\nFaltam **{missing}**. Use `/depositar` aqui ou `/lands deposit` no jogo antes da cobrança, ou o país perde os chunks mais novos."
+    upkeep-unpaid:
+      title: "💸 Manutenção não paga"
+      text: "**{country}** não conseguiu pagar a manutenção de {upkeep}: o banco tinha {bank}.\nO país perde os chunks mais novos até a conta fechar."
+    chunks-lost:
+      title: "🗺️ Território perdido"
+      text: "**{country}** perdeu {amount} chunk(s) por falta de pagamento da manutenção."
+    invite:
+      title: "✉️ Convite"
+      text: "Você foi convidado para o país **{country}**.\nEntre no servidor e use `/lands invites` para responder."
+    relation:
+      title: "🤝 Diplomacia"
+      ally: "**{sender}** pediu uma aliança com **{country}**.\nResponda no jogo, no menu do país."
+      enemy: "**{sender}** quer mudar a relação com **{country}** para inimigo."
+      neutral: "**{sender}** propôs neutralidade a **{country}**.\nResponda no jogo, no menu do país."

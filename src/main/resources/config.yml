@@ -1,0 +1,61 @@
+# GeoAnarchy
+# Recarregue com /geoanarchy reload. Trocar o token ou os canais do Discord pede um restart.
+# Os textos ficam em messages.yml.
+
+discord:
+  # O token do bot (Discord Developer Portal > Bot > Token).
+  # NUNCA mostre este arquivo a ninguém nem o coloque no GitHub: quem tem o token controla o bot.
+  # Vazio = o plugin funciona sem o Discord.
+  token: ""
+  # O id do seu servidor do Discord. 0 = o primeiro servidor em que o bot estiver.
+  guild-id: 0
+  # O que aparece como "Jogando ..." no perfil do bot.
+  activity: "GeoAnarchy.net"
+  channels:
+    # Canal público onde as declarações de guerra são anunciadas. 0 = não anunciar.
+    war: 1333077790072901653
+    # Canal onde o bot avisa que o servidor ligou. 0 = não avisar.
+    status: 1254199563888099448
+
+links:
+  invite: "https://discord.gg/nXdhtMD8Cx"
+  map: "https://mapa.geoanarchy.net/"
+  site: "https://geoanarchy.net"
+
+# Vincular a conta do Minecraft com a do Discord.
+linking:
+  # Por quantos minutos o código do /vincular vale.
+  code-minutes: 10
+  # Quantos códigos errados uma conta do Discord pode digitar antes de ter que esperar.
+  max-attempts: 5
+  lock-minutes: 5
+  # Cargo dado no Discord a quem vinculou. "" = nenhum.
+  role: "Vinculado"
+  # Trocar o apelido no Discord pelo nome do Minecraft.
+  sync-nickname: true
+
+# Avisos por mensagem privada no Discord.
+alerts:
+  # Quantos minutos depois da declaração a guerra começa. Tem que ser igual ao
+  # "preparation_time" de plugins/Lands/Modules/Wars/wars.yml (hoje: 1h).
+  war-preparation-minutes: 60
+  # No máximo um aviso de bandeira capturada por país a cada tantos minutos.
+  flag-cooldown-minutes: 5
+  # No máximo um aviso de "falta dinheiro para a manutenção" por país a cada tantas horas.
+  upkeep-cooldown-hours: 12
+
+# Coisas que mexem em dinheiro pelo Discord: /depositar e /pagar.
+actions:
+  enabled: true
+  # O máximo de Geos que um jogador pode enviar com /pagar pelo Discord por dia.
+  pay-daily-limit: 10000
+  # Quantos segundos o botão Confirmar fica valendo.
+  confirm-seconds: 60
+
+ranks:
+  # De quantos em quantos minutos o /ranks é recalculado.
+  refresh-minutes: 5
+
+vip:
+  # O grupo do LuckPerms que o /darvip dá.
+  group: vip

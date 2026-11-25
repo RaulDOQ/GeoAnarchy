@@ -1,37 +1,49 @@
 name: GeoAnarchy
-version: '1.0'
+version: '${project.version}'
 main: me.rauldoq.geoAnarchy.GeoAnarchy
-api-version: '1.20'
+api-version: '1.21'
+author: RaulDOQ
+description: Discord, alertas e utilidades do servidor GeoAnarchy.
+# None of these is required. Each part of the plugin switches itself on when its plugin is present.
+softdepend: [Vault, Lands, GeoEconomy, LuckPerms, Essentials]
+
 commands:
+  vincular:
+    description: Vincula a sua conta do Minecraft ao seu Discord.
+    usage: /<command>
+  desvincular:
+    description: Desfaz o vínculo com o Discord.
+    usage: /<command>
   discord:
-    description: Discord command
-    usage: /discord <subcommand>
+    description: Convite do Discord e opções da sua conta vinculada.
+    usage: /<command> [vincular|desvincular|acoes <on|off>]
   mapa:
-    description: Mapa
-    usage: /mapa
-  comprar:
-    description: Comprar itens
-    usage: /comprar <subcommand>
-  vanishcomaura:
-    description: farm de aura intenso
-    usage: /vanishcomaura
-  vaura:
-    description: farm de aura intenso
-    usage: /vaura
+    description: Mostra o link do mapa ao vivo.
+    usage: /<command>
   ranks:
-    description: ranks
-    usage: /ranks
+    description: Mostra quem mais jogou e quem mais matou.
+    usage: /<command>
   darvip:
-    description: da o vip
-    usage: /darvip <usuario> <duracao>
-tab-complete:
-  discord:
-    - servidor
-    - vincular
+    description: Dá meses de VIP a um jogador.
+    usage: /<command> <jogador> <meses>
+    permission: geoanarchy.darvip
+  vanishcomaura:
+    description: Some com estilo.
+    usage: /<command>
+    aliases: [vaura]
+    permission: geoanarchy.vanishcomaura
+  geoanarchy:
+    description: Administração do plugin GeoAnarchy.
+    usage: /<command> <reload|status>
+    permission: geoanarchy.admin
+
 permissions:
-  geoanarchy.vanishcomaura:
-    description: comando de aura
-    default: op
   geoanarchy.darvip:
-    description: darvip
+    description: Dar VIP a jogadores.
+    default: op
+  geoanarchy.vanishcomaura:
+    description: Usar /vanishcomaura.
+    default: op
+  geoanarchy.admin:
+    description: Recarregar o plugin e ver o estado do bot.
     default: op

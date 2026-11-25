@@ -1,0 +1,17 @@
+# Build output
+target/
+dependency-reduced-pom.xml
+
+# Secrets. The bot token lives in plugins/GeoAnarchy/config.yml on the server, never in this repository.
+.env
+*.env
+
+# Personal IDE state
+.idea/workspace.xml
+.idea/shelf/
+*.iws
+.vscode/
+
+# The website keeps its own ignore file in website/
+.DS_Store
+Thumbs.db
