@@ -12,46 +12,46 @@ Os comandos de jogador (pagar, vender, comprar, trocar) estão na [Wiki do Jogad
 
 | Comando | O que faz |
 |---|---|
-| `/lands deposit <valor>` | Deposita Geos no banco do país |
-| `/lands withdraw <valor>` | Saca Geos do banco do país |
-| `/treasury` | Mostra o banco e todas as moedas do tesouro |
-| `/treasury deposit <valor> <moeda>` | Deposita uma moeda no tesouro |
-| `/treasury withdraw <valor> <moeda>` | Saca uma moeda do tesouro |
+| `/pais bank deposit <valor>` | Deposita Geos no banco do país |
+| `/pais bank withdraw <valor>` | Saca Geos do banco do país |
+| `/tesouro` | Mostra o banco e todas as moedas do tesouro |
+| `/tesouro deposit <valor> <moeda>` | Deposita uma moeda no tesouro |
+| `/tesouro withdraw <valor> <moeda>` | Saca uma moeda do tesouro |
 
 ## Moeda própria
 
 | Comando | O que faz | Custo |
 |---|---|---|
-| `/currency create <código> <nome> <plural> [símbolo]` | Cria a moeda do país | 70.000 Geos |
-| `/currency print <valor>` | Imprime para o tesouro | Até 10% do total por semana |
-| `/currency print` | Mostra quanto ainda pode ser impresso | |
-| `/currency info <código>` | Mostra taxa, total, impressões e quem usa | |
+| `/moeda create <código> <nome> <plural> [símbolo]` | Cria a moeda do país | 70.000 Geos |
+| `/moeda print <valor>` | Imprime para o tesouro | Até 10% do total por semana |
+| `/moeda print` | Mostra quanto ainda pode ser impresso | |
+| `/moeda info <código>` | Mostra taxa, total, impressões e quem usa | |
 
 ## Adoção
 
 | Comando | Quem usa | O que faz |
 |---|---|---|
-| `/currency adopt <código>` | País sem moeda | Adota a moeda de outro país, ou pede para adotar |
-| `/currency abandon` | País sem moeda | Deixa de usar a moeda adotada, ou cancela o pedido |
-| `/currency policy open` | Dono da moeda | Qualquer país pode adotar |
-| `/currency policy approval` | Dono da moeda | Cada adoção precisa da sua aprovação |
-| `/currency requests` | Dono da moeda | Lista os pedidos em espera |
-| `/currency accept <país>` | Dono da moeda | Aceita um pedido |
-| `/currency deny <país>` | Dono da moeda | Recusa um pedido |
+| `/moeda adopt <código>` | País sem moeda | Adota a moeda de outro país, ou pede para adotar |
+| `/moeda abandon` | País sem moeda | Deixa de usar a moeda adotada, ou cancela o pedido |
+| `/moeda policy open` | Dono da moeda | Qualquer país pode adotar |
+| `/moeda policy approval` | Dono da moeda | Cada adoção precisa da sua aprovação |
+| `/moeda requests` | Dono da moeda | Lista os pedidos em espera |
+| `/moeda accept <país>` | Dono da moeda | Aceita um pedido |
+| `/moeda deny <país>` | Dono da moeda | Recusa um pedido |
 
 ## Mercado
 
 | Comando | O que faz | Observação |
 |---|---|---|
-| `/market create <nome>` | Constrói o mercado onde você está | 25.000 Geos, dentro do território |
-| `/market item <item> <on\|off>` | Adiciona ou tira um item da lista | Também pelo botão **Gerenciar itens** |
-| `/market tax <porcentagem>` | Define o imposto | De 0 a 10 |
-| `/market price <item> <porcentagem>` | Ajusta o preço de um item | De 50 a 200; 100 é o normal |
-| `/market take <item> <quantidade>` | Retira itens do estoque | Estando no ponto de venda |
-| `/market open` | Abre o mercado | |
-| `/market close` | Fecha o mercado | O estoque fica guardado |
-| `/market move` | Muda o centro para onde você está | Dentro do território |
-| `/market remove confirm` | Remove o mercado | Apaga o estoque junto |
+| `/mercado create <nome>` | Constrói o mercado onde você está | 25.000 Geos, dentro do território |
+| `/mercado item <item> <on\|off>` | Adiciona ou tira um item da lista | Também pelo botão **Gerenciar itens** |
+| `/mercado tax <porcentagem>` | Define o imposto | De 0 a 10 |
+| `/mercado price <item> <porcentagem>` | Ajusta o preço de um item | De 50 a 200; 100 é o normal |
+| `/mercado take <item> <quantidade>` | Retira itens do estoque | Estando no ponto de venda |
+| `/mercado open` | Abre o mercado | |
+| `/mercado close` | Fecha o mercado | O estoque fica guardado |
+| `/mercado move` | Muda o centro para onde você está | Dentro do território |
+| `/mercado remove confirm` | Remove o mercado | Apaga o estoque junto |
 
 ## Custos e limites
 
@@ -71,10 +71,10 @@ Os comandos de jogador (pagar, vender, comprar, trocar) estão na [Wiki do Jogad
 | Cada chunk a mais | 1.000 Geos |
 | Manutenção | 200 Geos por chunk, todo dia às 15:00 |
 
-## Em português
+## Nomes em inglês
 
-Os comandos também atendem por nomes em português: `/tesouro` é o `/treasury`, `/moeda` é o `/currency` e `/mercado` é o `/market`. O que vem depois continua igual: `/tesouro deposit 5000 PESO`, `/moeda print 1000`.
+Os comandos também funcionam em inglês: `/treasury` é o `/tesouro`, `/currency` é o `/moeda`, `/market` é o `/mercado` e `/lands` é o `/pais`. O que vem depois é igual nos dois: `/tesouro deposit 5000 PESO` e `/treasury deposit 5000 PESO` fazem a mesma coisa.
 
 ## Se você governa mais de um país
 
-Os comandos valem para o país onde você está pisando. Fora de todos eles, valem para o país escolhido com `/lands edit`. Se o jogo não souber qual é, ele pede para você entrar em um deles.
+Os comandos valem para o país onde você está pisando. Fora de todos eles, valem para o país escolhido com `/pais edit`. Se o jogo não souber qual é, ele pede para você entrar em um deles.

@@ -7,7 +7,7 @@ order: 4
 ## O comando
 
 ```text
-/currency print 30000
+/moeda print 30000
 ```
 
 O dinheiro novo vai direto para o **tesouro do país**. Só o país que criou a moeda pode imprimir. Um país que apenas adotou a moeda não pode.
@@ -15,7 +15,7 @@ O dinheiro novo vai direto para o **tesouro do país**. Só o país que criou a 
 Para ver quanto ainda dá para imprimir, digite só:
 
 ```text
-/currency print
+/moeda print
 ```
 
 ## O limite: 10% por semana
@@ -28,7 +28,7 @@ O limite conta os últimos 7 dias corridos, não a semana do calendário. Se voc
 
 ## Todo mundo fica sabendo
 
-Cada impressão é anunciada no chat para o **servidor inteiro**, com o valor impresso e o novo total da moeda. Ela também fica registrada em `/currency info` e no menu `/economy`, com a data e o nome de quem imprimiu.
+Cada impressão é anunciada no chat para o **servidor inteiro**, com o valor impresso e o novo total da moeda. Ela também fica registrada em `/moeda info` e no menu `/economia`, com a data e o nome de quem imprimiu.
 
 Não dá para imprimir escondido. Os jogadores que guardam a sua moeda vão ver.
 

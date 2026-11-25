@@ -1,6 +1,7 @@
 ---
 // "Sobre nós": what the server is, in the home page's own words, with a link to each
-// part of it. The server's story and team are still to be written.
+// part of it; then the server's story, from its start in 2024 to its return in 2026.
+// Every text is in pt.about (src/content/pt.ts).
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import Icon from '../../components/Icon.astro';
@@ -8,6 +9,7 @@ import Closing from '../../components/home/Closing.astro';
 import { pt } from '../../content/pt';
 
 const c = pt.about;
+const s = c.story;
 ---
 
 <Base title={c.meta.title} description={c.meta.description} page="about">
@@ -26,14 +28,39 @@ const c = pt.about;
         ))
       }
     </ul>
+  </section>
 
-    <div class="soon card" data-in="settle" style="--d: 120ms">
-      <span class="soon-tag">{pt.common.soon}</span>
-      <div>
-        <h2>{c.soon.title}</h2>
-        <p>{c.soon.body}</p>
-      </div>
-    </div>
+  <section class="container story" aria-labelledby="historia">
+    <header class="story-head" data-in="settle">
+      <p class="eyebrow">{s.chapter}</p>
+      <h2 id="historia">{s.title}</h2>
+      <p class="founders">{s.founders}</p>
+    </header>
+
+    <ul class="stats">
+      {
+        s.stats.map((stat, i) => (
+          <li class="stat card" data-in="settle" style={`--d: ${60 + i * 60}ms`}>
+            <strong>{stat.value}</strong>
+            <span>{stat.label}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <ol class="timeline">
+      {
+        s.parts.map((part) => (
+          <li class="part" data-in="settle">
+            <span class="tag">{part.tag}</span>
+            <div class="part-body card">
+              <h3>{part.title}</h3>
+              {part.body.map((paragraph) => <p>{paragraph}</p>)}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
   </section>
 
   <Closing />
@@ -41,9 +68,7 @@ const c = pt.about;
 
 <style>
   .about {
-    gap: 1rem;
     padding-top: 3.5rem;
-    display: grid;
   }
   .pillars {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -84,8 +109,7 @@ const c = pt.about;
   .pillar h2 {
     margin-top: .5rem;
   }
-  .pillar p,
-  .soon p {
+  .pillar p {
     color: var(--color-text-muted);
     font-size: .9375rem;
     line-height: 1.55;
@@ -94,36 +118,138 @@ const c = pt.about;
     margin-top: .4rem;
     font-size: .875rem;
   }
-  .soon {
-    align-items: center;
-    gap: 1.25rem;
-    padding: 1.5rem 1.6rem;
-    display: flex;
-  }
-  .soon div {
-    gap: .35rem;
+
+  /* The story */
+  .story {
+    gap: 1.5rem;
+    padding-top: 5rem;
     display: grid;
   }
-  .soon-tag {
-    box-shadow: inset 0 0 0 1px var(--color-green-ring);
-    color: var(--color-green-strong);
-    white-space: nowrap;
-    background: var(--color-green-soft);
-    border-radius: 999px;
-    flex: none;
-    padding: .35rem .7rem;
+  .story-head {
+    gap: .5rem;
+    max-width: 40rem;
+    display: grid;
+  }
+  .eyebrow {
+    color: var(--color-blue-strong);
+    letter-spacing: .08em;
+    text-transform: uppercase;
     font-size: .75rem;
     font-weight: 600;
   }
+  .story-head h2 {
+    font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.25rem);
+  }
+  .founders {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+  }
+  .stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    list-style: none;
+    display: grid;
+  }
+  .stat {
+    gap: .3rem;
+    padding: 1.3rem 1.5rem;
+    display: grid;
+  }
+  .stat strong {
+    color: var(--color-text);
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.05;
+  }
+  .stat span {
+    color: var(--color-text-muted);
+    font-size: .9375rem;
+  }
+  .timeline {
+    gap: 1rem;
+    max-width: 52rem;
+    margin-top: .5rem;
+    list-style: none;
+    display: grid;
+    position: relative;
+  }
+  /* The line that joins the years. */
+  .timeline::before {
+    content: '';
+    background: var(--color-hairline-strong);
+    width: 2px;
+    position: absolute;
+    top: .75rem;
+    bottom: .75rem;
+    left: 2.6rem;
+  }
+  .part {
+    grid-template-columns: 5.2rem minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+    display: grid;
+    position: relative;
+  }
+  .tag {
+    box-shadow: inset 0 0 0 1px var(--color-blue-ring);
+    color: var(--color-blue-strong);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    white-space: nowrap;
+    background: var(--color-bg);
+    border-radius: 999px;
+    justify-self: center;
+    margin-top: 1.35rem;
+    padding: .3rem .7rem;
+    font-size: .75rem;
+    font-weight: 600;
+    position: relative;
+  }
+  /* The tag's own tint, laid over the page colour so the line does not show through. */
+  .tag::before {
+    content: '';
+    background: var(--color-blue-soft);
+    border-radius: inherit;
+    position: absolute;
+    inset: 0;
+  }
+  .part-body {
+    gap: .7rem;
+    padding: 1.4rem 1.6rem 1.5rem;
+    display: grid;
+  }
+  .part-body h3 {
+    letter-spacing: -.02em;
+    font-size: 1.125rem;
+    line-height: 1.25;
+  }
+  .part-body p {
+    color: var(--color-text-soft);
+    font-size: .9375rem;
+    line-height: 1.65;
+  }
+
   @media (width <= 900px) {
     .pillars {
       grid-template-columns: minmax(0, 1fr);
     }
   }
-  @media (width <= 560px) {
-    .soon {
-      flex-direction: column;
-      align-items: flex-start;
+  @media (width <= 640px) {
+    .stats {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .timeline::before {
+      display: none;
+    }
+    .part {
+      grid-template-columns: minmax(0, 1fr);
+      gap: .5rem;
+    }
+    .tag {
+      justify-self: start;
+      margin-top: 0;
     }
   }
 </style>

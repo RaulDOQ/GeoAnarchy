@@ -6,7 +6,9 @@ order: 4
 
 ## Declarar
 
-Qualquer país pode declarar guerra a outro quando quiser, pela parte de guerras do menu do país (**/pais**). Não há número mínimo de jogadores online.
+Qualquer país pode declarar guerra a outro quando quiser, com **/pais war declare <país>**. Não há número mínimo de jogadores online.
+
+Durante a guerra, **/pais war info** mostra os pontos e **/pais war menu** abre o menu da guerra, onde também dá para se render.
 
 Depois de declarada, a guerra tem **1 hora de preparação**. Só então ela começa de verdade.
 

@@ -29,7 +29,7 @@ Para vender num mercado de país você recebe na moeda dele. Para comprar, preci
 ## Como achar um mercado
 
 ```text
-/market list
+/mercado list
 ```
 
 Abre um menu com todos os mercados, do mais perto para o mais longe. Passe o mouse em cima de um mercado para ver:
@@ -48,7 +48,7 @@ Cada mercado tem um **ponto de venda**: uma área de cerca de 10 blocos em volta
 - aparece um aviso acima da sua barra de itens, com o nome do mercado;
 - você vê um **anel de partículas** marcando a borda.
 
-Só dentro dessa área os comandos `/market`, `/sell` e `/buy` funcionam. Fora dela, o jogo avisa que você não está num mercado.
+Só dentro dessa área os comandos `/mercado`, `/vender` e `/comprar` funcionam. Fora dela, o jogo avisa que você não está num mercado.
 
 > **Atenção:** o servidor não protege o ponto de venda. Outros jogadores podem estar esperando por você lá. Chegue com cuidado, principalmente se estiver carregando muita coisa.
 

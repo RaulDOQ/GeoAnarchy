@@ -10,13 +10,13 @@ O dinheiro de um país fica em dois lugares:
 
 | | O que guarda | Como mexer |
 |---|---|---|
-| **Banco do país** | Os **Geos** do país | `/lands deposit` e `/lands withdraw` |
-| **Tesouro** | **Todas as outras moedas**: a sua e as de outros países | `/treasury deposit` e `/treasury withdraw` |
+| **Banco do país** | Os **Geos** do país | `/pais bank deposit` e `/pais bank withdraw` |
+| **Tesouro** | **Todas as outras moedas**: a sua e as de outros países | `/tesouro deposit` e `/tesouro withdraw` |
 
 Para ver tudo de uma vez:
 
 ```text
-/treasury
+/tesouro
 ```
 
 A primeira linha é o banco, em Geos. As seguintes são as outras moedas, com o valor aproximado de cada uma em Geos.
@@ -26,8 +26,8 @@ A primeira linha é o banco, em Geos. As seguintes são as outras moedas, com o 
 É o banco normal do país, o mesmo que paga a **manutenção** do território. Não existe um cofre separado para a economia.
 
 ```text
-/lands deposit 50000
-/lands withdraw 10000
+/pais bank deposit 50000
+/pais bank withdraw 10000
 ```
 
 É do banco que saem:
@@ -66,8 +66,8 @@ E sai dinheiro quando:
 ### Depositar e sacar
 
 ```text
-/treasury deposit 5000 PESO
-/treasury withdraw 2000 PESO
+/tesouro deposit 5000 PESO
+/tesouro withdraw 2000 PESO
 ```
 
 O depósito tira da sua carteira e coloca no tesouro. O saque faz o contrário. Só quem pode mexer na economia do país usa esses comandos.
@@ -79,8 +79,8 @@ O tesouro guarda qualquer moeda, não só a sua. Se o seu país recebeu Francos,
 Para pagar um soldado, um construtor ou um aliado na moeda do país, saque do tesouro e pague pela sua carteira:
 
 ```text
-/treasury withdraw 1000 PESO
-/pay Carlos 1000 PESO
+/tesouro withdraw 1000 PESO
+/pagar Carlos 1000 PESO
 ```
 
 ## Fique de olho no saldo

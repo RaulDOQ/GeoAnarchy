@@ -16,11 +16,11 @@ O mercado do país **segue o mercado continental mais próximo**. O ponto de par
 
 O mercado usa um preço **suavizado** do continente, que acompanha o real com cerca de 30 minutos de atraso. Assim ninguém consegue encher ou esvaziar o continente por um instante só para mexer no seu mercado.
 
-Para saber qual continente o seu mercado segue, veja em `/market list`: a linha `Segue o mercado ...`.
+Para saber qual continente o seu mercado segue, veja em `/mercado list`: a linha `Segue o mercado ...`.
 
 ## 2. O ajuste do país
 
-Em seguida entra a porcentagem que você definiu com `/market price`, de 50% a 200%. Sem ajuste, vale 100%.
+Em seguida entra a porcentagem que você definiu com `/mercado price`, de 50% a 200%. Sem ajuste, vale 100%.
 
 ## 3. O estoque do próprio mercado
 
@@ -67,10 +67,10 @@ Agora mude uma coisa de cada vez:
 
 **Moeda fraca, mercado caro.** Se a sua moeda perde valor, o tesouro precisa de mais unidades para comprar a mesma coisa. Imprimir para cobrir isso piora o problema.
 
-**O estoque é uma ferramenta.** Retirar itens com `/market take` sobe o preço e atrai vendedores. Deixar o estoque encher baixa o preço e atrai compradores.
+**O estoque é uma ferramenta.** Retirar itens com `/mercado take` sobe o preço e atrai vendedores. Deixar o estoque encher baixa o preço e atrai compradores.
 
 ## Conferir os preços
 
-Abra `/market` no ponto de venda, ou clique no seu mercado em `/market list`. O menu mostra, para cada item, quanto o mercado paga, quanto cobra, o estoque atual e o estoque normal.
+Abra `/mercado` no ponto de venda, ou clique no seu mercado em `/mercado list`. O menu mostra, para cada item, quanto o mercado paga, quanto cobra, o estoque atual e o estoque normal.
 
 Vale olhar depois de qualquer mudança: um ajuste novo, uma impressão de dinheiro, uma guerra que mexeu no câmbio.

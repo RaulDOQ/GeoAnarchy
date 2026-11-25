@@ -10,13 +10,13 @@ O que está entre `< >` é obrigatório e o que está entre `[ ]` é opcional. N
 
 | Comando | O que faz |
 |---|---|
-| `/bal` | Mostra o seu dinheiro em todas as moedas |
-| `/bal <jogador>` | Mostra o dinheiro de outro jogador |
-| `/pay <jogador> <valor>` | Paga em Geos |
-| `/pay <jogador> <valor> <moeda>` | Paga em outra moeda, por exemplo `/pay Maria 100 PESO` |
-| `/baltop [moeda] [página]` | Mostra os mais ricos |
+| `/saldo` | Mostra o seu dinheiro em todas as moedas |
+| `/saldo <jogador>` | Mostra o dinheiro de outro jogador |
+| `/pagar <jogador> <valor>` | Paga em Geos |
+| `/pagar <jogador> <valor> <moeda>` | Paga em outra moeda, por exemplo `/pagar Maria 100 PESO` |
+| `/ricos [moeda] [página]` | Mostra os mais ricos |
 
-`/balance`, `/money`, `/saldo` e `/dinheiro` são o mesmo que `/bal`.
+`/dinheiro` é o mesmo que `/saldo`.
 
 ## Mercados
 
@@ -24,12 +24,12 @@ Os comandos de vender e comprar só funcionam dentro do ponto de venda de um mer
 
 | Comando | O que faz |
 |---|---|
-| `/market` | Abre o menu do mercado onde você está |
-| `/market list` | Lista todos os mercados, com coordenadas e preços |
-| `/sell hand` | Vende a pilha que está na sua mão |
-| `/sell all` | Vende tudo o que você carrega e o mercado aceita |
-| `/sell <item> [quantidade]` | Vende um item. Sem a quantidade, vende todos |
-| `/buy <item> [quantidade]` | Compra um item. Sem a quantidade, compra 1 |
+| `/mercado` | Abre o menu do mercado onde você está |
+| `/mercado list` | Lista todos os mercados, com coordenadas e preços |
+| `/vender hand` | Vende a pilha que está na sua mão |
+| `/vender all` | Vende tudo o que você carrega e o mercado aceita |
+| `/vender <item> [quantidade]` | Vende um item. Sem a quantidade, vende todos |
+| `/comprar <item> [quantidade]` | Compra um item. Sem a quantidade, compra 1 |
 
 Os nomes dos itens são em inglês, como no Minecraft: `diamond`, `iron_ingot`, `oak_log`.
 
@@ -37,33 +37,35 @@ Os nomes dos itens são em inglês, como no Minecraft: `diamond`, `iron_ingot`, 
 
 | Comando | O que faz |
 |---|---|
-| `/exchange <valor> <de> <para>` | Pede a cotação de uma troca, por exemplo `/exchange 100 GEO PESO` |
-| `/exchange confirm` | Confirma a troca cotada |
-| `/exchange rates` | Mostra a taxa de todas as moedas |
-| `/currency list` | Lista todas as moedas |
-| `/currency info <código>` | Mostra os detalhes de uma moeda |
+| `/cambio <valor> <de> <para>` | Pede a cotação de uma troca, por exemplo `/cambio 100 GEO PESO` |
+| `/cambio confirm` | Confirma a troca cotada |
+| `/cambio rates` | Mostra a taxa de todas as moedas |
+| `/moeda list` | Lista todas as moedas |
+| `/moeda info <código>` | Mostra os detalhes de uma moeda |
 
 ## Menu
 
 | Comando | O que faz |
 |---|---|
-| `/economy` | Abre o menu com carteira, moedas, mercados e números da economia |
+| `/economia` | Abre o menu com carteira, moedas, mercados e números da economia |
 
-## Em português
+## Nomes em inglês
 
-Cada comando também atende por um nome em português. O que vem depois do comando continua igual: `/vender hand`, `/cambio 100 GEO PESO`, `/mercado list`.
+Cada comando também funciona com o nome em inglês, que é o mesmo de outros servidores:
 
-| Comando | Também funciona |
+| Comando | Em inglês |
 |---|---|
-| `/bal` | `/saldo`, `/dinheiro` |
-| `/pay` | `/pagar` |
-| `/baltop` | `/ricos` |
-| `/market` | `/mercado` |
-| `/sell` | `/vender` |
-| `/buy` | `/comprar` |
-| `/exchange` | `/cambio` |
-| `/currency` | `/moeda` |
-| `/economy` | `/economia` |
+| `/saldo` | `/bal`, `/balance`, `/money` |
+| `/pagar` | `/pay` |
+| `/ricos` | `/baltop` |
+| `/mercado` | `/market` |
+| `/vender` | `/sell` |
+| `/comprar` | `/buy` |
+| `/cambio` | `/exchange` |
+| `/moeda` | `/currency` |
+| `/economia` | `/economy` |
+
+O que vem depois do comando, como `hand`, `all`, `list` e `confirm`, é igual nos dois.
 
 Os valores aceitam vírgula: `/pagar Maria 12,5` envia 12 Geos e 50 centavos.
 

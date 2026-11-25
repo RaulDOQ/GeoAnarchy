@@ -14,7 +14,7 @@ Isso é uma decisão do país. Cada item da lista é algo que o **tesouro vai pa
 
 É o jeito mais fácil.
 
-1. Vá até o mercado e digite `/market`.
+1. Vá até o mercado e digite `/mercado`.
 2. Clique no botão **Gerenciar itens**, na linha de baixo. Só quem governa a economia do país vê esse botão.
 3. O menu passa a mostrar **todos os itens** que existem na economia do servidor.
 4. Clique num item para adicionar. Clique de novo para tirar.
@@ -25,8 +25,8 @@ Passe o mouse em cima de um item para ver a situação dele: `Negociado neste me
 ## Pelo comando
 
 ```text
-/market item diamond on
-/market item diamond off
+/mercado item diamond on
+/mercado item diamond off
 ```
 
 O nome do item é o do Minecraft em inglês, com `_` no lugar do espaço: `iron_ingot`, `cooked_beef`. Aperte **Tab** para o jogo completar.
@@ -45,7 +45,7 @@ Enquanto o item está fora da lista, ninguém consegue vender nem comprar aquele
 
 **O que o país produz.** Se a região tem muita madeira ou muita mineração, vender isso atrai compradores de longe, e eles vão precisar da sua moeda.
 
-**O que falta na região.** Olhe em `/market list` o que os mercados vizinhos não negociam. Ser o único lugar que negocia um item traz movimento.
+**O que falta na região.** Olhe em `/mercado list` o que os mercados vizinhos não negociam. Ser o único lugar que negocia um item traz movimento.
 
 **Evite itens de fazenda automática**, como pedregulho, cacto ou bambu. Um jogador com uma fazenda grande pode vender milhares e esvaziar o tesouro em minutos. Se quiser negociar esses itens, [baixe o preço deles](/wiki/pais/economia/gerenciar-mercado/).
 

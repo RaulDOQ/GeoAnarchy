@@ -20,7 +20,7 @@ Um país que não quer gastar 70.000 Geos criando uma moeda pode **adotar a moed
 ## Para quem quer adotar
 
 ```text
-/currency adopt PESO
+/moeda adopt PESO
 ```
 
 Dois resultados são possíveis:
@@ -31,7 +31,7 @@ Dois resultados são possíveis:
 Para deixar de usar a moeda (ou cancelar um pedido que está esperando):
 
 ```text
-/currency abandon
+/moeda abandon
 ```
 
 ### Vantagens
@@ -55,13 +55,13 @@ Ter outros países usando a sua moeda é bom para você: mais gente precisa dela
 ### Escolher quem pode adotar
 
 ```text
-/currency policy open
+/moeda policy open
 ```
 
 **Livre.** Qualquer país adota quando quiser. É como a moeda começa.
 
 ```text
-/currency policy approval
+/moeda policy approval
 ```
 
 **Com aprovação.** Cada país precisa pedir, e você aceita ou recusa.
@@ -69,14 +69,14 @@ Ter outros países usando a sua moeda é bom para você: mais gente precisa dela
 ### Responder aos pedidos
 
 ```text
-/currency requests
+/moeda requests
 ```
 
 Lista os países que estão esperando.
 
 ```text
-/currency accept Argentina
-/currency deny Argentina
+/moeda accept Argentina
+/moeda deny Argentina
 ```
 
 Aceita ou recusa o pedido. Use o nome do país como aparece na lista.
@@ -95,4 +95,4 @@ Depois que um país adotou a sua moeda, só ele pode deixar de usá-la. O que vo
 | `Todo país já usa a moeda mundial` | Você tentou adotar o Geo, que todos já usam |
 | `não tem mais um país por trás` | O país dono da moeda deixou de existir |
 | `Seu país já usa a moeda ...` | O seu país já adotou essa moeda |
-| `Não há pedido de ...` | Não há pedido desse país. Confira em `/currency requests` |
+| `Não há pedido de ...` | Não há pedido desse país. Confira em `/moeda requests` |

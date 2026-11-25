@@ -197,12 +197,12 @@ export const pt = {
     note: 'Servidor brasileiro · Survival · Mapa da Terra',
   },
 
-  // "Sobre nós". The three ideas repeat the home page's own words; the rest of the page
-  // is waiting for the server's story and team.
+  // "Sobre nós". The three ideas repeat the home page's own words; then the server's story,
+  // told by its founders (Astrum and Drew), from 2024 to its return in 2026.
   about: {
     meta: {
       title: 'Sobre nós | GeoAnarchy',
-      description: 'O que é o GeoAnarchy: um servidor de Minecraft brasileiro no mapa real da Terra, onde quem controla são os jogadores.',
+      description: 'A história do GeoAnarchy: um servidor de geopolítica sem regras no mapa real da Terra, criado em 2024 por Astrum e Drew e de volta em 2026.',
     },
     chapter: 'Sobre nós',
     title: ['Quem controla', 'são os jogadores'],
@@ -225,9 +225,67 @@ export const pt = {
       },
     ],
     more: 'Ver na página inicial',
-    soon: {
-      title: 'Esta página ainda está sendo escrita',
-      body: 'A história do servidor e a equipe por trás do GeoAnarchy vão aparecer aqui.',
+    story: {
+      chapter: 'Nossa história',
+      title: 'De onde veio o GeoAnarchy',
+      founders: 'Fundado por Astrum e Drew',
+      // The numbers from the first GeoAnarchy, shown above the story.
+      stats: [
+        { value: '2024', label: 'O ano em que tudo começou' },
+        { value: '150', label: 'Jogadores online ao mesmo tempo' },
+        { value: '1.500+', label: 'Membros no Discord' },
+      ],
+      // Each part of the story: a year (or a short tag), a title and its paragraphs.
+      parts: [
+        {
+          tag: '2024',
+          title: 'Um servidor sem regras',
+          body: [
+            'O GeoAnarchy foi fundado em 2024 por nós dois, Astrum e Drew. A gente gostava de política, economia, países e Minecraft, mas todo servidor de geopolítica era a mesma coisa: regras de roleplay para seguir, tanques, armas e aviões para aprender a usar, e um PvP totalmente diferente do jogo. Ainda havia vários níveis de burocracia, quando a gente só queria entrar, criar o nosso país e atacar os outros.',
+            'E nada daquilo parecia realista. No mundo real, o que impede um país de atacar outro são as consequências impostas pelos outros países, e não uma força divina, que nesses servidores eram o próprio servidor e as suas regras.',
+            'Então decidimos criar o nosso próprio servidor, fugindo de tudo isso: um servidor de geopolítica sem regras, onde cada parte da estrutura é controlada pelos jogadores, igual no mundo real.',
+          ],
+        },
+        {
+          tag: 'A ideia',
+          title: 'A base é o mundo real',
+          body: [
+            'Antigamente, o mundo era desorganizado. Países atacavam outros sem motivo, e piratas viviam de atacar quem encontravam e roubar tudo, só porque queriam. Hoje só existe “paz” porque vários países se uniram e criaram instituições.',
+            'Essas instituições não são uma lei definitiva. Quando um país ataca outro sem motivo, ele não é banido da existência: os outros países se juntam contra ele, e ele sofre as consequências, inclusive econômicas.',
+            'O mesmo pode acontecer no GeoAnarchy. Países que buscam paz podem se unir para se defender de piratas, terroristas e ataques sem motivo. Mas se alguém quiser atacar um país sem motivo, o servidor nunca vai impedir. Quem impede são os próprios jogadores.',
+          ],
+        },
+        {
+          tag: '2024',
+          title: 'O crescimento',
+          body: [
+            'Por um bom tempo, o servidor teve uma base estável de jogadores e não parou de crescer. Chegamos a 150 jogadores online ao mesmo tempo e a mais de 1.500 membros no Discord.',
+          ],
+        },
+        {
+          tag: '2025',
+          title: 'O fim',
+          body: [
+            'No início de 2025, decidimos fechar o servidor, por vários motivos. A escola tomava o nosso tempo, e o servidor não rendia o suficiente para se manter: só para ficar no ar, gastávamos mais de 200 reais por mês, sem contar a divulgação e as melhorias.',
+            'Sem tempo e sem dinheiro, o servidor foi caindo aos poucos, até ficar com uma média de 15 jogadores online. Então decidimos encerrar.',
+          ],
+        },
+        {
+          tag: '2025',
+          title: 'Outro servidor',
+          body: [
+            'Logo depois de fechar, vendemos o servidor para novos donos. Ele reabriu com outro nome e outras ideias: era focado em roleplay e queria adicionar coisas como tanques e armas.',
+            'Depois de alguns meses, esse servidor morreu de vez, e nunca mais conseguimos trazer de volta o servidor que tínhamos construído.',
+          ],
+        },
+        {
+          tag: '2026',
+          title: 'A volta',
+          body: [
+            'Em 2026, com a escola terminada, temos muito mais tempo para melhorar o servidor, administrar e investir nele. Por isso decidimos trazer o GeoAnarchy de volta, com a mesma ideia de sempre e com uma gameplay e uma qualidade muito melhores.',
+          ],
+        },
+      ],
     },
   },
 
@@ -326,7 +384,7 @@ export const pt = {
     countries: {
       id: 'paises',
       title: 'Países',
-      intro: 'Fundar um país, os 10 níveis, território e manutenção, e como funcionam as guerras.',
+      intro: 'Um tutorial passo a passo, os 10 níveis, território e manutenção, e como funcionam as guerras.',
     },
     enchantments: {
       id: 'encantamentos',
@@ -352,9 +410,9 @@ export const pt = {
         body: 'Esta wiki é para os donos de países e para os membros que cuidam da economia do país. Se você só quer jogar, comprar e vender, a Wiki do Jogador tem tudo o que você precisa.',
         needsLabel: 'Antes de começar',
         needs: [
-          'Você precisa ter um país, criado com /lands create.',
+          'Você precisa ter um país, criado com /pais create.',
           'Só o dono do país mexe na economia dele. O dono pode dar essa permissão a um cargo no menu de cargos do país (a permissão aparece como “Manage economy”).',
-          'O Geo do país fica no banco do país. Use /lands deposit para guardar dinheiro lá.',
+          'O Geo do país fica no banco do país. Use /pais bank deposit para guardar dinheiro lá.',
         ],
       },
       economy: {

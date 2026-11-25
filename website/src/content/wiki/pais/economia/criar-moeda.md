@@ -13,13 +13,13 @@ order: 3
 ## O comando
 
 ```text
-/currency create <CÓDIGO> <nome> <plural> [símbolo]
+/moeda create <CÓDIGO> <nome> <plural> [símbolo]
 ```
 
 Exemplo:
 
 ```text
-/currency create PESO Peso Pesos $
+/moeda create PESO Peso Pesos $
 ```
 
 | Parte | Regra | Exemplo |
@@ -59,8 +59,8 @@ O servidor inteiro recebe um aviso de que o seu país criou uma moeda.
 
 ## Os primeiros passos depois de criar
 
-1. Confira o tesouro com `/treasury`: os 100.000 devem estar lá.
-2. Veja a sua moeda em `/currency info PESO`.
+1. Confira o tesouro com `/tesouro`: os 100.000 devem estar lá.
+2. Veja a sua moeda em `/moeda info PESO`.
 3. [Construa o mercado](/wiki/pais/economia/criar-mercado/). Sem ele, quase ninguém terá motivo para usar a moeda.
 4. Decida se outros países podem [adotar a moeda](/wiki/pais/economia/adocao/) livremente ou só com a sua aprovação.
 
@@ -73,7 +73,7 @@ O servidor inteiro recebe um aviso de que o seu país criou uma moeda.
 | `O código ... já está em uso` | Já existe uma moeda com esse código |
 | `Os nomes precisam ter de 2 a 16 letras` | Nome com números, símbolos ou tamanho errado |
 | `Esse nome é parecido demais com uma moeda que já existe` | Já existe uma moeda com esse nome |
-| `Criar uma moeda custa ...` | Faltam Geos no banco do país. Deposite com `/lands deposit` |
+| `Criar uma moeda custa ...` | Faltam Geos no banco do país. Deposite com `/pais bank deposit` |
 | `Você não comanda a economia de nenhum país` | Você não é o dono nem tem a permissão |
 
 Quando o comando é recusado, nada é cobrado.

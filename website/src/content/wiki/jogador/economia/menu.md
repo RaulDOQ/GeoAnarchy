@@ -1,11 +1,11 @@
 ---
-title: O menu /economy
+title: O menu /economia
 summary: Um menu com a sua carteira, todas as moedas, todos os mercados e os números da economia do servidor.
 order: 9
 ---
 
 ```text
-/economy
+/economia
 ```
 
 Abre um menu com quatro páginas. `/economia` faz o mesmo. Ele funciona de qualquer lugar e é só para consulta: nada ali gasta o seu dinheiro.
@@ -29,7 +29,7 @@ Um ícone para cada moeda do servidor. Passe o mouse para ver:
 
 ## Mercados
 
-A mesma lista do `/market list`: todos os mercados, do mais perto para o mais longe, com coordenadas, distância, moeda e nível de preços.
+A mesma lista do `/mercado list`: todos os mercados, do mais perto para o mais longe, com coordenadas, distância, moeda e nível de preços.
 
 Clique num mercado para ver a lista de preços dele. De longe você só consegue olhar. Para negociar, é preciso estar lá.
 

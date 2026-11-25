@@ -12,7 +12,10 @@ Fundar um país custa **20.000 Geos**. Use:
 
 - O nome pode ter de **3 a 32 letras**, com espaços.
 - Você vira o **Fundador**.
-- O país nasce no nível **Tribo**, com até **100 chunks** e **20 membros**.
+- O país já nasce com os **9 chunks** em volta de você (um quadrado de 3 × 3), sem custo extra.
+- Ele começa no nível **Tribo**, com até **100 chunks** e **20 membros**.
+
+O passo a passo completo, com todos os comandos, está no [Tutorial](/wiki/paises/tutorial/).
 
 ## Os 10 níveis
 

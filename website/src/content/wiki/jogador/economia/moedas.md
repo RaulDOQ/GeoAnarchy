@@ -15,21 +15,21 @@ O Geo continua existindo ao lado de todas elas. Ele é a moeda do mundo e é a r
 ## Como você recebe moedas de países
 
 - **Vendendo no mercado de um país.** Ele paga na moeda dele.
-- **Recebendo de outro jogador**, com `/pay Nome 100 PESO`.
-- **Trocando no câmbio**, com `/exchange`. Veja [Câmbio](/wiki/economia/cambio/).
+- **Recebendo de outro jogador**, com `/pagar Nome 100 PESO`.
+- **Trocando no câmbio**, com `/cambio`. Veja [Câmbio](/wiki/economia/cambio/).
 
-Todas ficam na mesma carteira. O `/bal` mostra cada uma e quanto ela vale em Geos.
+Todas ficam na mesma carteira. O `/saldo` mostra cada uma e quanto ela vale em Geos.
 
 ## Ver as moedas que existem
 
 ```text
-/currency list
+/moeda list
 ```
 
 Mostra todas as moedas, quantas unidades 1 Geo compra e qual país emitiu cada uma.
 
 ```text
-/currency info PESO
+/moeda info PESO
 ```
 
 Mostra os detalhes de uma moeda:
@@ -43,7 +43,7 @@ Mostra os detalhes de uma moeda:
 | `Ainda pode ser impresso nesta semana` | Quanto o país ainda pode imprimir nesta semana |
 | `Usada por: Espanha, Argentina` | Os países que usam a moeda |
 
-O menu `/economy` mostra as mesmas informações, com a variação das últimas 24 horas e dos últimos 7 dias.
+O menu `/economia` mostra as mesmas informações, com a variação das últimas 24 horas e dos últimos 7 dias.
 
 ## O valor muda
 
@@ -69,7 +69,7 @@ Dinheiro novo não cria riqueza nova. Se o país gasta esse dinheiro e ele acaba
 
 > **Exemplo:** o Peso vale 0,10 Geo. A Espanha imprime 30.000 Pesos para pagar soldados, e eles trocam tudo por Geos. O Peso cai para cerca de 0,076 Geo. Quem tinha 10.000 Pesos guardados tinha o equivalente a 1.000 Geos e passou a ter 760.
 
-Antes de guardar muito dinheiro na moeda de um país, veja em `/currency info` quanto ele anda imprimindo.
+Antes de guardar muito dinheiro na moeda de um país, veja em `/moeda info` quanto ele anda imprimindo.
 
 ## Se o país deixar de existir
 

@@ -63,12 +63,12 @@ Na prática: depois de uma mudança forte no câmbio, os preços do mercado leva
 ## Como acompanhar
 
 ```text
-/currency info PESO
+/moeda info PESO
 ```
 
 Mostra a taxa atual, o total da moeda, quanto foi impresso na semana e quem usa a moeda.
 
-No menu `/economy`:
+No menu `/economia`:
 
 - **Moedas** mostra a variação do valor em 24 horas e em 7 dias, e quanto há na reserva.
 - **Economia** mostra a **inflação** de cada moeda em 24 horas e em 7 dias.

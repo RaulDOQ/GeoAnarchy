@@ -15,7 +15,7 @@ Todo jogador começa com **0 Geos**. O seu dinheiro fica na sua carteira, não n
 A carteira guarda todas as moedas que você tem: Geos e moedas de países. Para ver:
 
 ```text
-/bal
+/saldo
 ```
 
 Se você só tem Geos, aparece uma linha. Se tem outras moedas, aparece a lista, com o valor aproximado de cada uma em Geos:
@@ -26,18 +26,18 @@ Se você só tem Geos, aparece uma linha. Se tem outras moedas, aparece a lista,
  - 5,000.00 Pesos (vale cerca de 480.00 Geos)
 ```
 
-Para ver o dinheiro de outro jogador, use `/bal Nome`. Os atalhos `/saldo`, `/dinheiro`, `/balance` e `/money` fazem a mesma coisa.
+Para ver o dinheiro de outro jogador, use `/saldo Nome`. `/dinheiro` faz a mesma coisa.
 
 ## Pagar outro jogador
 
 ```text
-/pay Maria 250
+/pagar Maria 250
 ```
 
 Isso envia 250 Geos para a Maria. Para pagar em outra moeda, escreva o código dela no final:
 
 ```text
-/pay Maria 100 PESO
+/pagar Maria 100 PESO
 ```
 
 Regras do pagamento:
@@ -59,9 +59,9 @@ Regras do pagamento:
 | `2.5m` | 2.500.000 |
 | `1b` | 1.000.000.000 |
 
-> **Atenção:** o jogo usa o padrão americano. O **ponto** separa os centavos e a **vírgula** separa os milhares. Se você digitar `12,5` querendo dizer "doze e cinquenta", o jogo entende **125**. Para centavos, use sempre o ponto: `12.5`.
+> **Atenção:** com **um ponto só**, o jogo sempre lê centavos. `1.000` é **1 Geo**, não mil. Para mil, digite `1000`, `1k` ou `1,000`.
 
-Os valores que o jogo mostra seguem o mesmo padrão: `1,234.50 Geos` quer dizer mil duzentos e trinta e quatro Geos e cinquenta centavos.
+Os valores que o jogo mostra seguem o padrão americano: `1,234.50 Geos` quer dizer mil duzentos e trinta e quatro Geos e cinquenta centavos.
 
 ## Como ganhar dinheiro
 
@@ -73,7 +73,7 @@ Os valores que o jogo mostra seguem o mesmo padrão: `1,234.50 Geos` quer dizer 
 ## Quem tem mais
 
 ```text
-/baltop
+/ricos
 ```
 
-Mostra os jogadores mais ricos em Geos. Para o ranking de outra moeda, escreva o código: `/baltop PESO`. Para ver outra página, escreva o número: `/baltop 2`.
+Mostra os jogadores mais ricos em Geos. Para o ranking de outra moeda, escreva o código: `/ricos PESO`. Para ver outra página, escreva o número: `/ricos 2`.

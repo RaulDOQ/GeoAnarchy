@@ -8,7 +8,7 @@ order: 11
 
 ### Por que não consigo vender de onde estou?
 
-Porque só dá para vender **dentro do ponto de venda** de um mercado. Use `/market list` para ver onde eles ficam e vá até um. Você chegou quando aparecer o aviso acima da barra de itens.
+Porque só dá para vender **dentro do ponto de venda** de um mercado. Use `/mercado list` para ver onde eles ficam e vá até um. Você chegou quando aparecer o aviso acima da barra de itens.
 
 ### O mercado não aceita o meu item. Por quê?
 
@@ -32,7 +32,7 @@ Nos mercados continentais, sim. A cada meia hora, parte do estoque em excesso so
 
 ### Quero comprar um item, mas o mercado não tem.
 
-O mercado só vende o que os jogadores venderam para ele. Procure em outro mercado com `/market list`, ou espere alguém abastecer aquele.
+O mercado só vende o que os jogadores venderam para ele. Procure em outro mercado com `/mercado list`, ou espere alguém abastecer aquele.
 
 ## Dinheiro
 
@@ -40,9 +40,9 @@ O mercado só vende o que os jogadores venderam para ele. Procure em outro merca
 
 Não. O dinheiro fica na carteira, não no inventário. O que você perde são os itens que estava carregando.
 
-### Digitei `12,5` e paguei 125. O que houve?
+### Digitei `1.000` e paguei só 1 Geo. O que houve?
 
-O jogo usa o padrão americano: ponto para centavos, vírgula para milhares. A vírgula é ignorada. Para doze e cinquenta, digite `12.5`.
+Com um ponto só, o jogo lê centavos: `1.000` é 1. Para mil, digite `1000`, `1k` ou `1,000`. Para centavos, ponto e vírgula funcionam: `12.5` e `12,5` são doze e cinquenta.
 
 ### Paguei a pessoa errada. Dá para desfazer?
 
@@ -56,15 +56,15 @@ Os mercados continentais pagam em Geos por tudo o que compram. O primeiro dinhei
 
 ### Tenho Pesos, mas quero comprar num mercado que usa Geos.
 
-Troque no câmbio: `/exchange 500 PESO GEO`, depois `/exchange confirm`. Veja [Câmbio](/wiki/economia/cambio/).
+Troque no câmbio: `/cambio 500 PESO GEO`, depois `/cambio confirm`. Veja [Câmbio](/wiki/economia/cambio/).
 
-### Por que recebi menos do que a taxa mostrada em `/exchange rates`?
+### Por que recebi menos do que a taxa mostrada em `/cambio rates`?
 
 A taxa mostrada é a de uma troca muito pequena. A sua própria troca move a taxa, e quanto maior o valor, pior a cotação. Além disso há 1% de taxa. A cotação que aparece antes de confirmar é sempre o valor exato.
 
 ### A moeda que eu guardava perdeu valor. Por quê?
 
-Provavelmente o país imprimiu dinheiro, ou muita gente trocou a moeda por Geos. As impressões são anunciadas no chat e ficam registradas em `/currency info`. Veja [Moedas dos países](/wiki/economia/moedas/).
+Provavelmente o país imprimiu dinheiro, ou muita gente trocou a moeda por Geos. As impressões são anunciadas no chat e ficam registradas em `/moeda info`. Veja [Moedas dos países](/wiki/economia/moedas/).
 
 ### O país da minha moeda acabou. Perdi tudo?
 

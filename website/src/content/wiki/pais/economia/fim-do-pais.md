@@ -40,9 +40,9 @@ No jogo, ela aparece com o aviso `Its country no longer exists`.
 
 Se a decisão é sua, faça isto primeiro:
 
-1. **Retire o estoque do mercado** com `/market take`, item por item.
-2. **Saque o tesouro** com `/treasury withdraw` e distribua aos membros com `/pay`.
-3. **Saque os Geos do banco** com `/lands withdraw`.
+1. **Retire o estoque do mercado** com `/mercado take`, item por item.
+2. **Saque o tesouro** com `/tesouro withdraw` e distribua aos membros com `/pagar`.
+3. **Saque os Geos do banco** com `/pais bank withdraw`.
 4. **Avise quem usa a sua moeda**, principalmente os países que a adotaram. Eles vão querer trocar por Geos ou criar a própria moeda.
 
 ## Se o país que criou a moeda que você adotou acabar

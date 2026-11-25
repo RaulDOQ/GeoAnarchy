@@ -9,7 +9,7 @@ JavaScript that any static host can serve.
 | Address | File | What it is |
 |---|---|---|
 | `/` | `src/pages/index.astro` | Home: the pitch, the live map, the server's ideas, how to join, questions |
-| `/sobre/` | `src/pages/sobre/index.astro` | Sobre nós. The server's story and team are still to be written. |
+| `/sobre/` | `src/pages/sobre/index.astro` | Sobre nós: the three ideas of the home page, then the server's story (2024 to 2026) as a timeline. Texts in `pt.about`. |
 | `/loja/` | `src/pages/loja/index.astro` | Loja. The monthly goal (what keeps the server running, and how much is missing), then the three plans with a switch for paying every month, every 3 months or every 6 months. They cannot be bought yet; the page says so. |
 | `/wiki/` | `src/pages/wiki/index.astro` | GeoWiki, the players' wiki: how to join, the world, how the server works, and the lists of its sections' articles |
 | `/wiki/pais/` | `src/pages/wiki/pais/index.astro` | The country founders' wiki: who it is for, and its list of economy articles |

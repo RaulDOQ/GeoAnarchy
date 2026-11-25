@@ -26,7 +26,7 @@ Quanto mais gente negocia no seu mercado, mais gente precisa da sua moeda, e mai
 
 O país pode pagar mais por um item que ele quer e deixar o servidor inteiro trazer. Depois, os líderes retiram os itens do estoque.
 
-> **Exemplo:** a Espanha precisa de obsidiana. Ela paga 180% do preço normal, jogadores de vários países levam obsidiana até Madri, e o governo retira com `/market take`.
+> **Exemplo:** a Espanha precisa de obsidiana. Ela paga 180% do preço normal, jogadores de vários países levam obsidiana até Madri, e o governo retira com `/mercado take`.
 
 O país paga com a própria moeda, que ele mesmo emite.
 
@@ -59,4 +59,4 @@ Um mercado movimentado traz jogadores para o território: possíveis membros, al
 
 - **Adote a moeda de um vizinho.** É grátis, e o seu país passa a ter uma moeda com mercado. Veja [Adotar uma moeda](/wiki/pais/economia/adocao/).
 - **Use só Geos.** Um país funciona normalmente sem moeda própria. Os seus jogadores negociam nos mercados continentais.
-- **Junte aos poucos.** Os membros podem depositar no banco do país com `/lands deposit`.
+- **Junte aos poucos.** Os membros podem depositar no banco do país com `/pais bank deposit`.

@@ -20,7 +20,7 @@ Todo dia, às **15:00 (horário de Brasília)**, o banco do país paga **200 Geo
 
 > **Exemplo:** um país com 300 chunks paga 60.000 Geos por dia. No nível 9, com 30% de desconto, paga 42.000.
 
-Se o banco **não tiver dinheiro**, o país **perde chunks** até a conta fechar. O jogo avisa antes, então deixe sempre uma reserva no banco com **/pais deposit**.
+Se o banco **não tiver dinheiro**, o país **perde chunks** até a conta fechar. O jogo avisa antes, então deixe sempre uma reserva no banco com **/pais bank deposit <valor>**.
 
 ## Impostos
 
