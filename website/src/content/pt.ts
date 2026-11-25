@@ -289,11 +289,11 @@ export const pt = {
   wiki: {
     meta: {
       title: 'GeoWiki | GeoAnarchy',
-      description: 'O guia do GeoAnarchy: como entrar, o mundo do servidor, como ele funciona e a economia.',
+      description: 'O guia do GeoAnarchy: como entrar, o mundo do servidor, as regras, a economia, os países, os encantamentos e o VIP.',
     },
     chapter: 'GeoWiki',
     title: ['O guia do', 'GeoAnarchy'],
-    lead: 'O essencial para jogar: como entrar, o mundo do servidor e a economia.',
+    lead: 'O essencial para jogar: como entrar, as regras do mundo, a economia, os países, os encantamentos e o VIP.',
     // The side menu.
     indexLabel: 'Nesta wiki',
     // The switch between the two wikis, at the top of every wiki page.
@@ -306,7 +306,11 @@ export const pt = {
     // folders in src/content/wiki/<wiki>/.
     sections: {
       start: 'Começando',
+      geral: 'Mundo e regras',
       economia: 'Economia',
+      paises: 'Países',
+      encantamentos: 'Encantamentos',
+      vip: 'VIP e skins',
     },
     // An article page: its browser title, and the links at its end.
     articleTitle: '{title} | GeoWiki',
@@ -317,6 +321,22 @@ export const pt = {
       id: 'economia',
       title: 'Economia',
       intro: 'O Geo, as moedas dos países, o câmbio e os mercados: como o dinheiro funciona no servidor.',
+    },
+    // The other sections listed on the players' front page, after the economy.
+    countries: {
+      id: 'paises',
+      title: 'Países',
+      intro: 'Fundar um país, os 10 níveis, território e manutenção, e como funcionam as guerras.',
+    },
+    enchantments: {
+      id: 'encantamentos',
+      title: 'Encantamentos',
+      intro: '40 encantamentos novos, comprados com XP em Tomos Selados: como abrir, aplicar e juntar.',
+    },
+    vip: {
+      id: 'vip',
+      title: 'VIP e skins',
+      intro: 'Os planos Geo+, Geo Ultra e Geo Ultra+, o menu /geomenu e as skins de itens.',
     },
     // The founders' wiki.
     country: {
@@ -370,6 +390,8 @@ export const pt = {
         'Cada país pode ter o nome que quiser, onde quiser, e ter suas próprias leis e filosofias.',
         'Toda a economia é controlada por jogadores, sem loja do servidor.',
         'Não existe nenhum comando de teleporte.',
+        'O Nether e o End estão fechados: os itens deles vêm dos mercados.',
+        'Cristais do End e âncoras de renascimento são proibidos.',
       ],
     },
   },

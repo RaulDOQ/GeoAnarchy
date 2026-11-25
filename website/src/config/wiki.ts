@@ -16,7 +16,7 @@ export const wikiBase: Record<WikiId, string> = {
 
 /** The order of the sections in each wiki's side menu. A new folder also needs a name in pt.ts (`wiki.sections`). */
 const sectionOrder: Record<WikiId, readonly string[]> = {
-  jogador: ['economia'],
+  jogador: ['geral', 'economia', 'paises', 'encantamentos', 'vip'],
   pais: ['economia'],
 };
 

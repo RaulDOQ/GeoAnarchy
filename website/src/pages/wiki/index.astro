@@ -1,7 +1,8 @@
 ---
 // "GeoWiki", the players' wiki: its front page. The first three articles are here, on
-// one page (how to join, the world, how the server works), followed by the way into the
-// economy articles, which are pages of their own (src/content/wiki/jogador).
+// one page (how to join, the world, how the server works and its rules), followed by the way
+// into the economy, countries, enchantments and VIP articles, which are pages of their own
+// (src/content/wiki/jogador).
 import WikiLayout from '../../components/wiki/WikiLayout.astro';
 import WikiTopics from '../../components/wiki/WikiTopics.astro';
 import Editions from '../../components/Editions.astro';
@@ -43,6 +44,7 @@ const c = pt.wiki;
       <ul class="checks rules card" data-in="settle" style="--d: 100ms">
         {c.rules.items.map((item) => <li>{item}</li>)}
       </ul>
+      <WikiTopics wiki="jogador" section="geral" />
     </article>
 
     <article id={c.economy.id}>
@@ -50,6 +52,16 @@ const c = pt.wiki;
       <p class="intro" data-in="settle" style="--d: 60ms">{c.economy.intro}</p>
       <WikiTopics wiki="jogador" section="economia" />
     </article>
+
+    {
+      [c.countries, c.enchantments, c.vip].map((part) => (
+        <article id={part.id}>
+          <h2 data-in="settle">{part.title}</h2>
+          <p class="intro" data-in="settle" style="--d: 60ms">{part.intro}</p>
+          <WikiTopics wiki="jogador" section={part.id} />
+        </article>
+      ))
+    }
   </div>
 </WikiLayout>
 

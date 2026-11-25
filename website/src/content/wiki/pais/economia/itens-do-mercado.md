@@ -51,6 +51,12 @@ Enquanto o item está fora da lista, ninguém consegue vender nem comprar aquele
 
 > **Atenção:** um mercado vazio paga caro. Se você adicionar um item e o estoque estiver zerado, os primeiros vendedores recebem até o triplo do preço normal, pagos pelo tesouro. Adicione itens caros, como diamante e netherita, só se o tesouro aguentar.
 
+> **Cuidado com a netherita.** Ela vale de 200.000 a 1.000.000 de Geos. Num mercado sem estoque, **um único lingote** vendido custa ao tesouro o equivalente a até 1 milhão de Geos na sua moeda.
+
+## Itens do Nether e do End
+
+O Nether e o End estão fechados. Os mercados continentais **fabricam** netherita, moldes de melhoria e cascos de shulker, e **recebem de fora** fungo do Nether, quartzo, vara de blaze e os blocos do Nether e do End. O mercado do seu país **não faz nada disso**: ele só tem o que os jogadores vendem a ele. Os detalhes estão em [Itens do Nether e do End](/wiki/economia/itens-do-nether-e-do-end/), na Wiki do Jogador.
+
 ## Quando o continente não negocia o item
 
 Os preços do seu mercado partem dos preços do mercado continental mais próximo. Se o continente **não negocia** um item que você adicionou, o seu mercado usa o **preço normal** do item como ponto de partida.

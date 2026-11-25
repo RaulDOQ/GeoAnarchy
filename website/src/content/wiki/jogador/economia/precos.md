@@ -59,7 +59,8 @@ Ele volta a comprar quando o estoque baixar: porque alguém comprou, ou pelo des
 Nos **mercados continentais**, a cada 30 minutos uma parte do estoque que está **acima do normal** desaparece, como se o continente estivesse consumindo os itens.
 
 - Itens baratos e comuns somem mais rápido (pedra, terra, areia).
-- Itens valiosos somem devagar (diamante, netherita).
+- Itens valiosos somem devagar (diamante, esmeralda).
+- Itens que o mercado fabrica, como a netherita, **nunca somem** (veja [Itens do Nether e do End](/wiki/economia/itens-do-nether-e-do-end/)).
 - A quantidade varia um pouco a cada vez.
 - O estoque que está **no normal ou abaixo nunca some**.
 
