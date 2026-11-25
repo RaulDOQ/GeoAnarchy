@@ -24,8 +24,8 @@ commands:
     description: Mostra quem mais jogou e quem mais matou.
     usage: /<command>
   darvip:
-    description: Dá meses de VIP a um jogador.
-    usage: /<command> <jogador> <meses>
+    description: Dá meses de um plano VIP (Geo+, Geo Ultra, Geo Ultra+) a um jogador.
+    usage: /<command> <jogador> <plano> <meses>
     permission: geoanarchy.darvip
   vanishcomaura:
     description: Some com estilo.

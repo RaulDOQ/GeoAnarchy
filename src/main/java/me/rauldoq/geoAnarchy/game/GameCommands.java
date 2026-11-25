@@ -2,6 +2,7 @@ package me.rauldoq.geoAnarchy.game;
 
 import me.rauldoq.geoAnarchy.GeoAnarchy;
 import me.rauldoq.geoAnarchy.config.Messages;
+import me.rauldoq.geoAnarchy.config.VipPlan;
 import me.rauldoq.geoAnarchy.link.LinkService;
 import me.rauldoq.geoAnarchy.storage.Database.Link;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -134,19 +135,29 @@ public final class GameCommands implements TabExecutor {
         }
     }
 
+    /**
+     * /darvip <jogador> <plano> <meses>: adds months of a VIP plan (Geo+, Geo Ultra, Geo Ultra+) to a player who
+     * has joined before. The plan is a LuckPerms group given for that many days on top of what is left.
+     */
     private void darVip(CommandSender sender, String[] args) {
         Messages texts = plugin.messages();
         if (!sender.hasPermission("geoanarchy.darvip")) {
             texts.send(sender, "no-permission");
             return;
         }
-        if (args.length != 2) {
-            texts.send(sender, "vip-usage");
+        String plans = String.join(", ", plugin.settings().vipPlans().stream().map(VipPlan::id).toList());
+        if (args.length != 3) {
+            texts.send(sender, "vip-usage", "plans", plans);
+            return;
+        }
+        Optional<VipPlan> plan = plugin.settings().vipPlan(args[1]);
+        if (plan.isEmpty()) {
+            texts.send(sender, "vip-unknown-plan", "plan", args[1], "plans", plans);
             return;
         }
         int months;
         try {
-            months = Integer.parseInt(args[1]);
+            months = Integer.parseInt(args[2]);
         } catch (NumberFormatException notANumber) {
             months = 0;
         }
@@ -159,9 +170,17 @@ public final class GameCommands implements TabExecutor {
             texts.send(sender, "vip-unknown-player", "player", args[0]);
             return;
         }
-        int total = plugin.vips().give(target.getUniqueId(), target.getName(), months, plugin.settings().vipGroup(),
-                System.currentTimeMillis());
-        texts.send(sender, "vip-given", "player", target.getName(), "months", String.valueOf(months), "total", String.valueOf(total));
+        if (Bukkit.getPluginManager().getPlugin("LuckPerms") == null) {
+            texts.send(sender, "vip-no-luckperms");
+            return;
+        }
+        int days = plugin.vips().give(target.getUniqueId(), plan.get(), months, plugin.settings().vipDaysPerMonth());
+        texts.send(sender, "vip-given", "player", target.getName(), "plan", plan.get().name(),
+                "months", String.valueOf(months), "days", String.valueOf(days));
+        Player online = target.getPlayer();
+        if (online != null) {
+            texts.send(online, "vip-received", "plan", plan.get().name(), "days", String.valueOf(days));
+        }
     }
 
     private void vanishComAura(CommandSender sender) {
@@ -209,9 +228,15 @@ public final class GameCommands implements TabExecutor {
             options.addAll(List.of("on", "off"));
         } else if (name.equals("geoanarchy") && args.length == 1 && sender.hasPermission("geoanarchy.admin")) {
             options.addAll(List.of("reload", "status"));
-        } else if (name.equals("darvip") && args.length == 1 && sender.hasPermission("geoanarchy.darvip")) {
-            for (Player online : Bukkit.getOnlinePlayers()) {
-                options.add(online.getName());
+        } else if (name.equals("darvip") && sender.hasPermission("geoanarchy.darvip")) {
+            if (args.length == 1) {
+                for (Player online : Bukkit.getOnlinePlayers()) {
+                    options.add(online.getName());
+                }
+            } else if (args.length == 2) {
+                plugin.settings().vipPlans().forEach(plan -> options.add(plan.id()));
+            } else if (args.length == 3) {
+                options.addAll(List.of("1", "3", "6", "12"));
             }
         }
         String typed = args.length == 0 ? "" : args[args.length - 1].toLowerCase(Locale.ROOT);

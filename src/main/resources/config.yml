@@ -57,5 +57,19 @@ ranks:
   refresh-minutes: 5
 
 vip:
-  # O grupo do LuckPerms que o /darvip dá.
-  group: vip
+  # Os planos que o /darvip dá: /darvip <jogador> <plano> <meses>.
+  # Cada plano é um grupo do LuckPerms, o mesmo que o plugin GeoUltra procura.
+  # O tempo fica com o LuckPerms (grupo temporário): o /darvip soma dias ao que o jogador já tem,
+  # e o LuckPerms tira o grupo quando os dias acabam.
+  plans:
+    geoplus:
+      name: "Geo+"
+      group: geoplus
+    ultra:
+      name: "Geo Ultra"
+      group: ultra
+    ultraplus:
+      name: "Geo Ultra+"
+      group: ultraplus
+  # Quantos dias vale um mês.
+  days-per-month: 30

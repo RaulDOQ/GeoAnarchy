@@ -1,76 +1,59 @@
 package me.rauldoq.geoAnarchy.game;
 
-import me.rauldoq.geoAnarchy.storage.Database;
-import me.rauldoq.geoAnarchy.storage.Database.Vip;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import me.rauldoq.geoAnarchy.config.Settings;
+import me.rauldoq.geoAnarchy.config.VipPlan;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class VipServiceTest {
 
-    private static final UUID STEVE = UUID.randomUUID();
-    private static final long DAY = 24L * 60 * 60 * 1000;
+    private static final UUID STEVE = UUID.fromString("8667ba71-b85a-4004-af54-457a9734eed7");
 
-    @TempDir
-    Path folder;
-    private Database database;
-    private VipService vips;
-    private final List<String> console = new ArrayList<>();
+    @Test
+    void aPlanIsGivenAsATimedLuckPermsGroupThatAddsUp() {
+        List<String> console = new ArrayList<>();
+        VipService vips = new VipService(console::add);
+        VipPlan ultra = new VipPlan("ultra", "Geo Ultra", "ultra");
 
-    @BeforeEach
-    void open() throws Exception {
-        database = new Database(folder.resolve("test.db"));
-        vips = new VipService(database, console::add);
-    }
-
-    @AfterEach
-    void close() {
-        database.close();
+        assertEquals(90, vips.give(STEVE, ultra, 3, 30));
+        assertEquals(List.of("lp user 8667ba71-b85a-4004-af54-457a9734eed7 parent addtemp ultra 90d accumulate"), console);
     }
 
     @Test
-    void givingVipAddsTheGroupOnceAndCountsEveryMonth() {
-        assertEquals(3, vips.give(STEVE, "Steve", 3, "vip", 0), "the old command always gave one month, whatever was typed");
-        assertEquals(List.of("lp user Steve parent add vip"), console);
-
-        assertEquals(5, vips.give(STEVE, "Steve", 2, "vip", 10 * DAY));
-        assertEquals(1, console.size(), "more months for someone who is already VIP need no new group command");
-        assertEquals(0, database.vips().get(0).periodStart(), "adding months does not restart the current month");
+    void thePlayerGoesInByUuidAndOddGroupNamesAreRefused() {
+        assertThrows(IllegalArgumentException.class,
+                () -> VipService.command(STEVE, new VipPlan("x", "X", "ultra parent add admin"), 30));
+        assertTrue(VipPlan.validGroup("ultraplus"));
+        assertFalse(VipPlan.validGroup("Ultra"), "LuckPerms group names are lowercase");
+        assertFalse(VipPlan.validGroup("ultra; op"));
+        assertFalse(VipPlan.validGroup(""));
     }
 
     @Test
-    void aMonthIsUsedUpEveryThirtyDaysAndTheGroupGoesWhenNoneIsLeft() {
-        vips.give(STEVE, "Steve", 2, "vip", 0);
-        console.clear();
-
-        vips.tick("vip", 29 * DAY);
-        assertEquals(2, database.vips().get(0).months());
-
-        vips.tick("vip", 30 * DAY);
-        assertEquals(1, database.vips().get(0).months());
-        assertTrue(console.isEmpty());
-
-        vips.tick("vip", 60 * DAY);
-        assertTrue(database.vips().isEmpty());
-        assertEquals(List.of("lp user Steve parent remove vip"), console);
+    void theShippedSettingsListGeoUltrasThreePlans() {
+        Settings settings = Settings.load(YamlConfiguration.loadConfiguration(new File("src/main/resources/config.yml")));
+        assertEquals(List.of("geoplus", "ultra", "ultraplus"), settings.vipPlans().stream().map(VipPlan::id).toList());
+        assertEquals(List.of("Geo+", "Geo Ultra", "Geo Ultra+"), settings.vipPlans().stream().map(VipPlan::name).toList());
+        assertEquals("ultraplus", settings.vipPlan("ULTRAPLUS").orElseThrow().group());
+        assertTrue(settings.vipPlan("vip").isEmpty(), "the old single group is gone");
+        assertEquals(30, settings.vipDaysPerMonth());
     }
 
     @Test
-    void timeTheServerWasOffStillCounts() {
-        Vip vip = new Vip(STEVE, "Steve", 5, 0);
-        assertEquals(3, VipService.advance(vip, 61 * DAY).months());
-        assertEquals(60 * DAY, VipService.advance(vip, 61 * DAY).periodStart());
-        assertNull(VipService.advance(vip, 150 * DAY));
-        assertEquals(vip, VipService.advance(vip, DAY));
+    void aFileWithoutPlansStillHasGeoUltrasThree() throws Exception {
+        YamlConfiguration old = new YamlConfiguration();
+        old.loadFromString("vip:\n  group: vip\n");
+        Settings settings = Settings.load(old);
+        assertEquals(List.of("geoplus", "ultra", "ultraplus"), settings.vipPlans().stream().map(VipPlan::group).toList());
     }
 }

@@ -24,10 +24,6 @@ public final class Database implements AutoCloseable {
     public record Link(UUID minecraft, String name, String discord, long linkedAt) {
     }
 
-    /** A player with paid VIP months left. The current month started at periodStart. */
-    public record Vip(UUID minecraft, String name, int months, long periodStart) {
-    }
-
     private final Connection connection;
 
     public Database(Path file) throws SQLException {
@@ -49,8 +45,6 @@ public final class Database implements AutoCloseable {
                     + "minecraft TEXT NOT NULL, text TEXT NOT NULL, at INTEGER NOT NULL, seen INTEGER NOT NULL DEFAULT 0)");
             statement.execute("CREATE TABLE IF NOT EXISTS spending (minecraft TEXT NOT NULL, day TEXT NOT NULL, "
                     + "cents INTEGER NOT NULL, PRIMARY KEY (minecraft, day))");
-            statement.execute("CREATE TABLE IF NOT EXISTS vips (minecraft TEXT PRIMARY KEY, name TEXT NOT NULL, "
-                    + "months INTEGER NOT NULL, period_start INTEGER NOT NULL)");
         }
     }
 
@@ -144,30 +138,6 @@ public final class Database implements AutoCloseable {
     public synchronized void addSpent(UUID player, String day, long cents) {
         update("INSERT INTO spending (minecraft, day, cents) VALUES (?, ?, ?) "
                 + "ON CONFLICT (minecraft, day) DO UPDATE SET cents = cents + excluded.cents", player.toString(), day, cents);
-    }
-
-    // ---- VIPs ----
-
-    public synchronized List<Vip> vips() {
-        List<Vip> result = new ArrayList<>();
-        try (Statement statement = connection.createStatement();
-             ResultSet rows = statement.executeQuery("SELECT minecraft, name, months, period_start FROM vips")) {
-            while (rows.next()) {
-                result.add(new Vip(UUID.fromString(rows.getString(1)), rows.getString(2), rows.getInt(3), rows.getLong(4)));
-            }
-        } catch (SQLException error) {
-            throw new IllegalStateException(error);
-        }
-        return result;
-    }
-
-    public synchronized void saveVip(Vip vip) {
-        update("INSERT OR REPLACE INTO vips (minecraft, name, months, period_start) VALUES (?, ?, ?, ?)",
-                vip.minecraft().toString(), vip.name(), vip.months(), vip.periodStart());
-    }
-
-    public synchronized void deleteVip(UUID minecraft) {
-        update("DELETE FROM vips WHERE minecraft = ?", minecraft.toString());
     }
 
     private void update(String sql, Object... values) {

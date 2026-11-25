@@ -80,7 +80,7 @@ public final class GeoAnarchy extends JavaPlugin {
         prefs = new Prefs(database);
         alerts = new AlertService(links, prefs, System::currentTimeMillis);
         ranks = new Ranks();
-        vips = new VipService(database, command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
+        vips = new VipService(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
 
         bot = new Bot(this);
         alerts.setSender(bot);
@@ -107,7 +107,6 @@ public final class GeoAnarchy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
 
         // Once an hour: use up VIP time. Every five minutes: forget link codes that ran out.
-        Bukkit.getScheduler().runTaskTimer(this, () -> vips.tick(settings.vipGroup(), System.currentTimeMillis()), 20L * 30, 20L * 3600);
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, links::tidy, 20L * 300, 20L * 300);
 
         bot.start(settings);

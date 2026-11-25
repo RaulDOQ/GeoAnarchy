@@ -2,6 +2,11 @@ package me.rauldoq.geoAnarchy.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+
 /** Everything in config.yml, read once. A reload builds a new one. */
 public record Settings(
         String token, long guildId, String activity, long warChannel, long statusChannel,
@@ -9,7 +14,7 @@ public record Settings(
         int codeMinutes, int maxAttempts, int lockMinutes, String linkRole, boolean syncNickname,
         int warPreparationMinutes, int flagCooldownMinutes, int upkeepCooldownHours,
         boolean actionsEnabled, double payDailyLimit, int confirmSeconds,
-        int ranksRefreshMinutes, String vipGroup) {
+        int ranksRefreshMinutes, List<VipPlan> vipPlans, int vipDaysPerMonth) {
 
     public static Settings load(ConfigurationSection c) {
         return new Settings(
@@ -33,7 +38,32 @@ public record Settings(
                 Math.max(0, c.getDouble("actions.pay-daily-limit", 10_000)),
                 Math.max(10, c.getInt("actions.confirm-seconds", 60)),
                 Math.max(1, c.getInt("ranks.refresh-minutes", 5)),
-                c.getString("vip.group", "vip").trim());
+                vipPlans(c.getConfigurationSection("vip.plans")),
+                Math.max(1, c.getInt("vip.days-per-month", 30)));
+    }
+
+    /** The plans of config.yml, or GeoUltra's three when the file has none. Groups with odd names are left out. */
+    private static List<VipPlan> vipPlans(ConfigurationSection section) {
+        List<VipPlan> plans = new ArrayList<>();
+        if (section != null) {
+            for (String id : section.getKeys(false)) {
+                String group = section.getString(id + ".group", id).trim().toLowerCase(Locale.ROOT);
+                if (VipPlan.validGroup(group)) {
+                    plans.add(new VipPlan(id.toLowerCase(Locale.ROOT), section.getString(id + ".name", id), group));
+                }
+            }
+        }
+        if (plans.isEmpty()) {
+            plans.add(new VipPlan("geoplus", "Geo+", "geoplus"));
+            plans.add(new VipPlan("ultra", "Geo Ultra", "ultra"));
+            plans.add(new VipPlan("ultraplus", "Geo Ultra+", "ultraplus"));
+        }
+        return List.copyOf(plans);
+    }
+
+    /** A plan by what is typed in /darvip, ignoring case. */
+    public Optional<VipPlan> vipPlan(String id) {
+        return vipPlans.stream().filter(plan -> plan.id().equalsIgnoreCase(id)).findFirst();
     }
 
     public boolean hasToken() {

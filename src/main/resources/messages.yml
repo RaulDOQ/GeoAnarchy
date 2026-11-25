@@ -46,10 +46,13 @@ game:
   ranks-empty: "<dark_gray> -</dark_gray> <gray>Ninguém ainda."
 
   # ---- VIP ----
-  vip-usage: "<prefix><gray>Uso: /darvip <jogador> <meses>"
+  vip-usage: "<prefix><gray>Uso: /darvip <jogador> <plano> <meses>. Planos: <white><plans></white>"
+  vip-unknown-plan: "<prefix><red>Plano desconhecido: <white><plan></white>. Os planos são: <white><plans></white>.</red>"
+  vip-no-luckperms: "<prefix><red>O LuckPerms não está no servidor, e é ele que guarda os planos.</red>"
   vip-bad-months: "<prefix><red>Os meses precisam ser um número de 1 a 120.</red>"
   vip-unknown-player: "<prefix><red><white><player></white> nunca entrou no servidor.</red>"
-  vip-given: "<prefix><green><white><player></white> recebeu <months> mês(es) de VIP. Agora tem <total>.</green>"
+  vip-given: "<prefix><green><white><player></white> recebeu <months> mês(es) de <white><plan></white> (<days> dias, somados ao que já tinha).</green>"
+  vip-received: "<prefix><gold>Você recebeu <white><days></white> dias de <white><plan></white>! Abra o menu com <white>/geomenu</white>.</gold>"
 
   # ---- Administração ----
   admin-usage: "<prefix><gray>Uso: /geoanarchy reload ou /geoanarchy status"
