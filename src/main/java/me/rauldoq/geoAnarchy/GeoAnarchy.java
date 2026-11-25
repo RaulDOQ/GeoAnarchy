@@ -20,6 +20,7 @@ import me.rauldoq.geoAnarchy.game.Coffee;
 import me.rauldoq.geoAnarchy.game.GameCommands;
 import me.rauldoq.geoAnarchy.game.JoinListener;
 import me.rauldoq.geoAnarchy.game.Ranks;
+import me.rauldoq.geoAnarchy.game.RunOnce;
 import me.rauldoq.geoAnarchy.game.VipService;
 import me.rauldoq.geoAnarchy.link.LinkService;
 import me.rauldoq.geoAnarchy.storage.Database;
@@ -109,6 +110,11 @@ public final class GeoAnarchy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
         coffee = new Coffee(this);
         getServer().getPluginManager().registerEvents(coffee, this);
+
+        // run-once.txt: console commands prepared as a file. Scheduled tasks start once the server has finished
+        // starting, so LuckPerms and the rest are ready by then.
+        Bukkit.getScheduler().runTaskLater(this, () -> RunOnce.run(getDataFolder().toPath(),
+                command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command), getLogger()), 40L);
 
         // Once an hour: use up VIP time. Every five minutes: forget link codes that ran out.
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, links::tidy, 20L * 300, 20L * 300);
