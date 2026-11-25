@@ -55,7 +55,11 @@ game:
   vip-received: "<prefix><gold>Você recebeu <white><days></white> dias de <white><plan></white>! Abra o menu com <white>/geomenu</white>.</gold>"
 
   # ---- Administração ----
-  admin-usage: "<prefix><gray>Uso: /geoanarchy reload ou /geoanarchy status"
+  admin-usage: "<prefix><gray>Uso: /geoanarchy reload, /geoanarchy status ou /geoanarchy cafe <jogador> <qualidade>"
+
+  # ---- Café (bebida do BreweryX) ----
+  coffee-usage: "<prefix><gray>Uso: /geoanarchy cafe <jogador online> <qualidade de 1 a 10>. O BreweryX usa isso quando alguém bebe café."
+  coffee-drunk: "<prefix><gold>O café bateu!</gold> <gray>Mais rapidez e menos fome por <white><time></white>.</gray>"
   reloaded: "<prefix><green>config.yml e messages.yml recarregados.</green> <gray>Trocar o token ou os canais do Discord pede um restart."
   status: "<prefix><gold>GeoAnarchy</gold><newline><gray>Bot do Discord: <white><bot></white><newline>Contas vinculadas: <white><links></white><newline>Lands: <white><lands></white><newline>GeoEconomy: <white><economy></white>"
 

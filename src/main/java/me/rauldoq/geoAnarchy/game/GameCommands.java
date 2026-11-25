@@ -214,8 +214,35 @@ public final class GameCommands implements TabExecutor {
                     "links", String.valueOf(plugin.links().size()),
                     "lands", plugin.countries().available() ? "conectado" : "não instalado",
                     "economy", plugin.economy().available() ? "conectado" : "não instalado");
+            case "cafe" -> coffee(sender, args);
             default -> texts.send(sender, "admin-usage");
         }
+    }
+
+    /**
+     * /geoanarchy cafe <player> <quality>: run by BreweryX from the console when someone drinks coffee
+     * (servercommands in its recipes.yml, with %player_name% and %quality%).
+     */
+    private void coffee(CommandSender sender, String[] args) {
+        Messages texts = plugin.messages();
+        if (args.length != 3) {
+            texts.send(sender, "coffee-usage");
+            return;
+        }
+        Player player = Bukkit.getPlayerExact(args[1]);
+        int quality;
+        try {
+            quality = Integer.parseInt(args[2].trim());
+        } catch (NumberFormatException notANumber) {
+            quality = -1;
+        }
+        if (player == null || quality < 1 || quality > 10) {
+            texts.send(sender, "coffee-usage");
+            return;
+        }
+        int seconds = plugin.coffee().drink(player, quality);
+        String time = seconds >= 120 ? (seconds + 30) / 60 + " minutos" : seconds + " segundos";
+        texts.send(player, "coffee-drunk", "time", time);
     }
 
     @Override
@@ -227,7 +254,7 @@ public final class GameCommands implements TabExecutor {
         } else if (name.equals("discord") && args.length == 2 && args[0].equalsIgnoreCase("acoes")) {
             options.addAll(List.of("on", "off"));
         } else if (name.equals("geoanarchy") && args.length == 1 && sender.hasPermission("geoanarchy.admin")) {
-            options.addAll(List.of("reload", "status"));
+            options.addAll(List.of("reload", "status", "cafe"));
         } else if (name.equals("darvip") && sender.hasPermission("geoanarchy.darvip")) {
             if (args.length == 1) {
                 for (Player online : Bukkit.getOnlinePlayers()) {

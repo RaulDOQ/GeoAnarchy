@@ -14,7 +14,16 @@ public record Settings(
         int codeMinutes, int maxAttempts, int lockMinutes, String linkRole, boolean syncNickname,
         int warPreparationMinutes, int flagCooldownMinutes, int upkeepCooldownHours,
         boolean actionsEnabled, double payDailyLimit, int confirmSeconds,
-        int ranksRefreshMinutes, List<VipPlan> vipPlans, int vipDaysPerMonth) {
+        int ranksRefreshMinutes, List<VipPlan> vipPlans, int vipDaysPerMonth, Coffee coffee) {
+
+    /**
+     * Coffee from BreweryX: Haste, and hunger going down slower, for longer the better it was made.
+     * @param worstSeconds     how long the worst coffee (quality 1) lasts
+     * @param bestSeconds      how long a perfect coffee (quality 10) lasts
+     * @param hungerMultiplier how fast hunger drains while it lasts: 0.5 is half as fast
+     */
+    public record Coffee(int worstSeconds, int bestSeconds, double hungerMultiplier) {
+    }
 
     public static Settings load(ConfigurationSection c) {
         return new Settings(
@@ -39,7 +48,15 @@ public record Settings(
                 Math.max(10, c.getInt("actions.confirm-seconds", 60)),
                 Math.max(1, c.getInt("ranks.refresh-minutes", 5)),
                 vipPlans(c.getConfigurationSection("vip.plans")),
-                Math.max(1, c.getInt("vip.days-per-month", 30)));
+                Math.max(1, c.getInt("vip.days-per-month", 30)),
+                coffee(c));
+    }
+
+    private static Coffee coffee(ConfigurationSection c) {
+        int worst = Math.max(1, c.getInt("coffee.worst-seconds", 15));
+        int best = Math.max(worst, Math.min(1638, c.getInt("coffee.best-seconds", 1200)));
+        double multiplier = Math.max(0, Math.min(1, c.getDouble("coffee.hunger-multiplier", 0.5)));
+        return new Coffee(worst, best, multiplier);
     }
 
     /** The plans of config.yml, or GeoUltra's three when the file has none. Groups with odd names are left out. */

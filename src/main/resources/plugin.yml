@@ -34,7 +34,7 @@ commands:
     permission: geoanarchy.vanishcomaura
   geoanarchy:
     description: Administração do plugin GeoAnarchy.
-    usage: /<command> <reload|status>
+    usage: /<command> <reload|status|cafe>
     permission: geoanarchy.admin
 
 permissions:

@@ -16,6 +16,7 @@ import me.rauldoq.geoAnarchy.country.Countries;
 import me.rauldoq.geoAnarchy.country.LandsHook;
 import me.rauldoq.geoAnarchy.economy.Economy;
 import me.rauldoq.geoAnarchy.economy.GeoEconomyBridge;
+import me.rauldoq.geoAnarchy.game.Coffee;
 import me.rauldoq.geoAnarchy.game.GameCommands;
 import me.rauldoq.geoAnarchy.game.JoinListener;
 import me.rauldoq.geoAnarchy.game.Ranks;
@@ -60,6 +61,7 @@ public final class GeoAnarchy extends JavaPlugin {
     private Bot bot;
     private Ranks ranks;
     private VipService vips;
+    private Coffee coffee;
     private volatile Countries countries = Countries.NONE;
     private volatile Economy economy = Economy.NONE;
 
@@ -105,6 +107,8 @@ public final class GeoAnarchy extends JavaPlugin {
             }
         }
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
+        coffee = new Coffee(this);
+        getServer().getPluginManager().registerEvents(coffee, this);
 
         // Once an hour: use up VIP time. Every five minutes: forget link codes that ran out.
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, links::tidy, 20L * 300, 20L * 300);
@@ -238,6 +242,10 @@ public final class GeoAnarchy extends JavaPlugin {
 
     public VipService vips() {
         return vips;
+    }
+
+    public Coffee coffee() {
+        return coffee;
     }
 
     public Countries countries() {

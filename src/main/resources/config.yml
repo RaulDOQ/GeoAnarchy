@@ -73,3 +73,13 @@ vip:
       group: ultraplus
   # Quantos dias vale um mês.
   days-per-month: 30
+
+coffee:
+  # Café do BreweryX: Pressa (Haste) e a fome caindo mais devagar, pelo mesmo tempo.
+  # O BreweryX roda "/geoanarchy cafe <jogador> <qualidade>" quando alguém bebe café.
+  # Quanto melhor o café, mais tempo dura (cresce com o quadrado da qualidade):
+  # qualidade 1 = worst-seconds, 5 = uns 4 minutos, 8 = uns 12 minutos, 10 = best-seconds.
+  worst-seconds: 15
+  best-seconds: 1200
+  # Quão rápido a fome cai enquanto dura: 0.5 = metade da velocidade normal.
+  hunger-multiplier: 0.5
