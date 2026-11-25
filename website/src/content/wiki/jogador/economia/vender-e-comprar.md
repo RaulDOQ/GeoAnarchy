@@ -1,6 +1,6 @@
 ---
 title: Vender e comprar
-summary: Como usar o menu do mercado e os comandos rápidos, e o que significa cada mensagem.
+summary: Como usar o menu do mercado, o menu de venda (que também esvazia caixas de shulker) e os comandos rápidos, e o que significa cada mensagem.
 order: 4
 ---
 
@@ -26,8 +26,32 @@ Abre a lista de itens que aquele mercado negocia. Clique num item para negociar:
 Na linha de baixo do menu:
 
 - **Categoria**: filtra por tipo de item. Clique para ir à próxima, botão direito para voltar.
+- **Menu de venda** (o baú): abre o menu de venda, explicado abaixo.
 - **Vender tudo**: vende de uma vez tudo o que você carrega e o mercado aceita. Itens danificados, renomeados e encantados ficam com você.
 - O ícone do meio mostra a moeda do mercado, o imposto e quanto dinheiro você tem.
+
+## Pelo menu de venda
+
+O menu de venda é um baú onde você coloca o que quer vender, vê quanto vale e vende tudo com um clique. Estando no mercado, digite só:
+
+```text
+/vender
+```
+
+ou clique no **baú** da linha de baixo do `/mercado`.
+
+1. **Coloque os itens** nas cinco fileiras de cima: arrastando, ou com Shift + clique no seu inventário.
+2. **Veja quanto vale.** O botão **Vender** mostra o total na hora, item por item, e o que o mercado não compra e por quê: não negocia aquele item, está cheio, ou o tesouro do país não tem dinheiro.
+3. **Clique em Vender.** O que foi vendido some do menu e o dinheiro cai na sua carteira. O que não foi vendido continua lá.
+4. **Feche o menu.** Tudo o que sobrou volta para o seu inventário. Se não couber, cai aos seus pés.
+
+### Caixas de shulker
+
+Coloque caixas de shulker cheias no menu: o que está **dentro** delas é vendido, e as caixas **voltam para você**, com o que o mercado não comprou ainda dentro. A caixa em si nunca é vendida.
+
+> **Exemplo:** a Ana colhe trigo em Portugal e enche 10 caixas de shulker. No mercado de Lisboa ela abre `/vender`, coloca as 10 caixas e vê no botão quanto valem os 17.280 trigos. Ela clica em **Vender**, recebe o dinheiro e fecha o menu: as 10 caixas voltam vazias para o inventário dela.
+
+Itens danificados, renomeados ou encantados nunca são vendidos, nem soltos nem dentro das caixas: eles também voltam para você.
 
 ## Lendo um item
 
@@ -51,6 +75,7 @@ Para quem prefere digitar:
 
 | Comando | O que faz |
 |---|---|
+| `/vender` | Abre o menu de venda |
 | `/vender mao` | Vende a pilha que está na sua mão |
 | `/vender tudo` | Vende tudo o que você carrega e o mercado aceita |
 | `/vender diamond` | Vende todos os seus diamantes |

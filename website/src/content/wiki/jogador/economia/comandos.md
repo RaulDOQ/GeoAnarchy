@@ -26,6 +26,7 @@ Os comandos de vender e comprar só funcionam dentro do ponto de venda de um mer
 |---|---|
 | `/mercado` | Abre o menu do mercado onde você está |
 | `/mercado lista` | Lista todos os mercados, com coordenadas e preços |
+| `/vender` | Abre o menu de venda: coloque itens ou caixas de shulker cheias, veja quanto valem e venda |
 | `/vender mao` | Vende a pilha que está na sua mão |
 | `/vender tudo` | Vende tudo o que você carrega e o mercado aceita |
 | `/vender <item> [quantidade]` | Vende um item. Sem a quantidade, vende todos |
