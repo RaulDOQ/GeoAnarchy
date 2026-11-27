@@ -6,7 +6,7 @@ export const site = {
   url: 'https://geoanarchy.net',
 
   /** Shows the "site em desenvolvimento" strip and keeps the site out of search engines. */
-  inDevelopment: true,
+  inDevelopment: false,
 
   java: {
     address: 'geoanarchy.net',

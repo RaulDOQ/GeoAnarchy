@@ -29,7 +29,7 @@ O GeoMenu também vai ganhar botões para todos os jogadores, não só para quem
 
 ## Nome colorido
 
-Com qualquer plano, você pode pintar o seu nome com cores, degradês, negrito, itálico, sublinhado e riscado. Só as cores mudam: as letras precisam ser exatamente as do seu nome, com as mesmas maiúsculas e minúsculas.
+A partir do **Geo Ultra**, você pode pintar o seu nome com cores, degradês, negrito, itálico, sublinhado e riscado. Só as cores mudam: as letras precisam ser exatamente as do seu nome, com as mesmas maiúsculas e minúsculas.
 
 Exemplo para o jogador **Raul**:
 
@@ -53,7 +53,9 @@ Letras embaralhadas (&k) não são aceitas: ninguém conseguiria ler o seu nome.
 
 | | Geo+ | Geo Ultra | Geo Ultra+ |
 |---|---|---|---|
-| Nome colorido | Sim | Sim | Sim |
+| Sentar, deitar e rastejar (/sit, /lay, /crawl) | Sim | Sim | Sim |
+| Nome colorido (/nome) | Não | Sim | Sim |
+| Partículas (/pp) | Não | Sim | Sim |
 | Skins em uso ao mesmo tempo | 5 | 10 | 18 |
 | Pacotes de skins | Silvestre, Glacial | + Dracônico, Abissal | + Celestial |
 | Tags para escolher | 9 | 15 | 30 |
@@ -67,6 +69,6 @@ Novos benefícios vão aparecer no mesmo menu.
 
 As skins dos seus itens são removidas quando você entra no servidor depois que o plano acabou. Os itens continuam seus, só com a aparência normal.
 
-O nome colorido volta ao normal, mas fica guardado: se você voltar a ter um plano, as cores voltam sozinhas.
+O nome colorido volta ao normal, mas fica guardado: se você voltar a ter o Geo Ultra ou o Geo Ultra+, as cores voltam sozinhas.
 
 A tag, a mensagem de kill e a mensagem de entrada que você escolheu param de aparecer e também ficam guardadas. Se você passar para um plano mais simples, o que for só do plano mais caro para de aparecer até você escolher outra coisa.
