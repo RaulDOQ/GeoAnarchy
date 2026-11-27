@@ -1,7 +1,7 @@
 ---
 // The floating header bar. Each tab is a page: the current page has a pill (it glides
 // between pages with a view transition) and a soft highlight slides to the pointed tab.
-import Logo from './Logo.astro';
+import Wordmark from './Wordmark.astro';
 import Icon from './Icon.astro';
 import { site } from '../config/site';
 import { pt } from '../content/pt';
@@ -18,8 +18,7 @@ const c = pt.common;
 <header class="nav" data-site-nav>
   <div class="nav-inner">
     <a class="brand" href="/" aria-label={site.name}>
-      <span class="brand-mark"><Logo height={42} /></span>
-      <span>{site.name}</span>
+      <span class="brand-mark"><Wordmark width={62} /></span>
     </a>
     <nav class="tabs" aria-label={c.navLabel} data-nav-tabs>
       <span class="tab-hover" aria-hidden="true"></span>
@@ -147,14 +146,12 @@ const c = pt.common;
     display: flex;
     position: relative;
     box-shadow:
-      inset 0 0 0 1px #ffffff14,
-      0 10px 30px -18px #00000099;
+      inset 0 0 0 1px #ffffff14;
   }
   .nav.is-scrolled .nav-inner {
     background: #25282eeb;
     box-shadow:
-      inset 0 0 0 1px #ffffff1a,
-      0 16px 36px -18px #000000b3;
+      inset 0 0 0 1px #ffffff1a;
   }
   .nav-control {
     height: var(--ctl-h);
@@ -337,7 +334,7 @@ const c = pt.common;
     top: calc(100% + .5rem);
     left: 0;
     right: 0;
-    box-shadow: inset 0 0 0 1px #ffffff1a, 0 30px 60px -24px #000000b3;
+    box-shadow: inset 0 0 0 1px #ffffff1a;
   }
   @keyframes pop-in {
     0% {

@@ -12,7 +12,6 @@ const { chapter, title, lead } = Astro.props;
 
 <header class="page-top">
   <div class="page-bg" aria-hidden="true"></div>
-  <div class="page-light" aria-hidden="true"></div>
   <div class="page-head container">
     <p class="page-chip" data-in="settle"><i></i>{chapter}</p>
     <h1 class="page-title" data-in="lines" style="--d: 80ms">
@@ -39,14 +38,6 @@ const { chapter, title, lead } = Astro.props;
     inset: -6rem 0 -4rem;
     -webkit-mask-image: radial-gradient(52rem 26rem at 30% 40%, #000, #0000 78%);
     mask-image: radial-gradient(52rem 26rem at 30% 40%, #000, #0000 78%);
-  }
-  .page-light {
-    pointer-events: none;
-    background:
-      radial-gradient(closest-side at 30% 45%, #1766e01f, #0000),
-      radial-gradient(closest-side at 62% 60%, #12a05c1a, #0000);
-    position: absolute;
-    inset: -4rem 0 -6rem 30%;
   }
   .page-head {
     padding-block: clamp(4rem, 2rem + 6vw, 7rem) 1rem;

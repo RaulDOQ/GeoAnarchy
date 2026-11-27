@@ -44,7 +44,7 @@ Run these inside `website/` (Node 22.12 or newer):
 | `src/config/wiki.ts`, `src/content.config.ts` | How the articles become addresses, the side menu and the "previous / next" links. |
 | `src/components/wiki/`, `src/styles/wiki.css` | The wiki's frame (the switch between the two wikis, the side menu, the lists of articles) and the look of an article's text. |
 | `src/styles/tokens.css` | Colours, type, spacing and motion values (smooth dark-grey theme with blue and green accents). A few colours that only make sense in one place are written in that component; they are dark-theme colours too. |
-| `src/components/Logo.astro`, `Wordmark.astro` | The logo with the block Earth (header) and the name on its own (hero, closing section, footer, 404 page). |
+| `src/components/Logo.astro`, `Wordmark.astro` | The logo with the block Earth (home page hero) and the name on its own (the top bar, closing section, footer, 404 page). |
 | `src/components/PageHead.astro`, `Editions.astro` | The top of every page other than the home page, and the Java and Bedrock join cards (home page and GeoWiki). |
 | `src/components/home/` | The home page's sections: hero, the live map, anarchy, realism and its journey map, vanilla (no tanks, planes or guns), how to join, questions. `Closing.astro` ends every page. |
 | `src/scripts/` | Browser scripts: the live map (zoom and move), the tile painter it shares with the still map picture, the site's copy of the map as the pages read it, scroll entrances, copy buttons. |

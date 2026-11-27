@@ -38,8 +38,6 @@ const c = pt.hero;
     </p>
     </div>
     <div class="hero-logo" data-in="dissolve" style="--d: 120ms">
-      <div class="hero-light" aria-hidden="true"></div>
-      <span class="hero-logo-shadow" aria-hidden="true"></span>
       <div class="hero-logo-float"><Logo height={470} alt={site.name} /></div>
     </div>
     <div class="hero-next-wrap">
@@ -108,37 +106,19 @@ const c = pt.hero;
     z-index: 2;
     position: relative;
   }
-  /* The logo, large, drifting gently up and down over a soft light. */
+  /* The logo, large, drifting gently up and down. */
   .hero-logo {
     place-items: center;
     display: grid;
     position: relative;
   }
-  .hero-light {
-    pointer-events: none;
-    background:
-      radial-gradient(closest-side at 40% 42%, #1766e02e, #1766e00d 55%, #0000),
-      radial-gradient(closest-side at 68% 66%, #12a05c29, #12a05c0a 55%, #0000);
-    position: absolute;
-    inset: -18% -26%;
-  }
   .hero-logo-float {
-    filter: drop-shadow(0 26px 30px #00000073);
     position: relative;
   }
   .hero-logo-float :global(img) {
     width: auto;
     max-width: 100%;
     height: clamp(17rem, 9rem + 20vw, 29.5rem);
-  }
-  .hero-logo-shadow {
-    filter: blur(22px);
-    opacity: .55;
-    background: radial-gradient(closest-side, #00000080, #0000);
-    width: 62%;
-    height: 2.6rem;
-    position: absolute;
-    bottom: -1.9rem;
   }
   /* On a phone the text runs over the whole picture, so it is darkened evenly. */
   @media (width <= 760px) {
@@ -152,18 +132,9 @@ const c = pt.hero;
     .hero-logo-float {
       animation: logo-float 7s var(--ease-in-out) infinite;
     }
-    .hero-logo-shadow {
-      animation: logo-shadow 7s var(--ease-in-out) infinite;
-    }
     @keyframes logo-float {
       50% {
         transform: translateY(-12px) rotate(-1.2deg);
-      }
-    }
-    @keyframes logo-shadow {
-      50% {
-        opacity: .38;
-        transform: scale(.9);
       }
     }
   }
@@ -360,9 +331,6 @@ const c = pt.hero;
     }
     .hero-logo-float :global(img) {
       height: clamp(13rem, 8rem + 16vw, 19rem);
-    }
-    .hero-light {
-      inset: -10% 0;
     }
     .hero-next-wrap {
       display: none;

@@ -8,7 +8,6 @@ const c = pt.closing;
 ---
 
 <section class="closing container">
-  <div class="closing-light" aria-hidden="true"></div>
   <div class="closing-logo" data-in="settle"><Wordmark width={280} alt={site.name} /></div>
   <h2 class="closing-title" data-in="lines" style="--d: 100ms">
     <span class="line"><span class="grad">{c.title[0]}</span></span>
@@ -26,16 +25,6 @@ const c = pt.closing;
     text-align: center;
     padding-block: clamp(8rem, 4rem + 9vw, 13rem) 2rem;
     position: relative;
-  }
-  .closing-light {
-    z-index: -1;
-    pointer-events: none;
-    background:
-      radial-gradient(closest-side at 40% 50%, #1766e01f, #0000),
-      radial-gradient(closest-side at 62% 55%, #12a05c1c, #0000);
-    height: 26rem;
-    position: absolute;
-    inset: auto 0 -6rem;
   }
   .closing-logo {
     justify-content: center;

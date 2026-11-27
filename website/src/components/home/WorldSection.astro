@@ -157,15 +157,12 @@ const tiles = drawableTiles(view);
     position: relative;
     overflow: hidden;
     box-shadow:
-      0 0 0 1px #ffffff14,
-      0 50px 100px -40px #000000b3,
-      0 24px 48px -28px #00000080;
+      0 0 0 1px #ffffff14;
   }
   .livemap:global(.is-active) .livemap-card {
     box-shadow:
       0 0 0 1px var(--color-blue),
-      0 0 0 4px var(--color-blue-ring),
-      0 50px 100px -40px #000000b3;
+      0 0 0 4px var(--color-blue-ring);
   }
   .livemap-world {
     transform-origin: 0 0;
@@ -277,7 +274,7 @@ const tiles = drawableTiles(view);
     transition: opacity .25s ease-out, transform .45s var(--spring-snappy);
     display: inline-flex;
     transform: translateY(6px);
-    box-shadow: inset 0 0 0 1px #ffffff1a, 0 10px 24px -10px #000000b3;
+    box-shadow: inset 0 0 0 1px #ffffff1a;
   }
   .pad-pill :global(svg) {
     width: .85rem;
