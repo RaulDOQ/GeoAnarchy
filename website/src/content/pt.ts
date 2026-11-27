@@ -356,11 +356,12 @@ export const pt = {
     indexLabel: 'Nesta wiki',
     // The number beside each section of the side menu, read aloud as "12 artigos".
     groupCount: '{n} artigos',
-    // The switch between the two wikis, at the top of every wiki page.
+    // The switch between the two wikis and the tools, at the top of every wiki page.
     switchLabel: 'Escolha a wiki',
     wikis: {
       jogador: { label: 'Wiki do Jogador', note: 'Para quem joga' },
       pais: { label: 'Wiki do País', note: 'Para fundadores de países' },
+      ferramentas: { label: 'Ferramentas', note: 'Cores e textos' },
     },
     // The side menu's groups. `start` is the front page's own articles; the others are the
     // folders in src/content/wiki/<wiki>/.
@@ -399,6 +400,49 @@ export const pt = {
       intro: 'Os planos Geo+, Geo Ultra e Geo Ultra+, o menu /geomenu e as skins de itens.',
     },
     // The founders' wiki.
+    // The tools tab (src/pages/wiki/ferramentas). Each tool is a page of its own.
+    tools: {
+      meta: {
+        title: 'Ferramentas | GeoWiki',
+        description: 'Ferramentas do GeoAnarchy: gerador de textos coloridos com degradê, cores RGB, negrito e sublinhado, nos formatos que o servidor usa.',
+      },
+      title: ['Ferramentas', 'do GeoAnarchy'],
+      lead: 'Monte textos coloridos para o nome do seu país, o seu apelido e o chat, com degradês e cores RGB, e copie o código pronto.',
+      menu: 'Ferramentas',
+      colors: {
+        menu: 'Gerador de cores',
+        title: 'Gerador de cores',
+        intro: 'Escreva o texto, escolha as cores e os estilos de cada parte, e copie o código no formato de onde você vai usar.',
+        segment: 'Parte {n}',
+        text: 'Texto',
+        placeholder: 'Digite aqui',
+        mode: 'Cor',
+        modes: { solid: 'Uma cor', gradient: 'Degradê', rainbow: 'Arco-íris' },
+        stop: 'Cor {n} do degradê',
+        addStop: 'Mais uma cor',
+        removeStop: 'Tirar a última cor',
+        palette: 'Cores do Minecraft (aplica na cor selecionada)',
+        styles: { bold: 'Negrito', italic: 'Itálico', underline: 'Sublinhado', strike: 'Riscado', obfuscated: 'Embaralhado' },
+        addSegment: 'Adicionar parte',
+        removeSegment: 'Remover esta parte',
+        preview: 'Como fica no jogo',
+        code: 'Código',
+        copy: 'Copiar código',
+        length: '{n} caracteres',
+        countryLimit: 'Nomes de país aceitam até 32 caracteres, contando os códigos.',
+        countryOver: 'Passou de 32 caracteres: o nome do país não vai caber. Use menos partes, cores ou estilos.',
+        formats: [
+          { id: 'mini', label: 'Nome de país', note: 'Para /pais create e /pais rename (formato MiniMessage)' },
+          { id: 'amp', label: 'Chat e apelido', note: 'Para o chat e o /nick (códigos & e &#RRGGBB)' },
+          { id: 'bukkit', label: 'Outros plugins', note: 'Para plugins que só aceitam &x&R&R&G&G&B&B' },
+        ],
+        tips: [
+          'Renomear um país custa 10.000 Geos e só pode ser feito uma vez por dia: confira a prévia antes.',
+          'Cores no chat e no apelido dependem de permissão no servidor.',
+          'Quem joga pelo Bedrock (celular e console) vê as cores RGB um pouco diferentes.',
+        ],
+      },
+    },
     country: {
       meta: {
         title: 'Wiki do País | GeoWiki',

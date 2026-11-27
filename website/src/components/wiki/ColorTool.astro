@@ -1,0 +1,518 @@
+---
+// The colour tool of the GeoWiki's tools tab. A text is made of parts; each part has its
+// own colour (one colour, a gradient or a rainbow) and styles. The page shows how it looks
+// in the game and writes the code in the format where it will be used. Everything runs in
+// the browser; the logic is in src/scripts/mc-text.ts.
+import Icon from '../Icon.astro';
+import { pt } from '../../content/pt';
+
+const t = pt.wiki.tools.colors;
+---
+
+<section class="tool card" data-color-tool data-texts={JSON.stringify(t)}>
+  <div class="parts" data-parts></div>
+  <button type="button" class="btn-line add" data-add>{t.addSegment}</button>
+
+  <div class="preview-block">
+    <p class="label">{t.preview}</p>
+    <div class="preview" data-preview aria-live="polite"></div>
+  </div>
+
+  <div class="code-block">
+    <div class="formats" role="tablist" aria-label={t.code}>
+      {
+        t.formats.map((format, i) => (
+          <button type="button" role="tab" class="format" data-format={format.id} aria-selected={i === 0 ? 'true' : 'false'}>
+            {format.label}
+          </button>
+        ))
+      }
+    </div>
+    <p class="format-note" data-format-note>{t.formats[0].note}</p>
+    <pre class="code" data-code></pre>
+    <div class="code-foot">
+      <span class="length" data-length></span>
+      <button type="button" class="btn-solid" data-copy="" data-copy-button><Icon name="copy" />{t.copy}</button>
+    </div>
+    <p class="limit" data-limit></p>
+  </div>
+</section>
+
+<ul class="tips">
+  {t.tips.map((tip) => <li>{tip}</li>)}
+</ul>
+
+<script>
+  import { PALETTE, letters, normalize, render, shadow, type Format, type Mode, type Part } from '../../scripts/mc-text';
+
+  const root = document.querySelector<HTMLElement>('[data-color-tool]');
+  if (root) {
+    const t = JSON.parse(root.dataset.texts ?? '{}');
+    const partsBox = root.querySelector<HTMLElement>('[data-parts]')!;
+    const preview = root.querySelector<HTMLElement>('[data-preview]')!;
+    const code = root.querySelector<HTMLElement>('[data-code]')!;
+    const length = root.querySelector<HTMLElement>('[data-length]')!;
+    const limit = root.querySelector<HTMLElement>('[data-limit]')!;
+    const note = root.querySelector<HTMLElement>('[data-format-note]')!;
+    const copy = root.querySelector<HTMLElement>('[data-copy-button]')!;
+
+    const styleKeys = ['bold', 'italic', 'underline', 'strike', 'obfuscated'] as const;
+    const styleMarks: Record<(typeof styleKeys)[number], string> = { bold: 'B', italic: 'I', underline: 'U', strike: 'S', obfuscated: '?' };
+    const blank = (text: string, colors: string[], mode: Mode = 'solid'): Part => ({
+      text, mode, colors, bold: false, italic: false, underline: false, strike: false, obfuscated: false,
+    });
+
+    const parts: Part[] = [blank('GeoAnarchy', ['#55ff55', '#55ffff'], 'gradient')];
+    /** Which colour of each part the palette changes. */
+    const selected: number[] = [0];
+    let format: Format = 'mini';
+
+    function el<K extends keyof HTMLElementTagNameMap>(tag: K, props: Record<string, string> = {}, ...children: (Node | string)[]) {
+      const node = document.createElement(tag);
+      for (const [key, value] of Object.entries(props)) {
+        if (key === 'class') node.className = value;
+        else node.setAttribute(key, value);
+      }
+      node.append(...children);
+      return node;
+    }
+
+    /** Draws the editors again. Only for changes of shape (a part added, a mode changed...). */
+    function draw(): void {
+      partsBox.replaceChildren(...parts.map((part, index) => editor(part, index)));
+      update();
+    }
+
+    function editor(part: Part, index: number): HTMLElement {
+      const box = el('div', { class: 'part', 'data-index': String(index) });
+
+      const head = el('div', { class: 'part-head' }, el('span', { class: 'part-title' }, t.segment.replace('{n}', String(index + 1))));
+      if (parts.length > 1) {
+        head.append(el('button', { type: 'button', class: 'remove', 'data-remove': '', 'aria-label': t.removeSegment, title: t.removeSegment }, '✕'));
+      }
+      box.append(head);
+
+      const input = el('input', { type: 'text', class: 'text', 'data-text': '', placeholder: t.placeholder, 'aria-label': t.text, maxlength: '64' }) as HTMLInputElement;
+      input.value = part.text;
+      box.append(el('label', { class: 'field' }, el('span', {}, t.text), input));
+
+      const modes = el('div', { class: 'modes', role: 'radiogroup', 'aria-label': t.mode });
+      for (const mode of ['solid', 'gradient', 'rainbow'] as Mode[]) {
+        modes.append(el('button', { type: 'button', role: 'radio', class: 'mode', 'data-mode': mode, 'aria-checked': String(part.mode === mode) }, t.modes[mode]));
+      }
+      box.append(modes);
+
+      if (part.mode !== 'rainbow') {
+        const stops = el('div', { class: 'stops' });
+        part.colors.forEach((color, stop) => {
+          const picker = el('input', { type: 'color', 'data-stop': String(stop), 'aria-label': t.stop.replace('{n}', String(stop + 1)) }) as HTMLInputElement;
+          picker.value = normalize(color);
+          const holder = el('label', { class: 'stop' + (selected[index] === stop ? ' is-selected' : '') }, picker);
+          stops.append(holder);
+        });
+        if (part.mode === 'gradient') {
+          if (part.colors.length < 5) stops.append(el('button', { type: 'button', class: 'stop-button', 'data-add-stop': '', title: t.addStop, 'aria-label': t.addStop }, '+'));
+          if (part.colors.length > 2) stops.append(el('button', { type: 'button', class: 'stop-button', 'data-remove-stop': '', title: t.removeStop, 'aria-label': t.removeStop }, '−'));
+        }
+        box.append(stops);
+
+        const palette = el('div', { class: 'palette', 'aria-label': t.palette });
+        for (const color of PALETTE) {
+          palette.append(el('button', { type: 'button', class: 'swatch', 'data-swatch': color.hex, title: `&${color.code}`, 'aria-label': `&${color.code}`, style: `--swatch:${color.hex}` }));
+        }
+        box.append(el('p', { class: 'small' }, t.palette), palette);
+      }
+
+      const styles = el('div', { class: 'styles' });
+      for (const key of styleKeys) {
+        styles.append(el('button', { type: 'button', class: `style style-${key}`, 'data-style': key, 'aria-pressed': String(part[key]) },
+          el('span', { class: 'mark' }, styleMarks[key]), t.styles[key]));
+      }
+      box.append(styles);
+      return box;
+    }
+
+    /** Redraws the preview and the code, keeping the editors (and the typing cursor) as they are. */
+    function update(): void {
+      preview.replaceChildren();
+      for (const part of parts) {
+        for (const { char, color } of letters(part)) {
+          const span = el('span', { style: `color:${color};text-shadow:.12em .12em 0 ${shadow(color)}` }, char);
+          if (part.bold) span.classList.add('b');
+          if (part.italic) span.classList.add('i');
+          if (part.underline) span.classList.add('u');
+          if (part.strike) span.classList.add('s');
+          if (part.obfuscated && char !== ' ') {
+            span.classList.add('obf');
+            span.dataset.char = char;
+          }
+          preview.append(span);
+        }
+      }
+      if (!preview.childNodes.length) preview.append(el('span', { class: 'empty' }, t.placeholder));
+
+      const text = render(parts, format);
+      code.textContent = text;
+      copy.dataset.copy = text;
+      const count = Array.from(text).length;
+      length.textContent = t.length.replace('{n}', String(count));
+      if (format === 'mini') {
+        limit.hidden = false;
+        limit.textContent = count > 32 ? t.countryOver : t.countryLimit;
+        limit.classList.toggle('is-over', count > 32);
+      } else {
+        limit.hidden = true;
+      }
+    }
+
+    partsBox.addEventListener('input', (event) => {
+      const target = event.target as HTMLInputElement;
+      const box = target.closest<HTMLElement>('.part');
+      if (!box) return;
+      const index = Number(box.dataset.index);
+      if (target.matches('[data-text]')) {
+        parts[index].text = target.value;
+      } else if (target.matches('[data-stop]')) {
+        const stop = Number(target.dataset.stop);
+        parts[index].colors[stop] = normalize(target.value);
+        selected[index] = stop;
+        box.querySelectorAll('.stop').forEach((label, i) => label.classList.toggle('is-selected', i === stop));
+      }
+      update();
+    });
+
+    partsBox.addEventListener('click', (event) => {
+      const target = (event.target as HTMLElement).closest<HTMLElement>('button, .stop');
+      const box = target?.closest<HTMLElement>('.part');
+      if (!target || !box) return;
+      const index = Number(box.dataset.index);
+      const part = parts[index];
+      if (target.matches('.stop')) {
+        const stop = Number(target.querySelector<HTMLInputElement>('[data-stop]')?.dataset.stop ?? 0);
+        selected[index] = stop;
+        box.querySelectorAll('.stop').forEach((label, i) => label.classList.toggle('is-selected', i === stop));
+        return;
+      }
+      if (target.matches('[data-remove]')) {
+        parts.splice(index, 1);
+        selected.splice(index, 1);
+        draw();
+      } else if (target.matches('[data-mode]')) {
+        const mode = target.dataset.mode as Mode;
+        part.mode = mode;
+        if (mode === 'solid') part.colors = [part.colors[0] ?? '#ffffff'];
+        if (mode === 'gradient' && part.colors.length < 2) {
+          const first = part.colors[0] ?? '#55ff55';
+          part.colors = [first, first === '#55ffff' ? '#ff55ff' : '#55ffff'];
+        }
+        selected[index] = 0;
+        draw();
+      } else if (target.matches('[data-add-stop]')) {
+        part.colors.push(part.colors[part.colors.length - 1] ?? '#ffffff');
+        selected[index] = part.colors.length - 1;
+        draw();
+      } else if (target.matches('[data-remove-stop]')) {
+        part.colors.pop();
+        selected[index] = Math.min(selected[index] ?? 0, part.colors.length - 1);
+        draw();
+      } else if (target.matches('[data-swatch]')) {
+        const stop = Math.min(selected[index] ?? 0, part.colors.length - 1);
+        part.colors[stop] = target.dataset.swatch!;
+        const picker = box.querySelector<HTMLInputElement>(`[data-stop="${stop}"]`);
+        if (picker) picker.value = target.dataset.swatch!;
+        update();
+      } else if (target.matches('[data-style]')) {
+        const key = target.dataset.style as (typeof styleKeys)[number];
+        part[key] = !part[key];
+        target.setAttribute('aria-pressed', String(part[key]));
+        update();
+      }
+    });
+
+    root.querySelector('[data-add]')?.addEventListener('click', () => {
+      const last = parts[parts.length - 1];
+      parts.push(blank('', [last && last.mode !== 'rainbow' ? last.colors[last.colors.length - 1] : '#ffffff']));
+      selected.push(0);
+      draw();
+      partsBox.querySelector<HTMLInputElement>(`.part[data-index="${parts.length - 1}"] [data-text]`)?.focus();
+    });
+
+    root.querySelectorAll<HTMLElement>('[data-format]').forEach((tab, i) => {
+      tab.addEventListener('click', () => {
+        format = tab.dataset.format as Format;
+        root.querySelectorAll('[data-format]').forEach((other) => other.setAttribute('aria-selected', String(other === tab)));
+        note.textContent = t.formats[i].note;
+        update();
+      });
+    });
+
+    // Obfuscated letters change all the time, as in the game.
+    const glyphs = 'ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789#$%&@';
+    const still = matchMedia('(prefers-reduced-motion: reduce)');
+    window.setInterval(() => {
+      if (still.matches) return;
+      preview.querySelectorAll<HTMLElement>('.obf').forEach((span) => {
+        span.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      });
+    }, 70);
+
+    draw();
+  }
+</script>
+
+<style>
+  .tool {
+    gap: 1.25rem;
+    padding: 1.4rem;
+    display: grid;
+  }
+  .parts {
+    gap: 1rem;
+    display: grid;
+  }
+  .tool :global(.part) {
+    box-shadow: var(--edge);
+    background: var(--color-surface-2);
+    border-radius: 1rem;
+    gap: .8rem;
+    padding: 1rem 1.1rem 1.1rem;
+    display: grid;
+  }
+  .tool :global(.part-head) {
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+  }
+  .tool :global(.part-title),
+  .label {
+    color: var(--color-text);
+    letter-spacing: -.01em;
+    font-size: .875rem;
+    font-weight: 600;
+  }
+  .tool :global(.remove) {
+    color: var(--color-text-faint);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: .5rem;
+    padding: .25rem .5rem;
+    font-size: .9rem;
+  }
+  .tool :global(.remove:hover) {
+    color: var(--color-text);
+    background: var(--color-surface-hover);
+  }
+  .tool :global(.field) {
+    gap: .35rem;
+    display: grid;
+  }
+  .tool :global(.field span),
+  .tool :global(.small) {
+    color: var(--color-text-muted);
+    font-size: .8125rem;
+    font-weight: 500;
+  }
+  .tool :global(.text) {
+    font: inherit;
+    color: var(--color-text);
+    background: var(--color-surface);
+    box-shadow: inset 0 0 0 1px var(--color-hairline-strong);
+    border: 0;
+    border-radius: .65rem;
+    padding: .6rem .75rem;
+    font-size: 1rem;
+  }
+  .tool :global(.text:focus) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 1px;
+  }
+  .tool :global(.modes),
+  .tool :global(.styles),
+  .formats {
+    flex-wrap: wrap;
+    gap: .4rem;
+    display: flex;
+  }
+  .tool :global(.mode),
+  .tool :global(.style),
+  .format,
+  .tool :global(.stop-button) {
+    font: inherit;
+    color: var(--color-text-soft);
+    cursor: pointer;
+    background: var(--color-surface);
+    box-shadow: inset 0 0 0 1px var(--color-hairline-strong);
+    border: 0;
+    border-radius: 999px;
+    align-items: center;
+    gap: .4rem;
+    padding: .4rem .8rem;
+    font-size: .84375rem;
+    font-weight: 500;
+    display: inline-flex;
+  }
+  .tool :global(.mode[aria-checked="true"]),
+  .tool :global(.style[aria-pressed="true"]),
+  .format[aria-selected="true"] {
+    color: var(--color-blue-strong);
+    background: var(--color-blue-soft);
+    box-shadow: inset 0 0 0 1px var(--color-blue-ring);
+    font-weight: 600;
+  }
+  .tool :global(.mark) {
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+  .tool :global(.style-italic .mark) {
+    font-style: italic;
+  }
+  .tool :global(.style-underline .mark) {
+    text-decoration: underline;
+  }
+  .tool :global(.style-strike .mark) {
+    text-decoration: line-through;
+  }
+  .tool :global(.stops) {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    display: flex;
+  }
+  .tool :global(.stop) {
+    cursor: pointer;
+    box-shadow: inset 0 0 0 1px var(--color-hairline-strong);
+    border-radius: .7rem;
+    padding: .25rem;
+    display: inline-flex;
+  }
+  .tool :global(.stop.is-selected) {
+    box-shadow: 0 0 0 2px var(--color-blue);
+  }
+  .tool :global(.stop input) {
+    cursor: pointer;
+    background: none;
+    border: 0;
+    width: 2.4rem;
+    height: 1.8rem;
+    padding: 0;
+  }
+  .tool :global(.stop-button) {
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    padding: 0;
+    font-size: 1.1rem;
+  }
+  .tool :global(.palette) {
+    grid-template-columns: repeat(16, minmax(0, 1fr));
+    gap: .3rem;
+    max-width: 30rem;
+    display: grid;
+  }
+  .tool :global(.swatch) {
+    aspect-ratio: 1;
+    cursor: pointer;
+    background: var(--swatch);
+    border: 0;
+    border-radius: .35rem;
+    box-shadow: inset 0 0 0 1px #0a1b2e33;
+    transition: transform .15s;
+  }
+  .tool :global(.swatch:hover) {
+    transform: scale(1.15);
+  }
+  .add {
+    justify-self: start;
+  }
+  .preview-block,
+  .code-block {
+    gap: .6rem;
+    display: grid;
+  }
+  /* The preview looks like the game's chat: dark, blocky letters with a hard shadow. */
+  .preview {
+    color: #fff;
+    overflow-wrap: anywhere;
+    background: #1b1d22 repeating-conic-gradient(#ffffff05 0 25%, transparent 0 50%) 0 0 / 16px 16px;
+    border-radius: .8rem;
+    min-height: 4.5rem;
+    padding: 1.25rem 1.2rem;
+    font-family: var(--font-mono);
+    font-size: clamp(1.15rem, 1rem + .8vw, 1.6rem);
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  .preview :global(.b) {
+    font-weight: 800;
+  }
+  .preview :global(.i) {
+    font-style: italic;
+  }
+  .preview :global(.u) {
+    text-decoration: underline;
+  }
+  .preview :global(.s) {
+    text-decoration: line-through;
+  }
+  .preview :global(.u.s) {
+    text-decoration: underline line-through;
+  }
+  .preview :global(.empty) {
+    color: #ffffff55;
+  }
+  .format-note {
+    color: var(--color-text-muted);
+    font-size: .875rem;
+  }
+  .code {
+    color: var(--color-text);
+    white-space: pre-wrap;
+    word-break: break-all;
+    background: var(--color-surface-2);
+    box-shadow: var(--edge);
+    border-radius: .8rem;
+    min-height: 3rem;
+    margin: 0;
+    padding: .9rem 1rem;
+    font-family: var(--font-mono);
+    font-size: .9rem;
+    line-height: 1.5;
+  }
+  .code-foot {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem;
+    display: flex;
+  }
+  .length {
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+    font-size: .875rem;
+  }
+  .limit {
+    color: var(--color-text-muted);
+    font-size: .875rem;
+  }
+  .limit.is-over {
+    color: #c0392b;
+    font-weight: 600;
+  }
+  .tips {
+    color: var(--color-text-muted);
+    gap: .4rem;
+    margin-top: 1.25rem;
+    padding-left: 1.1rem;
+    font-size: .9375rem;
+    display: grid;
+  }
+  @media (width <= 560px) {
+    .tool {
+      padding: 1rem;
+    }
+    .tool :global(.palette) {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+  }
+</style>

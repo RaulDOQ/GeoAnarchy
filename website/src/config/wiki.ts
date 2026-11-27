@@ -1,23 +1,30 @@
-// The GeoWiki's shape. There are two wikis: one for players and one for country founders.
-// Each has sections of articles, which are the Markdown files in src/content/wiki, laid
+// The GeoWiki's shape. There are two wikis, one for players and one for country founders, plus
+// a tab of tools (pages of their own in src/pages/wiki/ferramentas). Each wiki has sections of articles, which are the Markdown files in src/content/wiki, laid
 // out as <wiki>/<section>/<article>.md. This file turns them into addresses, the side
 // menu and the "previous / next" links.
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { pt } from '../content/pt';
 
-export type WikiId = 'jogador' | 'pais';
+export type WikiId = 'jogador' | 'pais' | 'ferramentas';
 export type WikiArticle = CollectionEntry<'wiki'>;
 
 /** Where each wiki starts. */
 export const wikiBase: Record<WikiId, string> = {
   jogador: '/wiki/',
   pais: '/wiki/pais/',
+  ferramentas: '/wiki/ferramentas/',
 };
+
+/** The tools tab: interactive pages, not Markdown articles. The first one is the tab's front page. */
+export const tools = [
+  { id: 'cores', href: '/wiki/ferramentas/', title: pt.wiki.tools.colors.menu },
+] as const;
 
 /** The order of the sections in each wiki's side menu. A new folder also needs a name in pt.ts (`wiki.sections`). */
 const sectionOrder: Record<WikiId, readonly string[]> = {
   jogador: ['geral', 'economia', 'paises', 'encantamentos', 'vip'],
   pais: ['paises', 'economia'],
+  ferramentas: [],
 };
 
 interface Place {
@@ -89,6 +96,13 @@ export interface WikiGroup {
 /** The side menu of a wiki. `current` is the address of the page being shown. */
 export async function wikiMenu(wiki: WikiId, current?: string): Promise<WikiGroup[]> {
   const groups: WikiGroup[] = [];
+  if (wiki === 'ferramentas') {
+    return [{
+      title: pt.wiki.tools.menu,
+      links: tools.map((tool) => ({ label: tool.title, href: tool.href, current: tool.href === current })),
+      open: true,
+    }];
+  }
   if (wiki === 'jogador') {
     // The first articles live on the wiki's front page.
     const c = pt.wiki;

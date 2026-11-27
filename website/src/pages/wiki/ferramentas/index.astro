@@ -1,0 +1,37 @@
+---
+// The GeoWiki's tools tab: its front page is the colour tool (components/wiki/ColorTool.astro).
+// More tools can be added as pages here and in `tools` (src/config/wiki.ts).
+import WikiLayout from '../../../components/wiki/WikiLayout.astro';
+import ColorTool from '../../../components/wiki/ColorTool.astro';
+import { wikiBase } from '../../../config/wiki';
+import { pt } from '../../../content/pt';
+
+const c = pt.wiki.tools;
+---
+
+<WikiLayout wiki="ferramentas" title={c.meta.title} description={c.meta.description} current={wikiBase.ferramentas}>
+  <article class="tool-page">
+    <h2 data-in="settle">{c.colors.title}</h2>
+    <p class="intro" data-in="settle" style="--d: 60ms">{c.colors.intro}</p>
+    <ColorTool />
+  </article>
+</WikiLayout>
+
+<style>
+  .tool-page {
+    gap: 1rem;
+    display: grid;
+  }
+  h2 {
+    color: var(--color-text);
+    letter-spacing: -.03em;
+    font-size: clamp(1.5rem, 1.25rem + .9vw, 1.9rem);
+    line-height: 1.15;
+  }
+  .intro {
+    color: var(--color-text-muted);
+    max-width: 44rem;
+    font-size: 1.03125rem;
+    line-height: 1.6;
+  }
+</style>

@@ -1,6 +1,6 @@
 ---
-// The switch at the top of every wiki page: the players' wiki or the country founders'
-// wiki. Each choice is a link to that wiki's front page.
+// The switch at the top of every wiki page: the players' wiki, the country founders' wiki,
+// or the tools. Each choice is a link to its front page.
 import Icon from '../Icon.astro';
 import { wikiBase, type WikiId } from '../../config/wiki';
 import { pt } from '../../content/pt';
@@ -15,6 +15,7 @@ const c = pt.wiki;
 const choices = [
   { id: 'jogador', icon: 'player', ...c.wikis.jogador },
   { id: 'pais', icon: 'flag', ...c.wikis.pais },
+  { id: 'ferramentas', icon: 'palette', ...c.wikis.ferramentas },
 ] as const;
 ---
 
@@ -90,6 +91,11 @@ const choices = [
     font-weight: 500;
     line-height: 1.1;
   }
+  @media (width <= 720px) {
+    .note {
+      display: none;
+    }
+  }
   @media (width <= 520px) {
     .wiki-switch {
       display: flex;
@@ -97,7 +103,12 @@ const choices = [
     a {
       flex: 1;
       justify-content: center;
-      padding: .6rem .7rem;
+      padding: .6rem .5rem;
+    }
+    .name {
+      white-space: normal;
+      text-align: center;
+      font-size: .875rem;
     }
     a :global(svg),
     .note {

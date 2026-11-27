@@ -13,6 +13,7 @@ JavaScript that any static host can serve.
 | `/loja/` | `src/pages/loja/index.astro` | Loja. The monthly goal (what keeps the server running, and how much is missing), then the three plans with a switch for paying every month, every 3 months or every 6 months. They cannot be bought yet; the page says so. |
 | `/wiki/` | `src/pages/wiki/index.astro` | GeoWiki, the players' wiki: how to join, the world, how the server works, and the lists of its sections' articles |
 | `/wiki/pais/` | `src/pages/wiki/pais/index.astro` | The country founders' wiki: who it is for, and its lists of country and economy articles |
+| `/wiki/ferramentas/` | `src/pages/wiki/ferramentas/index.astro` | The wiki's tools tab: the colour tool (`src/components/wiki/ColorTool.astro`, with its formatting in `src/scripts/mc-text.ts`), which writes coloured text as MiniMessage for country names, `&` and `&#RRGGBB` codes for chat and /nick, or `&x` codes for other plugins |
 | `/wiki/<section>/<article>/`, `/wiki/pais/<section>/<article>/` | `src/pages/wiki/[...path].astro` | One page per wiki article (see "The GeoWiki" below) |
 | any other | `src/pages/404.astro` | Page not found |
 
@@ -54,10 +55,12 @@ Run these inside `website/` (Node 22.12 or newer):
 
 ## The GeoWiki
 
-There are two wikis, and a switch at the top of every wiki page goes from one to the other:
+There are two wikis and a tools tab, and a switch at the top of every wiki page goes between them:
 
 - **Wiki do Jogador** (`/wiki/`), for everyone who plays.
 - **Wiki do País** (`/wiki/pais/`), for country founders and whoever helps run a country.
+- **Ferramentas** (`/wiki/ferramentas/`), tools that run in the browser. To add one, add its
+  page under `src/pages/wiki/ferramentas/` and an entry to `tools` in `src/config/wiki.ts`.
 
 Each wiki has a side menu with its sections. Each section is a group that opens to show its
 articles: the one being read starts open, the others closed (`open` in `wikiMenu`). The

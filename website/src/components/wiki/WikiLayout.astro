@@ -23,7 +23,7 @@ interface Props {
 
 const { wiki, title, description, current, article = false } = Astro.props;
 const c = pt.wiki;
-const head = wiki === 'pais' ? c.country : c;
+const head = wiki === 'pais' ? c.country : wiki === 'ferramentas' ? c.tools : c;
 const groups = await wikiMenu(wiki, current);
 ---
 
