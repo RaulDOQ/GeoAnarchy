@@ -1,7 +1,7 @@
 // Run with `npm test`: the store's prices.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { goalProgress, periodPrice, reais, skinItems, skinOptions, skinPacks, store, tags } from './store.ts';
+import { goalProgress, periodPrice, reais, skinItems, skinOptions, skinPacks, skinPrice, store, tagPriceOf, tags } from './store.ts';
 
 test('the store has VIP, Skins and Tags categories, each a page under /loja/', () => {
   assert.deepEqual(store.categories.map((category) => category.id), ['vip', 'skins', 'tags']);
@@ -13,6 +13,16 @@ test('five skin packs, nine items each, sold four ways', () => {
   assert.deepEqual(skinPacks.map((pack) => pack.plan), ['geo-plus', 'geo-plus', 'geo-ultra', 'geo-ultra', 'geo-ultra-plus']);
   assert.equal(skinItems.tools.length + skinItems.armour.length, 9);
   assert.deepEqual(skinOptions.map((option) => [option.id, option.items]), [['single', 1], ['tools', 5], ['armour', 4], ['pack', 9]]);
+});
+
+test('skins cost 19,90 one item, 39,90 sword and tools, 59,99 armour, 75,99 the whole pack', () => {
+  for (const pack of skinPacks) {
+    assert.deepEqual(skinOptions.map((option) => reais(skinPrice(pack, option.id))), ['19,90', '39,90', '59,99', '75,99'], pack.id);
+  }
+});
+
+test('a tag on its own costs 7,90', () => {
+  assert.ok(tags.every((tag) => reais(tagPriceOf(tag)) === '7,90'));
 });
 
 test('the tags are the 30 of the game: 9 with Geo+, 6 more with Geo Ultra, 15 more with Geo Ultra+', () => {

@@ -1,13 +1,13 @@
 ---
 // "Loja", the Tags category: every tag of the game, grouped by the plan that includes it,
-// each drawn in its own colours the way it shows in chat. Tags will also be sold on their
-// own, for good; until a tag has a price it says "Em breve". The tags and their prices:
-// src/config/store.ts (kept in step with GeoUltra's presets.yml).
+// each drawn in its own colours the way it shows in chat, with its price on its own (for
+// good). The tags and their prices: src/config/store.ts (kept in step with GeoUltra's
+// presets.yml).
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import StoreShell from '../../components/store/StoreShell.astro';
 import Closing from '../../components/home/Closing.astro';
-import { reais, store, tags } from '../../config/store';
+import { reais, store, tagPriceOf, tags } from '../../config/store';
 import { pt } from '../../content/pt';
 
 const c = pt.store;
@@ -53,7 +53,7 @@ function paint(colors: readonly string[]): string {
                 <p class="included">{t.included.replace('{plan}', group.plan.name)}</p>
                 <p class="buy">
                   <span>{t.price}</span>
-                  <span class="soon">{tag.price ? `R$ ${reais(tag.price)}` : pt.common.soon}</span>
+                  <span class="price">R$ {reais(tagPriceOf(tag))}</span>
                 </p>
               </li>
             ))}
@@ -177,17 +177,12 @@ function paint(colors: readonly string[]): string {
     color: var(--color-text-soft);
     font-weight: 600;
   }
-  .soon {
+  .price {
     white-space: nowrap;
-    flex: none;
-    box-shadow: inset 0 0 0 1px var(--color-green-ring);
-    color: var(--color-green-strong);
-    background: var(--color-green-soft);
-    border-radius: 999px;
-    padding: .3rem .6rem;
-    font-size: .75rem;
-    font-weight: 600;
-    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text);
+    font-size: .9375rem;
+    font-weight: 700;
   }
 
   @media (width <= 560px) {

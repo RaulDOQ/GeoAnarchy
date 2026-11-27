@@ -49,7 +49,15 @@ Por exemplo, um jogador Geo+ pode usar [CRIA] em vermelho, e um Geo Ultra+ pode 
 
 As tags que o seu plano não inclui aparecem na lista com *"Você não tem esta tag"* e o plano que a inclui. Uma tag que você ganhou ou comprou separada fica **sua para sempre**, mesmo sem plano (sem plano, ela aparece no estilo Original).
 
-Com **/tagcor** você pinta uma tag sua com as cores que quiser, letra por letra, como no /nome: por exemplo `/tagcor &cB&6OSS` ou `/tagcor <gradient:gold:red>BOSS`. As letras precisam ser exatamente as da tag, em maiúsculas (`BOSs` não vale), e só vale para tags que você tem. **/tagcor limpar** volta ao estilo Original. Para montar as cores, use o [Gerador de cores](/wiki/ferramentas/).
+Com **/tagcor** você pinta uma tag sua com as suas cores, como no /nome: por exemplo `/tagcor &cBOSS`. As letras precisam ser exatamente as da tag, em maiúsculas (`BOSs` não vale), e só vale para tags que você tem. O que dá para usar segue o plano, igual à tela de estilo:
+
+| Plano | Na /tagcor |
+|---|---|
+| Geo+ (ou sem plano, com uma tag sua para sempre) | Uma cor: `/tagcor &cBOSS` |
+| Geo Ultra | Uma cor, com negrito, itálico, sublinhado ou riscado: `/tagcor &c&lBOSS` |
+| Geo Ultra+ | Também degradês, arco-íris e uma cor por letra: `/tagcor <gradient:gold:red>BOSS` |
+
+**/tagcor limpar** volta ao estilo Original. Para montar as cores, use o [Gerador de cores](/wiki/ferramentas/).
 
 A equipe do servidor continua com a tag da equipe, e a tag escolhida vem depois dela: [Brasil] [Admin] [EGO] Astrum.
 

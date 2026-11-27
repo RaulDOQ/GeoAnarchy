@@ -1,8 +1,8 @@
 ---
 // "Loja", the Skins category: the five skin packs of GeoUltra, the plan that includes
 // each, its nine items, and the four ways to buy skins on their own (one item, sword and
-// tools, armour, the whole pack), each with its own price. Until a price is set it says
-// "Em breve". The packs and prices: src/config/store.ts.
+// tools, armour, the whole pack), each with its own price, and what to know before buying
+// (netherite only; a skin is lost on death). The packs and prices: src/config/store.ts.
 //
 // Pictures: the item icons are in public/loja/skins/<pack>/ (copied from GeoUltra). In-game
 // screenshots go in src/assets/skins/<pack>/ (png, jpg or webp) and appear here by
@@ -13,7 +13,7 @@ import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import StoreShell from '../../components/store/StoreShell.astro';
 import Closing from '../../components/home/Closing.astro';
-import { reais, skinItems, skinOptions, skinPacks, store } from '../../config/store';
+import { reais, skinItems, skinOptions, skinPacks, skinPrice, store } from '../../config/store';
 import { pt } from '../../content/pt';
 
 const c = pt.store;
@@ -44,6 +44,12 @@ function screenshotsOf(pack: string): ImageMetadata[] {
           </li>
         ))}
       </ul>
+      <div class="rules">
+        <p class="label">{s.rulesLabel}</p>
+        <ul>
+          {s.rules.map((rule) => <li>{rule}</li>)}
+        </ul>
+      </div>
     </div>
 
     {
@@ -91,7 +97,7 @@ function screenshotsOf(pack: string): ImageMetadata[] {
               <p class="label">{s.pricesLabel}</p>
               <ul>
                 {skinOptions.map((option) => {
-                  const price = pack.prices?.[option.id];
+                  const price = skinPrice(pack, option.id);
                   return (
                     <li>
                       <span class="price-name">
@@ -153,6 +159,22 @@ function screenshotsOf(pack: string): ImageMetadata[] {
   .intro .way-about {
     font-size: .8125rem;
     line-height: 1.45;
+  }
+  /* What to know before buying: netherite only, and what happens when you die. */
+  .rules {
+    gap: .4rem;
+    margin-top: .6rem;
+    display: grid;
+  }
+  .rules ul {
+    gap: .35rem;
+    padding-left: 1.1rem;
+    display: grid;
+  }
+  .rules li {
+    color: var(--color-text-soft);
+    font-size: .875rem;
+    line-height: 1.5;
   }
 
   .pack {

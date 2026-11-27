@@ -54,8 +54,16 @@ export interface StoreTag {
   plan: PlanId;
   colors: readonly string[];
   bold?: boolean;
-  /** The price to buy the tag on its own, for good, in centavos. Missing: "Em breve". */
+  /** This tag's own price, in centavos, where it differs from `tagPrice`. */
   price?: number;
+}
+
+/** What buying one tag on its own costs, for good, in centavos. */
+export const tagPrice = 790;
+
+/** What one tag costs, in centavos. */
+export function tagPriceOf(tag: StoreTag): number {
+  return tag.price ?? tagPrice;
 }
 
 /** The kinds of item a skin pack dresses, as GeoUltra names them, in the order they are shown. */
@@ -77,6 +85,19 @@ export const skinOptions = [
 ] as const;
 export type SkinOptionId = (typeof skinOptions)[number]['id'];
 
+/** What each way of buying skins costs, in centavos, for every pack (a pack can set its own `prices`). */
+export const skinPrices: Record<SkinOptionId, number> = {
+  single: 1990,
+  tools: 3990,
+  armour: 5999,
+  pack: 7599,
+};
+
+/** What one way of buying a pack's skins costs, in centavos. */
+export function skinPrice(pack: SkinPack, option: SkinOptionId): number {
+  return pack.prices?.[option] ?? skinPrices[option];
+}
+
 /**
  * One skin pack, as GeoUltra has it (config.yml, skins.packs): its name, the plan that
  * includes it, and the colour it is shown in. The icons are in public/loja/skins/<id>/,
@@ -87,7 +108,7 @@ export interface SkinPack {
   name: string;
   plan: PlanId;
   color: string;
-  /** What each way of buying costs, in centavos. A missing price says "Em breve". */
+  /** This pack's own prices, in centavos, where they differ from `skinPrices`. */
   prices?: Partial<Record<SkinOptionId, number>>;
 }
 

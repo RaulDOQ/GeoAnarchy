@@ -8,7 +8,7 @@ order: 2
 
 Uma skin muda **só a aparência** de uma espada, ferramenta ou peça de armadura. O item continua igual em tudo: material, dano, durabilidade, encantamentos e nome.
 
-Skins só podem ser aplicadas em itens de **diamante** e **netherita**.
+Skins só podem ser aplicadas em itens de **netherite**. Skins que já estavam em itens de diamante continuam neles até serem removidas.
 
 ## Os pacotes
 

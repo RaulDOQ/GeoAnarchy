@@ -383,7 +383,7 @@ export const pt = {
         title: 'Skins | Loja | GeoAnarchy',
         description: 'As skins de itens do GeoAnarchy: os pacotes Silvestre, Glacial, Dracônico, Abissal e Celestial, que vêm com os planos VIP e, em breve, à venda separados.',
       },
-      lead: 'Skins mudam a aparência das suas espadas, ferramentas e armaduras de diamante e netherite. Só o visual: o item continua igual em tudo o resto.',
+      lead: 'Skins mudam a aparência das suas espadas, ferramentas e armaduras de netherite. Só o visual: o item continua igual em tudo o resto.',
       intro: {
         title: 'Cinco pacotes, nove itens cada',
         body: [
@@ -400,6 +400,12 @@ export const pt = {
       } as Record<string, { name: string; about: string }>,
       count: '{count} itens',
       countOne: '1 item',
+      // What to know before buying, shown under the four ways.
+      rulesLabel: 'Bom saber',
+      rules: [
+        'As skins só podem ser aplicadas em itens de netherite.',
+        'Se você morrer, perde a skin: ela fica no item, e quem pegar o item de você poderá usá-la.',
+      ],
       // What each item is called, by the names GeoUltra uses.
       items: {
         sword: 'Espada',
@@ -431,7 +437,7 @@ export const pt = {
         title: 'Tags para sempre',
         body: [
           'Hoje as tags vêm com os planos: cada plano libera as suas e as dos planos abaixo dele.',
-          'Em breve, cada tag também poderá ser comprada separada. Uma tag comprada fica sua para sempre, mesmo sem plano, e dá para pintá-la com as cores que você quiser usando /tagcor.',
+          'Em breve, cada tag também poderá ser comprada separada. Uma tag comprada fica sua para sempre, mesmo sem plano, e dá para pintá-la com /tagcor: uma cor no Geo+, negrito no Geo Ultra, degradês no Geo Ultra+.',
         ],
       },
       group: 'Com o {plan}',
