@@ -13,7 +13,10 @@ import java.util.UUID;
 public interface Economy {
 
     enum PayStatus {
-        PAID, NO_SUCH_PLAYER, SAME_PLAYER, NOT_ENOUGH, RECEIVER_FULL, FAILED
+        PAID,
+        /** {@link #payOnce} with an id that was already paid: nothing moved this time. */
+        ALREADY_PAID,
+        NO_SUCH_PLAYER, SAME_PLAYER, NOT_ENOUGH, RECEIVER_FULL, FAILED
     }
 
     /** @param receiver the receiving player's name as the economy knows it */
@@ -47,6 +50,15 @@ public interface Economy {
     Optional<String> accountName(String typedName);
 
     Pay pay(UUID from, String toName, long cents);
+
+    /**
+     * {@link #pay}, at most once for this payment id, even across restarts: the economy saves the id together with
+     * the money. Paying again with the same id moves nothing and answers ALREADY_PAID.
+     */
+    Pay payOnce(String paymentId, UUID from, String toName, long cents);
+
+    /** True once a payment with this id was paid by {@link #payOnce}. */
+    boolean paid(String paymentId);
 
     /** Every market's price for an item, or empty if no market trades it. The item is its Minecraft name. */
     List<Price> prices(String item);
@@ -94,6 +106,16 @@ public interface Economy {
         @Override
         public Pay pay(UUID from, String toName, long cents) {
             return new Pay(PayStatus.FAILED, toName, null);
+        }
+
+        @Override
+        public Pay payOnce(String paymentId, UUID from, String toName, long cents) {
+            return new Pay(PayStatus.FAILED, toName, null);
+        }
+
+        @Override
+        public boolean paid(String paymentId) {
+            return false;
         }
 
         @Override

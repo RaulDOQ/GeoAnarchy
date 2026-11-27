@@ -116,7 +116,10 @@ public final class GameCommands implements TabExecutor {
 
     private void ranks(CommandSender sender) {
         Messages texts = plugin.messages();
-        Ranks.Board board = plugin.ranks().get(plugin.settings().ranksRefreshMinutes());
+        Ranks.Board board = plugin.ranks().get();
+        if (!board.complete()) {
+            texts.send(sender, "ranks-loading", "percent", String.valueOf(board.percent()));
+        }
         texts.send(sender, "ranks-header-time");
         list(sender, board.hoursPlayed(), "h");
         texts.send(sender, "ranks-header-kills");

@@ -53,7 +53,8 @@ actions:
   confirm-seconds: 60
 
 ranks:
-  # De quantos em quantos minutos o /ranks é recalculado.
+  # De quantos em quantos minutos o tempo de jogo de quem está online é lido de novo para o /ranks.
+  # As kills contam na hora. Quem está offline é lido uma vez, aos poucos, quando o servidor liga.
   refresh-minutes: 5
 
 vip:

@@ -44,6 +44,7 @@ game:
   ranks-header-kills: "<prefix><gold>Quem mais matou jogadores</gold>"
   ranks-line: "<gray><rank>.</gray> <white><player></white> <dark_gray>-</dark_gray> <gold><value></gold>"
   ranks-empty: "<dark_gray> -</dark_gray> <gray>Ninguém ainda."
+  ranks-loading: "<prefix><gray>Os ranks ainda estão sendo calculados (<percent>%). A lista abaixo pode estar incompleta."
 
   # ---- VIP ----
   vip-usage: "<prefix><gray>Uso: /darvip <jogador> <plano> <meses>. Planos: <white><plans></white>"
@@ -138,6 +139,8 @@ discord:
     limit: "Pelo Discord dá para enviar até {limit} por dia. Hoje você ainda pode enviar {left}."
     confirm: "Enviar **{amount}** para **{player}**?\nSua carteira tem {balance}. Não dá para desfazer."
     done: "✅ Enviado: **{amount}** para **{player}**.\nSua carteira agora tem {balance}."
+    # O dinheiro foi enviado, mas o registro (limite do dia e aviso no jogo) falhou. O plugin refaz o registro sozinho.
+    not-recorded: "✅ Enviado: **{amount}** para **{player}**.\nO registro do envio ainda não foi salvo; o servidor termina isso sozinho. Não envie de novo."
     receiver-full: "**{player}** não pode guardar tanto dinheiro."
   # O que aparece no jogo, no próximo login, depois de "Pelo Discord, a sua conta:"
   log:

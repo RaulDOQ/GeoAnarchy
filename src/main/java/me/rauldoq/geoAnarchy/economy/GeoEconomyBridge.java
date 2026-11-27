@@ -96,6 +96,21 @@ public final class GeoEconomyBridge implements Economy {
 
     @Override
     public Pay pay(UUID from, String toName, long cents) {
+        return pay(null, from, toName, cents);
+    }
+
+    @Override
+    public Pay payOnce(String paymentId, UUID from, String toName, long cents) {
+        return pay(paymentId, from, toName, cents);
+    }
+
+    @Override
+    public boolean paid(String paymentId) {
+        return geo.ledger().isDone(paymentId);
+    }
+
+    /** @param paymentId when not null, the money moves at most once for it (GeoEconomy saves it with the transfer) */
+    private Pay pay(String paymentId, UUID from, String toName, long cents) {
         Optional<Account> payer = geo.accounts().get(from);
         Optional<Account> receiver = geo.accounts().findByName(toName);
         if (receiver.isEmpty()) {
@@ -109,10 +124,15 @@ public final class GeoEconomyBridge implements Economy {
         if (id.equals(from)) {
             return new Pay(PayStatus.SAME_PLAYER, name, id);
         }
-        Result result = geo.ledger().transfer(payer.get().wallet(), receiver.get().wallet(),
-                geo.currencies().geo().code(), cents, TransactionType.TRANSFER, "discord:/pagar");
+        String currency = geo.currencies().geo().code();
+        Result result = paymentId == null
+                ? geo.ledger().transfer(payer.get().wallet(), receiver.get().wallet(), currency, cents,
+                        TransactionType.TRANSFER, "discord:/pagar")
+                : geo.ledger().transferOnce(paymentId, payer.get().wallet(), receiver.get().wallet(), currency, cents,
+                        TransactionType.TRANSFER, "discord:/pagar " + paymentId);
         PayStatus status = switch (result.status()) {
             case SUCCESS -> PayStatus.PAID;
+            case ALREADY_DONE -> PayStatus.ALREADY_PAID;
             case INSUFFICIENT_FUNDS -> PayStatus.NOT_ENOUGH;
             case BALANCE_LIMIT -> PayStatus.RECEIVER_FULL;
             default -> PayStatus.FAILED;

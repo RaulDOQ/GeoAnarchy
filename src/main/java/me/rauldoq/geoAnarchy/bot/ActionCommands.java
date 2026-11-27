@@ -4,7 +4,9 @@ import me.rauldoq.geoAnarchy.GeoAnarchy;
 import me.rauldoq.geoAnarchy.config.Messages;
 import me.rauldoq.geoAnarchy.country.Country;
 import me.rauldoq.geoAnarchy.economy.Economy;
+import me.rauldoq.geoAnarchy.economy.Payments;
 import me.rauldoq.geoAnarchy.storage.Database.Link;
+import me.rauldoq.geoAnarchy.storage.Database.Payment;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -16,8 +18,6 @@ import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,17 +37,18 @@ import java.util.function.Supplier;
  *   <li>Everything done here is shown to the player the next time they log in.</li>
  *   <li>A player can switch all of this off for themselves in game: /discord acoes off.</li>
  * </ul>
+ * A /pagar is kept in geoanarchy.db and paid at most once, however often its button is pressed and even across a
+ * restart (see {@link Payments}).
  */
 public final class ActionCommands {
 
     private static final String CONFIRM = "geo:act:";
-    private static final ZoneId BRAZIL = ZoneId.of("America/Sao_Paulo");
 
     private enum Kind {
-        DEPOSIT, PAY
+        DEPOSIT
     }
 
-    /** Something a player asked for and has not confirmed yet. */
+    /** A /depositar the player has not confirmed yet. (A /pagar is kept in the database by {@link Payments}.) */
     private record Pending(String discordId, UUID player, String playerName, Kind kind, long cents, String target,
                            String targetName, long expiresAt) {
     }
@@ -113,11 +114,21 @@ public final class ActionCommands {
     }
 
     private String remember(Pending action) {
-        long now = System.currentTimeMillis();
-        pending.values().removeIf(old -> old.expiresAt() <= now || old.discordId().equals(action.discordId()));
-        String id = CONFIRM + UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+        forgetWaiting(action.discordId());
+        String id = newId();
         pending.put(id, action);
         return id;
+    }
+
+    /** A new request replaces whatever the same person has not confirmed yet, a deposit or a payment. */
+    private void forgetWaiting(String discordId) {
+        long now = System.currentTimeMillis();
+        pending.values().removeIf(old -> old.expiresAt() <= now || old.discordId().equals(discordId));
+        plugin.database().replaceWaitingPayments(discordId, plugin.messages().text("action.expired"));
+    }
+
+    private static String newId() {
+        return CONFIRM + UUID.randomUUID().toString().replace("-", "").substring(0, 16);
     }
 
     private long deadline() {
@@ -197,8 +208,10 @@ public final class ActionCommands {
             if (balance < amount.getAsLong()) {
                 return Step.say(texts.text("action.not-enough", "balance", economy.geos(balance)));
             }
-            String id = remember(new Pending(link.discord(), link.minecraft(), link.name(), Kind.PAY,
-                    amount.getAsLong(), receiver.get(), receiver.get(), deadline()));
+            forgetWaiting(link.discord());
+            String id = newId();
+            plugin.payments().create(id, link.discord(), link.minecraft(), link.name(), receiver.get(),
+                    amount.getAsLong(), deadline());
             return new Step(texts.text("pay.confirm", "amount", economy.geos(amount.getAsLong()),
                     "player", receiver.get(), "balance", economy.geos(balance)), id);
         });
@@ -208,17 +221,20 @@ public final class ActionCommands {
         return Math.round(plugin.settings().payDailyLimit() * 100);
     }
 
-    private static String today() {
-        return LocalDate.now(BRAZIL).toString();
-    }
-
     private long leftToday(UUID player) {
-        return dailyLimit() - plugin.database().spent(player, today());
+        return plugin.payments().leftOn(player, plugin.payments().today());
     }
 
     private void confirmed(ButtonInteractionEvent event) {
         Pending action = pending.get(event.getComponentId());
         Messages texts = plugin.messages();
+        if (action == null) {
+            Optional<Payment> payment = plugin.payments().find(event.getComponentId());
+            if (payment.isPresent()) {
+                confirmedPayment(event, payment.get());
+                return;
+            }
+        }
         if (action == null || action.expiresAt() <= System.currentTimeMillis()) {
             pending.remove(event.getComponentId());
             event.editMessage(new MessageEditBuilder().setContent(texts.text("action.expired")).setComponents().build()).queue();
@@ -239,7 +255,47 @@ public final class ActionCommands {
         }));
     }
 
-    /** Does the confirmed action. Runs on the server thread. @return the text to show in Discord */
+    /**
+     * A click on a /pagar button. The first click pays; a repeated click (a double click, Discord trying again, a
+     * click after a restart) gets the same answer without paying again, and finishes the booking if a failure
+     * had left it open.
+     */
+    private void confirmedPayment(ButtonInteractionEvent event, Payment payment) {
+        if (!payment.discord().equals(event.getUser().getId())) {
+            event.reply(plugin.messages().text("action.not-yours")).setEphemeral(true).queue();
+            return;
+        }
+        event.deferEdit().queue(hook -> plugin.onMain(() -> pay(payment)).whenComplete((text, error) -> {
+            if (error != null) {
+                bot.failed(error);
+            }
+            hook.editOriginal(new MessageEditBuilder()
+                    .setContent(error != null || text == null ? plugin.messages().text("error") : text)
+                    .setComponents().build()).queue();
+        }));
+    }
+
+    /** Pays a confirmed /pagar. Runs on the server thread. @return the text to show in Discord */
+    private String pay(Payment payment) {
+        Messages texts = plugin.messages();
+        Payments.Outcome outcome = plugin.payments().confirm(payment.id(), () -> {
+            Optional<Link> link = plugin.links().byDiscord(payment.discord());
+            if (link.isEmpty() || !link.get().minecraft().equals(payment.minecraft())) {
+                return texts.text("link.needed");
+            }
+            return blocked(link.get());
+        });
+        if (outcome.paidNow() && outcome.receiverId() != null) {
+            Player receiver = Bukkit.getPlayer(outcome.receiverId());
+            if (receiver != null) {
+                plugin.messages().send(receiver, "pay-received", "amount", plugin.economy().geos(payment.cents()),
+                        "player", payment.name());
+            }
+        }
+        return outcome.text();
+    }
+
+    /** Does a confirmed deposit. Runs on the server thread. @return the text to show in Discord */
     private String perform(Pending action) {
         Messages texts = plugin.messages();
         Economy economy = plugin.economy();
@@ -268,37 +324,7 @@ public final class ActionCommands {
                     "balance", economy.geos(economy.geoBalance(action.player())));
         }
 
-        if (action.cents() > leftToday(action.player())) {
-            return texts.text("pay.limit", "limit", economy.geos(dailyLimit()),
-                    "left", economy.geos(Math.max(0, leftToday(action.player()))));
-        }
-        Economy.Pay pay = economy.pay(action.player(), action.target(), action.cents());
-        switch (pay.status()) {
-            case PAID -> {
-                plugin.database().addSpent(action.player(), today(), action.cents());
-                plugin.rememberAction(action.player(), texts.text("log.pay", "amount", amount, "player", pay.receiver()));
-                Player receiver = pay.receiverId() == null ? null : Bukkit.getPlayer(pay.receiverId());
-                if (receiver != null) {
-                    plugin.messages().send(receiver, "pay-received", "amount", amount, "player", action.playerName());
-                }
-                return texts.text("pay.done", "amount", amount, "player", pay.receiver(),
-                        "balance", economy.geos(economy.geoBalance(action.player())));
-            }
-            case NO_SUCH_PLAYER -> {
-                return texts.text("pay.no-player", "player", action.target());
-            }
-            case SAME_PLAYER -> {
-                return texts.text("pay.self");
-            }
-            case NOT_ENOUGH -> {
-                return texts.text("action.not-enough", "balance", economy.geos(economy.geoBalance(action.player())));
-            }
-            case RECEIVER_FULL -> {
-                return texts.text("pay.receiver-full", "player", pay.receiver());
-            }
-            default -> {
-                return texts.text("error");
-            }
-        }
+        // Only deposits wait in memory: a /pagar is kept and paid by Payments.
+        return texts.text("error");
     }
 }
