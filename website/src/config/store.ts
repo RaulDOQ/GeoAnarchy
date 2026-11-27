@@ -16,16 +16,16 @@ export const store = {
 
   /** The plans, cheapest first. `monthly` is the price of one month, in centavos. */
   plans: [
-    { id: 'geo-plus', name: 'Geo+', monthly: 799 },
-    { id: 'geo-ultra', name: 'Geo Ultra', monthly: 1799 },
-    { id: 'geo-ultra-plus', name: 'Geo Ultra+', monthly: 2799 },
+    { id: 'geo-plus', name: 'Geo+', monthly: 990 },
+    { id: 'geo-ultra', name: 'Geo Ultra', monthly: 1990 },
+    { id: 'geo-ultra-plus', name: 'Geo Ultra+', monthly: 2990 },
   ],
 
   /** How often a plan can be paid, and the discount for paying more months at once (in percent). */
   periods: [
     { months: 1, off: 0 },
-    { months: 3, off: 20 },
-    { months: 6, off: 40 },
+    { months: 3, off: 15 },
+    { months: 6, off: 30 },
   ],
 } as const;
 

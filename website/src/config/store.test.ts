@@ -6,25 +6,25 @@ import { goalProgress, periodPrice, reais, store } from './store.ts';
 test('the three plans and what a month costs', () => {
   assert.deepEqual(
     store.plans.map((plan) => [plan.name, reais(plan.monthly)]),
-    [['Geo+', '7,99'], ['Geo Ultra', '17,99'], ['Geo Ultra+', '27,99']],
+    [['Geo+', '9,90'], ['Geo Ultra', '19,90'], ['Geo Ultra+', '29,90']],
   );
 });
 
-test('three months take 20% off, six months 40%', () => {
+test('three months take 15% off, six months 30%', () => {
   const table = store.plans.map((plan) => store.periods.map((period) => reais(periodPrice(plan.monthly, period).total)));
   assert.deepEqual(table, [
-    ['7,99', '19,18', '28,76'],
-    ['17,99', '43,18', '64,76'],
-    ['27,99', '67,18', '100,76'],
+    ['9,90', '25,25', '41,58'],
+    ['19,90', '50,75', '83,58'],
+    ['29,90', '76,25', '125,58'],
   ]);
 });
 
 test('the price per month falls with every longer period', () => {
   const perMonth = store.plans.map((plan) => store.periods.map((period) => reais(periodPrice(plan.monthly, period).perMonth)));
   assert.deepEqual(perMonth, [
-    ['7,99', '6,39', '4,79'],
-    ['17,99', '14,39', '10,79'],
-    ['27,99', '22,39', '16,79'],
+    ['9,90', '8,42', '6,93'],
+    ['19,90', '16,92', '13,93'],
+    ['29,90', '25,42', '20,93'],
   ]);
 });
 
