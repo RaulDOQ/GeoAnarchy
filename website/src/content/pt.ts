@@ -325,33 +325,38 @@ export const pt = {
     benefitsLabel: 'Benefícios',
     benefitsSoon: 'Os benefícios deste plano serão anunciados em breve.',
     // A plan also gives everything the plans below it give, so a list starts by saying so.
+    // {style|words} paints some words (src/pages/loja/index.astro, "Painted words"):
+    // accent is the plan's own colour; geo-plus and geo-ultra are those plans' colours;
+    // nome is a coloured-name gradient; xp is the colour of experience orbs; the skin
+    // packs (silvestre, glacial, draconico, abissal, celestial) have their own colours.
+    // Keep it to a few words per plan: the better the plan, the more colour it gets.
     benefits: {
       'geo-plus': [
         'Sentar, deitar e rastejar onde quiser (/sit, /lay, /crawl)',
-        'Skins de itens: até 5 em uso, pacotes Silvestre e Glacial',
-        '3 mensagens de abate personalizadas',
+        '{accent|Skins de itens}: até 5 em uso, pacotes {silvestre|Silvestre} e {glacial|Glacial}',
+        '3 mensagens de kill personalizadas',
         '3 tags personalizadas',
       ],
       'geo-ultra': [
-        'Tudo do Geo+',
-        'Nome colorido, com degradês e cores RGB (/nome)',
-        'Partículas em volta do personagem (/pp)',
-        'Skins de itens: até 10 em uso, mais os pacotes Dracônico e Abissal',
-        '5 mensagens de abate personalizadas',
+        'Tudo do {geo-plus|Geo+}',
+        '{nome|Nome colorido}, com degradês e cores RGB (/nome)',
+        '{accent|Partículas} em volta do personagem (/pp)',
+        '{accent|Skins de itens}: até 10 em uso, mais os pacotes {draconico|Dracônico} e {abissal|Abissal}',
+        '5 mensagens de kill personalizadas',
         '3 mensagens de entrada personalizadas e coloridas',
         'Efeito de morte',
         '5 tags personalizadas',
       ],
       'geo-ultra-plus': [
-        'Tudo do Geo Ultra',
+        'Tudo do {geo-ultra|Geo Ultra}',
         'Nomes personalizados nos itens',
-        '20% a mais de XP',
-        '20% a mais de XP de habilidades',
-        'Skins de itens: até 18 em uso, mais o pacote Celestial',
-        '10 mensagens de abate personalizadas e coloridas',
+        '{xp|20% a mais de XP}',
+        '{xp|20% a mais de XP} de habilidades',
+        '{accent|Skins de itens}: até 18 em uso, mais o pacote {celestial|Celestial}',
+        '10 mensagens de kill personalizadas e coloridas',
         '5 mensagens de morte personalizadas e coloridas',
-        'Efeitos de abate e efeitos de morte',
-        'Uma vez por mês: 30% a mais de XP para o servidor inteiro, por 30 minutos',
+        'Efeitos após uma kill e efeitos após a morte',
+        'Uma vez por mês: {xp|30% a mais de XP} para o servidor inteiro, por 30 minutos',
         '10 tags personalizadas',
       ],
     } as Record<string, readonly string[]>,

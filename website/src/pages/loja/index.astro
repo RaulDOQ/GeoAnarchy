@@ -21,6 +21,25 @@ const progress = goalProgress(goal);
 const goalOf = g.of.replace('{goal}', money(goal.amount));
 // Under the bar: what is missing, or that the goal is reached (and by how much it was passed).
 const goalStatus = progress.left > 0 ? g.left.replace('{left}', money(progress.left)) : progress.over > 0 ? `${g.reached} · ${g.over.replace('{over}', money(progress.over))}` : g.reached;
+
+// Painted words in a benefit: "{style|words}" becomes words in that style (see
+// pt.store.benefits, and "Painted words" in the styles below).
+interface Piece {
+  style?: string;
+  text: string;
+}
+function painted(text: string): Piece[] {
+  const pieces: Piece[] = [];
+  let last = 0;
+  for (const match of text.matchAll(/\{([a-z-]+)\|([^}]+)\}/g)) {
+    const at = match.index ?? 0;
+    if (at > last) pieces.push({ text: text.slice(last, at) });
+    pieces.push({ style: match[1], text: match[2] });
+    last = at + match[0].length;
+  }
+  if (last < text.length) pieces.push({ text: text.slice(last) });
+  return pieces;
+}
 ---
 
 <Base title={c.meta.title} description={c.meta.description} page="store">
@@ -72,9 +91,19 @@ const goalStatus = progress.left > 0 ? g.left.replace('{left}', money(progress.l
     <ul class="plans">
       {
         store.plans.map((plan, i) => (
-          <li class="plan card" data-in="settle" style={`--d: ${120 + i * 70}ms`}>
+          <li class={`plan card plan-${plan.id}`} data-in="settle" style={`--d: ${120 + i * 70}ms`}>
             <div class="plan-top">
-              <h2>{plan.name}</h2>
+              {/* Geo Ultra+ is Geo Ultra with a gold "+", so the top plan's "+" is drawn apart. */}
+              <h2 class="name">
+                {i > 0 && plan.name.endsWith('+') ? (
+                  <>
+                    <span class="name-text">{plan.name.slice(0, -1)}</span>
+                    <span class="plus">+</span>
+                  </>
+                ) : (
+                  <span class="name-text">{plan.name}</span>
+                )}
+              </h2>
               {/* One more block for every plan up. */}
               <span class="tier" aria-hidden="true">
                 {store.plans.map((_, n) => (
@@ -116,7 +145,13 @@ const goalStatus = progress.left > 0 ? g.left.replace('{left}', money(progress.l
               {c.benefits[plan.id]?.length ? (
                 <ul class="checks">
                   {c.benefits[plan.id].map((benefit) => (
-                    <li>{benefit}</li>
+                    <li>
+                      <span>
+                        {painted(benefit).map((piece) =>
+                          piece.style ? <span class={`paint paint-${piece.style}`}>{piece.text}</span> : piece.text,
+                        )}
+                      </span>
+                    </li>
                   ))}
                 </ul>
               ) : (
@@ -237,7 +272,7 @@ const goalStatus = progress.left > 0 ? g.left.replace('{left}', money(progress.l
   .switch input:checked + label {
     color: var(--color-text);
     background: var(--color-surface);
-    box-shadow: var(--edge), 0 3px 8px -4px #0a1b2e59;
+    box-shadow: var(--edge), 0 3px 8px -4px #00000080;
   }
   .switch input:focus-visible + label {
     outline: 2px solid var(--color-focus);
@@ -287,15 +322,145 @@ const goalStatus = progress.left > 0 ? g.left.replace('{left}', money(progress.l
     width: .65rem;
     height: .65rem;
   }
+  /* One block per plan, in that plan's colour. */
   .tier i.on {
     box-shadow: none;
-    background: var(--color-blue);
+    background: var(--color-green);
   }
   .tier i.on:nth-child(2) {
-    background: #0e8fb4;
+    background: var(--color-blue);
   }
   .tier i.on:nth-child(3) {
-    background: var(--color-green);
+    background: var(--plus-violet);
+  }
+
+  /* Each plan looks a step richer than the one below it. Geo+ is the plain one: a green
+     name and nothing else. Geo Ultra has a teal-to-blue name with a soft glow and a card
+     edged in blue. Geo Ultra+ is Geo Ultra made better: the same colours carried on to
+     violet, moving slowly, a gold "+" (Geo Ultra+ is gold in the game too) and a thin
+     border in those colours. */
+  .plans {
+    --plus-teal: #38bfe0;
+    --plus-violet: #a08bff;
+    --plus-gold: #f2b83c;
+    --paint-ultra: linear-gradient(100deg, var(--plus-teal), var(--color-blue-bright));
+    --paint-ultra-plus: linear-gradient(100deg, var(--plus-teal), var(--color-blue-bright) 35%, var(--plus-violet) 65%, var(--color-blue-bright) 85%, var(--plus-teal));
+  }
+  .plan-geo-plus {
+    --accent: var(--color-green-strong);
+    --accent-paint: linear-gradient(var(--color-green-strong), var(--color-green-strong));
+    --check: var(--color-green);
+  }
+  .plan-geo-ultra {
+    --accent-paint: var(--paint-ultra);
+    --check: var(--color-blue);
+    --glow: #4a8cf78c;
+    box-shadow: inset 0 0 0 1px #4a8cf742, var(--shadow-card), 0 22px 44px -30px #4a8cf766;
+  }
+  .plan-geo-ultra-plus {
+    --accent-paint: linear-gradient(100deg, var(--color-blue-bright), var(--plus-violet));
+    --check: var(--plus-violet);
+    --glow: #a08bff8c;
+    background:
+      radial-gradient(120% 45% at 50% 0%, #a08bff17, #a08bff00 70%) padding-box,
+      var(--grad-surface) padding-box,
+      linear-gradient(140deg, var(--plus-teal), var(--color-blue) 40%, var(--plus-violet) 75%, var(--plus-gold)) border-box;
+    border: 1.5px solid #0000;
+    box-shadow: var(--shadow-card), 0 26px 52px -30px #a08bff66;
+  }
+  .name {
+    align-items: baseline;
+    display: inline-flex;
+  }
+  .plan-geo-plus .name-text {
+    color: var(--color-green-strong);
+  }
+  .plan-geo-ultra .name-text,
+  .plan-geo-ultra-plus .name-text {
+    color: #0000;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-image: var(--paint-ultra);
+    filter: drop-shadow(0 0 .45rem var(--glow));
+  }
+  .plan-geo-ultra-plus .name-text {
+    background-image: var(--paint-ultra-plus);
+    background-size: 250% 100%;
+    animation: shimmer 9s ease-in-out infinite alternate;
+  }
+  .plus {
+    color: var(--plus-gold);
+    filter: drop-shadow(0 0 .4rem #f5b400a6);
+    margin-left: .04em;
+  }
+  @keyframes shimmer {
+    to {
+      background-position: 100% 0;
+    }
+  }
+  .plan-geo-ultra .benefits {
+    background: #4a8cf70d;
+  }
+  .plan-geo-ultra-plus .benefits {
+    background: linear-gradient(160deg, #4a8cf70d, #a08bff12);
+  }
+  .plan .checks li:before {
+    background: var(--check, var(--color-green));
+  }
+
+  /* Painted words (pt.store.benefits): a few words per plan, never whole lines. */
+  .paint {
+    font-weight: 600;
+  }
+  .paint-accent,
+  .paint-geo-ultra,
+  .paint-nome {
+    color: #0000;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .paint-accent {
+    background-image: var(--accent-paint);
+  }
+  .paint-geo-plus {
+    color: var(--color-green-strong);
+  }
+  .paint-geo-ultra {
+    background-image: var(--paint-ultra);
+  }
+  /* What a coloured name looks like: the colour tool's green to blue, ending in violet. */
+  .paint-nome {
+    background-image: linear-gradient(90deg, var(--color-green-strong), var(--plus-teal) 45%, var(--plus-violet));
+  }
+  /* The green-yellow of experience orbs. */
+  .paint-xp {
+    color: #a6e34f;
+    text-shadow: 0 0 .6rem #a6e34f4d;
+  }
+  /* The skin packs, each in its own colour (the same as in the game's menu). */
+  .paint-silvestre {
+    color: #69d37a;
+  }
+  .paint-glacial {
+    color: #5fd6f0;
+  }
+  .paint-draconico {
+    color: #ff8150;
+  }
+  .paint-abissal {
+    color: #c897ff;
+  }
+  .paint-celestial {
+    color: #f5c542;
+    text-shadow: 0 0 .55rem #f5c54259;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plan-geo-ultra-plus .name-text {
+      animation: none;
+    }
   }
 
   /* Every card holds the price for each way of paying; only the chosen one shows. */
