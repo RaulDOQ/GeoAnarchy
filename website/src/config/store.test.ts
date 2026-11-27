@@ -1,11 +1,18 @@
 // Run with `npm test`: the store's prices.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { goalProgress, periodPrice, reais, store, tags } from './store.ts';
+import { goalProgress, periodPrice, reais, skinItems, skinOptions, skinPacks, store, tags } from './store.ts';
 
-test('the store has a VIP and a Tags category, each a page under /loja/', () => {
-  assert.deepEqual(store.categories.map((category) => category.id), ['vip', 'tags']);
+test('the store has VIP, Skins and Tags categories, each a page under /loja/', () => {
+  assert.deepEqual(store.categories.map((category) => category.id), ['vip', 'skins', 'tags']);
   assert.ok(store.categories.every((category) => category.path.startsWith('/loja/') && category.path.endsWith('/')));
+});
+
+test('five skin packs, nine items each, sold four ways', () => {
+  assert.deepEqual(skinPacks.map((pack) => pack.id), ['silvestre', 'glacial', 'draconico', 'abissal', 'celestial']);
+  assert.deepEqual(skinPacks.map((pack) => pack.plan), ['geo-plus', 'geo-plus', 'geo-ultra', 'geo-ultra', 'geo-ultra-plus']);
+  assert.equal(skinItems.tools.length + skinItems.armour.length, 9);
+  assert.deepEqual(skinOptions.map((option) => [option.id, option.items]), [['single', 1], ['tools', 5], ['armour', 4], ['pack', 9]]);
 });
 
 test('the tags are the 30 of the game: 9 with Geo+, 6 more with Geo Ultra, 15 more with Geo Ultra+', () => {

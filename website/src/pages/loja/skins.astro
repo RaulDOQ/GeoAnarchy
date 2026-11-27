@@ -1,0 +1,326 @@
+---
+// "Loja", the Skins category: the five skin packs of GeoUltra, the plan that includes
+// each, its nine items, and the four ways to buy skins on their own (one item, sword and
+// tools, armour, the whole pack), each with its own price. Until a price is set it says
+// "Em breve". The packs and prices: src/config/store.ts.
+//
+// Pictures: the item icons are in public/loja/skins/<pack>/ (copied from GeoUltra). In-game
+// screenshots go in src/assets/skins/<pack>/ (png, jpg or webp) and appear here by
+// themselves, in file-name order; until a pack has one it shows a placeholder.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import StoreShell from '../../components/store/StoreShell.astro';
+import Closing from '../../components/home/Closing.astro';
+import { reais, skinItems, skinOptions, skinPacks, store } from '../../config/store';
+import { pt } from '../../content/pt';
+
+const c = pt.store;
+const s = c.skins;
+const planName = (id: string) => store.plans.find((plan) => plan.id === id)?.name ?? id;
+
+const shots = import.meta.glob<{ default: ImageMetadata }>('../../assets/skins/*/*.{png,jpg,jpeg,webp}', { eager: true });
+function screenshotsOf(pack: string): ImageMetadata[] {
+  return Object.entries(shots)
+    .filter(([path]) => path.includes(`/skins/${pack}/`))
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, file]) => file.default);
+}
+---
+
+<Base title={s.meta.title} description={s.meta.description} page="store">
+  <PageHead chapter={c.chapter} title={c.title} lead={s.lead} />
+
+  <StoreShell active="skins">
+    <div class="intro card" data-in="settle" style="--d: 60ms">
+      <h2>{s.intro.title}</h2>
+      {s.intro.body.map((line) => <p>{line}</p>)}
+      <ul class="ways">
+        {skinOptions.map((option) => (
+          <li>
+            <p class="way-name">{s.options[option.id].name}</p>
+            <p class="way-about">{s.options[option.id].about}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    {
+      skinPacks.map((pack, i) => {
+        const screenshots = screenshotsOf(pack.id);
+        return (
+          <section class="pack card" style={`--pack: ${pack.color}; --d: ${100 + i * 60}ms`} data-in="settle">
+            <div class="pack-head">
+              <h2>{pack.name}</h2>
+              <span class="included">{s.included.replace('{plan}', planName(pack.plan))}</span>
+            </div>
+
+            <div class="pack-body">
+              <div class={`shots${screenshots.length > 1 ? ' many' : ''}`}>
+                {screenshots.length > 0 ? (
+                  screenshots.map((shot) => (
+                    <Image src={shot} alt={s.screenshot.replace('{pack}', pack.name)} widths={[480, 960]} sizes="(width <= 640px) 100vw, 480px" />
+                  ))
+                ) : (
+                  <div class="no-shots">
+                    <img src={`/loja/skins/${pack.id}/sword.png`} alt="" width="16" height="16" />
+                    <span>{s.screenshotsSoon}</span>
+                  </div>
+                )}
+              </div>
+
+              <div class="items">
+                {(['tools', 'armour'] as const).map((group) => (
+                  <div class="item-group">
+                    <p class="label">{group === 'tools' ? s.toolsLabel : s.armourLabel}</p>
+                    <ul class="icons">
+                      {skinItems[group].map((item) => (
+                        <li>
+                          <img src={`/loja/skins/${pack.id}/${item}.png`} alt={`${s.items[item]} ${pack.name}`} width="16" height="16" loading="lazy" />
+                          <span>{s.items[item]}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="prices">
+              <p class="label">{s.pricesLabel}</p>
+              <ul>
+                {skinOptions.map((option) => {
+                  const price = pack.prices?.[option.id];
+                  return (
+                    <li>
+                      <span class="price-name">
+                        {s.options[option.id].name}
+                        <small>{option.items === 1 ? s.countOne : s.count.replace('{count}', String(option.items))}</small>
+                      </span>
+                      <span class={price ? 'price' : 'soon'}>{price ? `R$ ${reais(price)}` : pt.common.soon}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </section>
+        );
+      })
+    }
+  </StoreShell>
+
+  <Closing />
+</Base>
+
+<style>
+  .intro {
+    gap: .55rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem 1.6rem;
+    display: grid;
+  }
+  .intro h2 {
+    letter-spacing: -.025em;
+    font-size: 1.25rem;
+  }
+  .intro p {
+    color: var(--color-text-muted);
+    font-size: .9375rem;
+    line-height: 1.6;
+  }
+  /* The four ways to buy, side by side. */
+  .ways {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .6rem;
+    margin-top: .5rem;
+    list-style: none;
+    display: grid;
+  }
+  .ways li {
+    box-shadow: var(--edge);
+    background: var(--color-bg-tint);
+    border-radius: .8rem;
+    gap: .25rem;
+    padding: .8rem .9rem;
+    display: grid;
+  }
+  .intro .way-name {
+    color: var(--color-text);
+    font-size: .9375rem;
+    font-weight: 650;
+  }
+  .intro .way-about {
+    font-size: .8125rem;
+    line-height: 1.45;
+  }
+
+  .pack {
+    gap: 1.1rem;
+    padding: 1.4rem 1.5rem 1.5rem;
+    display: grid;
+  }
+  .pack + .pack {
+    margin-top: 1rem;
+  }
+  .pack-head {
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    display: flex;
+  }
+  /* Each pack's name in its own colour, as in the game's menu. */
+  .pack-head h2 {
+    color: var(--pack);
+    letter-spacing: -.025em;
+    font-size: 1.375rem;
+  }
+  .included {
+    color: var(--color-text-muted);
+    background: var(--color-surface-2);
+    box-shadow: var(--edge);
+    border-radius: 999px;
+    padding: .35rem .7rem;
+    font-size: .8125rem;
+    font-weight: 600;
+  }
+
+  .pack-body {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 1.25rem;
+    display: grid;
+  }
+  .shots {
+    gap: .6rem;
+    display: grid;
+  }
+  .shots.many {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .shots :global(img) {
+    border-radius: .75rem;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  /* Until the in-game pictures arrive: the pack's sword, large, on a wash of its colour. */
+  .no-shots {
+    aspect-ratio: 16 / 9;
+    color: var(--color-text-muted);
+    background: radial-gradient(120% 90% at 30% 20%, color-mix(in srgb, var(--pack) 22%, transparent), transparent 70%), var(--color-bg-tint);
+    box-shadow: var(--edge);
+    border-radius: .75rem;
+    place-content: center;
+    justify-items: center;
+    gap: .7rem;
+    font-size: .875rem;
+    font-weight: 600;
+    display: grid;
+  }
+  .no-shots img {
+    image-rendering: pixelated;
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .items {
+    gap: .9rem;
+    display: grid;
+  }
+  .item-group {
+    gap: .45rem;
+    display: grid;
+  }
+  .icons {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: .4rem;
+    list-style: none;
+    display: grid;
+  }
+  .icons li {
+    box-shadow: var(--edge);
+    background: var(--color-bg-tint);
+    border-radius: .6rem;
+    justify-items: center;
+    gap: .3rem;
+    padding: .55rem .2rem .45rem;
+    display: grid;
+  }
+  /* The game's 16 x 16 pictures, scaled up without blurring. */
+  .icons img {
+    image-rendering: pixelated;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  .icons span {
+    color: var(--color-text-muted);
+    text-align: center;
+    font-size: .6875rem;
+    line-height: 1.2;
+  }
+
+  .prices {
+    border-top: 1px solid var(--color-hairline);
+    gap: .55rem;
+    padding-top: 1rem;
+    display: grid;
+  }
+  .prices ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .5rem;
+    list-style: none;
+    display: grid;
+  }
+  .prices li {
+    box-shadow: var(--edge);
+    background: var(--color-bg-tint);
+    border-radius: .7rem;
+    justify-items: start;
+    gap: .5rem;
+    padding: .75rem .8rem;
+    display: grid;
+  }
+  .price-name {
+    font-size: .875rem;
+    font-weight: 600;
+    line-height: 1.3;
+    display: grid;
+  }
+  .price-name small {
+    color: var(--color-text-faint);
+    font-size: .75rem;
+    font-weight: 500;
+  }
+  .price {
+    font-variant-numeric: tabular-nums;
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+  .soon {
+    white-space: nowrap;
+    box-shadow: inset 0 0 0 1px var(--color-green-ring);
+    color: var(--color-green-strong);
+    background: var(--color-green-soft);
+    border-radius: 999px;
+    padding: .3rem .6rem;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  @container shop (width < 46rem) {
+    .pack-body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .ways,
+    .prices ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @container shop (width < 26rem) {
+    .icons {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -373,8 +373,52 @@ export const pt = {
     categoriesLabel: 'Categorias da loja',
     categories: {
       vip: 'VIP',
+      skins: 'Skins',
       tags: 'Tags',
     } as Record<string, string>,
+    // The Skins page (/loja/skins/). The packs and their prices are in src/config/store.ts.
+    // {plan} is a plan's name, {count} a number of items.
+    skins: {
+      meta: {
+        title: 'Skins | Loja | GeoAnarchy',
+        description: 'As skins de itens do GeoAnarchy: os pacotes Silvestre, Glacial, Dracônico, Abissal e Celestial, que vêm com os planos VIP e, em breve, à venda separados.',
+      },
+      lead: 'Skins mudam a aparência das suas espadas, ferramentas e armaduras de diamante e netherite. Só o visual: o item continua igual em tudo o resto.',
+      intro: {
+        title: 'Cinco pacotes, nove itens cada',
+        body: [
+          'Hoje as skins vêm com os planos: cada plano libera os seus pacotes e os dos planos abaixo dele.',
+          'Em breve, as skins também poderão ser compradas separadas, de quatro jeitos:',
+        ],
+      },
+      // The four ways to buy, by the ids in src/config/store.ts (skinOptions).
+      options: {
+        single: { name: 'Skin avulsa', about: 'A skin de um item, o que você escolher.' },
+        tools: { name: 'Espada e ferramentas', about: 'Espada, picareta, machado, pá e enxada.' },
+        armour: { name: 'Armadura', about: 'Capacete, peitoral, calça e botas.' },
+        pack: { name: 'Pacote inteiro', about: 'Os nove itens do pacote.' },
+      } as Record<string, { name: string; about: string }>,
+      count: '{count} itens',
+      countOne: '1 item',
+      // What each item is called, by the names GeoUltra uses.
+      items: {
+        sword: 'Espada',
+        pickaxe: 'Picareta',
+        axe: 'Machado',
+        shovel: 'Pá',
+        hoe: 'Enxada',
+        helmet: 'Capacete',
+        chestplate: 'Peitoral',
+        leggings: 'Calça',
+        boots: 'Botas',
+      } as Record<string, string>,
+      toolsLabel: 'Espada e ferramentas',
+      armourLabel: 'Armadura',
+      included: 'Vem com o {plan}',
+      pricesLabel: 'Comprar separado',
+      screenshotsSoon: 'Imagens do jogo em breve',
+      screenshot: 'O pacote {pack} no jogo',
+    },
     // The Tags page (/loja/tags/). The tags themselves are in src/config/store.ts.
     // {plan} is a plan's name, {count} a number of tags.
     tags: {

@@ -10,6 +10,7 @@ export const store = {
    */
   categories: [
     { id: 'vip', path: '/loja/' },
+    { id: 'skins', path: '/loja/skins/' },
     { id: 'tags', path: '/loja/tags/' },
   ],
 
@@ -56,6 +57,48 @@ export interface StoreTag {
   /** The price to buy the tag on its own, for good, in centavos. Missing: "Em breve". */
   price?: number;
 }
+
+/** The kinds of item a skin pack dresses, as GeoUltra names them, in the order they are shown. */
+export const skinItems = {
+  tools: ['sword', 'pickaxe', 'axe', 'shovel', 'hoe'],
+  armour: ['helmet', 'chestplate', 'leggings', 'boots'],
+} as const;
+export type SkinItem = (typeof skinItems)['tools' | 'armour'][number];
+
+/**
+ * The four ways to buy a pack's skins, each with its own price: one item's skin of
+ * your choice, the sword and the tools, the armour, or the whole pack.
+ */
+export const skinOptions = [
+  { id: 'single', items: 1 },
+  { id: 'tools', items: skinItems.tools.length },
+  { id: 'armour', items: skinItems.armour.length },
+  { id: 'pack', items: skinItems.tools.length + skinItems.armour.length },
+] as const;
+export type SkinOptionId = (typeof skinOptions)[number]['id'];
+
+/**
+ * One skin pack, as GeoUltra has it (config.yml, skins.packs): its name, the plan that
+ * includes it, and the colour it is shown in. The icons are in public/loja/skins/<id>/,
+ * one per item; in-game screenshots go in src/assets/skins/<id>/ and show up by themselves.
+ */
+export interface SkinPack {
+  id: string;
+  name: string;
+  plan: PlanId;
+  color: string;
+  /** What each way of buying costs, in centavos. A missing price says "Em breve". */
+  prices?: Partial<Record<SkinOptionId, number>>;
+}
+
+/** Every pack, cheapest plan first. */
+export const skinPacks: readonly SkinPack[] = [
+  { id: 'silvestre', name: 'Silvestre', plan: 'geo-plus', color: '#69d37a' },
+  { id: 'glacial', name: 'Glacial', plan: 'geo-plus', color: '#5fd6f0' },
+  { id: 'draconico', name: 'Dracônico', plan: 'geo-ultra', color: '#ff8150' },
+  { id: 'abissal', name: 'Abissal', plan: 'geo-ultra', color: '#c897ff' },
+  { id: 'celestial', name: 'Celestial', plan: 'geo-ultra-plus', color: '#f5c542' },
+];
 
 /** Every tag, cheapest plan first. Geo+ one colour, Geo Ultra bold, Geo Ultra+ bold gradients. */
 export const tags: readonly StoreTag[] = [
