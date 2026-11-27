@@ -1,5 +1,11 @@
 package me.rauldoq.geoAnarchy.chat;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -21,6 +27,43 @@ import java.util.regex.Pattern;
  * </ul>
  */
 public final class LegacyColors {
+
+    private static final LegacyComponentSerializer AMPERSAND = LegacyComponentSerializer.builder()
+            .character('&').hexColors().useUnusualXRepeatedCharacterHexFormat().build();
+
+    /**
+     * A display name in "&" codes, hex colours and gradients included. Used instead of the server's own
+     * legacy text of the name, which could round hex colours to the 16 Minecraft ones.
+     */
+    public static String ofComponent(Component component) {
+        return component == null ? "" : AMPERSAND.serialize(component);
+    }
+
+    /**
+     * The Minecraft colour closest to the colour of the first coloured letter, as "&a", or "" when the name has
+     * no colour. Above a player's head the game can only paint the name in one of the 16 colours.
+     */
+    public static String nearestCode(Component component) {
+        TextColor color = component == null ? null : firstColor(component, null);
+        if (color == null) {
+            return "";
+        }
+        return AMPERSAND.serialize(Component.text("x", NamedTextColor.nearestTo(color))).substring(0, 2);
+    }
+
+    private static TextColor firstColor(Component component, TextColor inherited) {
+        TextColor own = component.color() != null ? component.color() : inherited;
+        if (own != null && component instanceof TextComponent text && !text.content().isEmpty()) {
+            return own;
+        }
+        for (Component child : component.children()) {
+            TextColor found = firstColor(child, own);
+            if (found != null) {
+                return found;
+            }
+        }
+        return null;
+    }
 
     private static final Map<String, String> CODES = Map.ofEntries(
             Map.entry("black", "0"), Map.entry("dark_blue", "1"), Map.entry("dark_green", "2"),

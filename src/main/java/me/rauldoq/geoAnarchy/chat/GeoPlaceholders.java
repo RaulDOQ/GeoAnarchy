@@ -15,7 +15,9 @@ import java.util.Locale;
  * <ul>
  *   <li>%geoanarchy_country%: "[Portugal] " in the country's colors, or nothing without a country</li>
  *   <li>%geoanarchy_country_name%: the country's name in its colors, or nothing</li>
- *   <li>%geoanarchy_name%: the player's display name (with an Essentials nickname, if any)</li>
+ *   <li>%geoanarchy_name%: the player's display name, with the colours of GeoUltra's /nome</li>
+ *   <li>%geoanarchy_name_color%: the Minecraft colour closest to that name's first colour ("&a"), or nothing.
+ *       For the name above the head, which the game paints in one of the 16 colours only.</li>
  *   <li>%geoanarchy_player%: the player's account name</li>
  *   <li>%geoanarchy_prefix%: the rank prefix from LuckPerms (through Vault), or nothing</li>
  * </ul>
@@ -64,8 +66,9 @@ public final class GeoPlaceholders extends PlaceholderExpansion {
         return switch (params.toLowerCase(Locale.ROOT)) {
             case "country" -> tags.tag(player.getUniqueId());
             case "country_name" -> tags.name(player.getUniqueId());
-            case "name" -> player instanceof Player online ? online.getDisplayName()
+            case "name" -> player instanceof Player online ? LegacyColors.ofComponent(online.displayName())
                     : player.getName() == null ? "" : player.getName();
+            case "name_color" -> player instanceof Player online ? LegacyColors.nearestCode(online.displayName()) : "";
             case "player" -> player.getName() == null ? "" : player.getName();
             case "prefix" -> prefix(player);
             default -> null;

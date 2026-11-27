@@ -9,6 +9,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ChatTagsTest {
 
     @Test
+    void aColouredNameKeepsItsHexColoursAndTheHeadGetsTheClosestColour() {
+        net.kyori.adventure.text.Component name = net.kyori.adventure.text.minimessage.MiniMessage.miniMessage()
+                .deserialize("<#12ab34><b>Ra</b><red>ul");
+        String legacy = LegacyColors.ofComponent(name);
+        assertTrue(legacy.startsWith("&x&1&2&a&b&3&4&lRa"), legacy);
+        assertTrue(legacy.endsWith("&cul"), legacy);
+        assertEquals("&2", LegacyColors.nearestCode(name));
+        assertEquals("&6", LegacyColors.nearestCode(net.kyori.adventure.text.Component.text("Raul",
+                net.kyori.adventure.text.format.NamedTextColor.GOLD)));
+        assertEquals("", LegacyColors.nearestCode(net.kyori.adventure.text.Component.text("Raul")));
+        assertEquals("Raul", LegacyColors.ofComponent(net.kyori.adventure.text.Component.text("Raul")));
+    }
+
+    @Test
     void aCountryShowsInBracketsAndNoCountryShowsNothing() {
         assertEquals("&f[&cPortugal&f] ", ChatTags.tagOf("&cPortugal"));
         assertEquals("", ChatTags.tagOf(null));
