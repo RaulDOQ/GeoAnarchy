@@ -8,7 +8,7 @@ order: 1
 
 Existem três planos VIP, do mais simples ao mais completo: **Geo+**, **Geo Ultra** e **Geo Ultra+**. Quem tem um plano tem tudo o que os de baixo dão. Os preços estão na [Loja](/loja/).
 
-Os planos não dão vantagem em combate nem na economia: o que eles liberam é visual e de conforto.
+Quase tudo o que os planos liberam é visual e de conforto. A lista completa de cada plano, com o que ainda vai chegar, está na [Loja](/loja/).
 
 ## O GeoMenu
 

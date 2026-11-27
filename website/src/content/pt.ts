@@ -324,10 +324,36 @@ export const pt = {
     // per benefit. While a list is empty the card says that the benefits come later.
     benefitsLabel: 'Benefícios',
     benefitsSoon: 'Os benefícios deste plano serão anunciados em breve.',
+    // A plan also gives everything the plans below it give, so a list starts by saying so.
     benefits: {
-      'geo-plus': [],
-      'geo-ultra': [],
-      'geo-ultra-plus': [],
+      'geo-plus': [
+        'Sentar, deitar e rastejar onde quiser (/sit, /lay, /crawl)',
+        'Skins de itens: até 5 em uso, pacotes Silvestre e Glacial',
+        '3 mensagens de abate personalizadas',
+        '3 tags personalizadas',
+      ],
+      'geo-ultra': [
+        'Tudo do Geo+',
+        'Nome colorido, com degradês e cores RGB (/nome)',
+        'Partículas em volta do personagem (/pp)',
+        'Skins de itens: até 10 em uso, mais os pacotes Dracônico e Abissal',
+        '5 mensagens de abate personalizadas',
+        '3 mensagens de entrada personalizadas e coloridas',
+        'Efeito de morte',
+        '5 tags personalizadas',
+      ],
+      'geo-ultra-plus': [
+        'Tudo do Geo Ultra',
+        'Nomes personalizados nos itens',
+        '20% a mais de XP',
+        '20% a mais de XP de habilidades',
+        'Skins de itens: até 18 em uso, mais o pacote Celestial',
+        '10 mensagens de abate personalizadas e coloridas',
+        '5 mensagens de morte personalizadas e coloridas',
+        'Efeitos de abate e efeitos de morte',
+        'Uma vez por mês: 30% a mais de XP para o servidor inteiro, por 30 minutos',
+        '10 tags personalizadas',
+      ],
     } as Record<string, readonly string[]>,
     status: {
       title: 'Os planos ainda não estão à venda',
