@@ -74,7 +74,7 @@ players' wiki has five sections, in this order
 | `economia` | Economia | The GeoEconomy plugin: money, markets, prices, currencies, exchange, Nether and End items |
 | `paises` | Países | Countries (the Lands plugin) for players: what a country is, joining one, what members, allies and foreigners can do |
 | `encantamentos` | Encantamentos | The GeoEnchantments plugin: tomes, applying, essences, merging, all 40 enchantments |
-| `vip` | VIP e skins | The GeoUltra plugin: the three plans, /geomenu, skins |
+| `vip` | VIP e skins | The GeoUltra plugin: the three plans, /geomenu, skins, tags and kill/join messages (lists mirror GeoUltra's presets.yml) |
 
 The founders' wiki has two:
 

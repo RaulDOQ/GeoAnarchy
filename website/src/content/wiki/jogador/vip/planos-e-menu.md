@@ -1,6 +1,6 @@
 ---
 title: Planos e o GeoMenu
-summary: Os três planos VIP, o GeoMenu (/geomenu), o nome colorido e o que cada plano libera hoje.
+summary: Os três planos VIP, o GeoMenu (/geomenu), o nome colorido, as tags e mensagens e o que cada plano libera hoje.
 order: 1
 ---
 
@@ -18,6 +18,9 @@ No menu:
 
 - **Skins**: mude a aparência das suas espadas, ferramentas e armaduras (veja [Skins](/wiki/vip/skins/)).
 - **Nome colorido**: a sua cabeça, com o seu nome do jeito que ele aparece hoje. Clique para ver como pintar o nome.
+- **Tags**: troque a tag do seu plano por outra, como [EGO] ou [SIGMA] (veja [Tags e mensagens](/wiki/vip/tags-e-mensagens/)).
+- **Mensagens de kill**: o que todos leem no chat quando você mata alguém.
+- **Mensagens de entrada**: o que todos leem quando você entra no servidor.
 - **Seu plano**: qual é, e quantos dias faltam. Sem plano, o botão mostra onde ver os planos.
 
 Um botão que é de um plano que você não tem continua aparecendo, com a indicação do plano que ele precisa. Clicar nele avisa: *“Essa funcionalidade é apenas para Geo+.”*
@@ -53,6 +56,9 @@ Letras embaralhadas (&k) não são aceitas: ninguém conseguiria ler o seu nome.
 | Nome colorido | Sim | Sim | Sim |
 | Skins em uso ao mesmo tempo | 5 | 10 | 18 |
 | Pacotes de skins | Silvestre, Glacial | + Dracônico, Abissal | + Celestial |
+| Tags para escolher | 9 | 15 | 30 |
+| Mensagens de kill para escolher | 6 | 10 | 20 (10 coloridas) |
+| Mensagens de entrada para escolher | Não | 6 | 6 |
 
 Novos benefícios vão aparecer no mesmo menu.
 
@@ -61,3 +67,5 @@ Novos benefícios vão aparecer no mesmo menu.
 As skins dos seus itens são removidas quando você entra no servidor depois que o plano acabou. Os itens continuam seus, só com a aparência normal.
 
 O nome colorido volta ao normal, mas fica guardado: se você voltar a ter um plano, as cores voltam sozinhas.
+
+A tag, a mensagem de kill e a mensagem de entrada que você escolheu param de aparecer e também ficam guardadas. Se você passar para um plano mais simples, o que for só do plano mais caro para de aparecer até você escolher outra coisa.

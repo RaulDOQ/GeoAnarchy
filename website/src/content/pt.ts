@@ -334,18 +334,18 @@ export const pt = {
       'geo-plus': [
         'Sentar, deitar e rastejar onde quiser (/sit, /lay, /crawl)',
         '{accent|Skins de itens}: até 5 em uso, pacotes {silvestre|Silvestre} e {glacial|Glacial}',
-        '3 mensagens de kill personalizadas',
-        '3 tags personalizadas',
+        'Mensagens de kill: escolha entre 6',
+        'Tags no lugar da tag do plano: escolha entre 9',
       ],
       'geo-ultra': [
         'Tudo do {geo-plus|Geo+}',
         '{nome|Nome colorido}, com degradês e cores RGB (/nome)',
         '{accent|Partículas} em volta do personagem (/pp)',
         '{accent|Skins de itens}: até 10 em uso, mais os pacotes {draconico|Dracônico} e {abissal|Abissal}',
-        '5 mensagens de kill personalizadas',
-        '3 mensagens de entrada personalizadas e coloridas',
+        'Mensagens de kill: escolha entre 10',
+        'Mensagens de entrada coloridas: escolha entre 6',
         'Efeito de morte',
-        '5 tags personalizadas',
+        'Tags: escolha entre 15',
       ],
       'geo-ultra-plus': [
         'Tudo do {geo-ultra|Geo Ultra}',
@@ -353,11 +353,11 @@ export const pt = {
         '{xp|20% a mais de XP}',
         '{xp|20% a mais de XP} de habilidades',
         '{accent|Skins de itens}: até 18 em uso, mais o pacote {celestial|Celestial}',
-        '10 mensagens de kill personalizadas e coloridas',
-        '5 mensagens de morte personalizadas e coloridas',
+        'Mensagens de kill coloridas: escolha entre 20',
+        'Mensagens de morte coloridas: escolha entre 5',
         'Efeitos após uma kill e efeitos após a morte',
         'Uma vez por mês: {xp|30% a mais de XP} para o servidor inteiro, por 30 minutos',
-        '10 tags personalizadas',
+        'Tags em degradê: escolha entre 30',
       ],
     } as Record<string, readonly string[]>,
     status: {
@@ -428,7 +428,7 @@ export const pt = {
     vip: {
       id: 'vip',
       title: 'VIP e skins',
-      intro: 'Os planos Geo+, Geo Ultra e Geo Ultra+, o GeoMenu (/geomenu), o nome colorido e as skins de itens.',
+      intro: 'Os planos Geo+, Geo Ultra e Geo Ultra+, o GeoMenu (/geomenu), o nome colorido, as skins de itens, as tags e as mensagens de kill e de entrada.',
     },
     // The founders' wiki.
     // The tools tab (src/pages/wiki/ferramentas). Each tool is a page of its own.
