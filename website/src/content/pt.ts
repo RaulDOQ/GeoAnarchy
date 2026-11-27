@@ -294,7 +294,7 @@ export const pt = {
   store: {
     meta: {
       title: 'Loja | GeoAnarchy',
-      description: 'Ajude o GeoAnarchy a continuar e crescer: a meta mensal do servidor e os planos Geo+, Geo Ultra e Geo Ultra+.',
+      description: 'Ajude o GeoAnarchy a continuar e crescer: a meta mensal do servidor, os planos Geo+, Geo Ultra e Geo Ultra+ e as tags.',
     },
     chapter: 'Loja',
     title: ['Ajude o servidor', 'a continuar e crescer'],
@@ -335,7 +335,7 @@ export const pt = {
         'Sentar, deitar e rastejar onde quiser (/sit, /lay, /crawl)',
         '{accent|Skins de itens}: até 5 em uso, pacotes {silvestre|Silvestre} e {glacial|Glacial}',
         'Mensagens de kill: escolha entre 6',
-        'Tags no lugar da tag do plano: escolha entre 9',
+        'Tags no lugar da tag do plano: escolha entre 9, na cor que quiser',
       ],
       'geo-ultra': [
         'Tudo do {geo-plus|Geo+}',
@@ -345,7 +345,7 @@ export const pt = {
         'Mensagens de kill: escolha entre 10',
         'Mensagens de entrada coloridas: escolha entre 6',
         'Efeito de morte',
-        'Tags: escolha entre 15',
+        'Tags: escolha entre 15, com cor e negrito',
       ],
       'geo-ultra-plus': [
         'Tudo do {geo-ultra|Geo Ultra}',
@@ -357,17 +357,44 @@ export const pt = {
         'Mensagens de morte coloridas: escolha entre 5',
         'Efeitos após uma kill e efeitos após a morte',
         'Uma vez por mês: {xp|30% a mais de XP} para o servidor inteiro, por 30 minutos',
-        'Tags em degradê: escolha entre 30',
+        'Tags: escolha entre 30, com {accent|degradês} e arco-íris',
       ],
     } as Record<string, readonly string[]>,
     status: {
-      title: 'Os planos ainda não estão à venda',
-      body: 'Avisaremos no Discord quando as assinaturas abrirem.',
+      title: 'A loja ainda não está aberta',
+      body: 'Avisaremos no Discord quando os planos e as tags estiverem à venda.',
     },
     cta: 'Entrar no Discord',
     note: {
       title: 'E dentro do jogo?',
       body: 'No GeoAnarchy, toda a economia é controlada por jogadores, sem loja do servidor.',
+    },
+    // The category tabs over every store page, by the ids in src/config/store.ts.
+    categoriesLabel: 'Categorias da loja',
+    categories: {
+      vip: 'VIP',
+      tags: 'Tags',
+    } as Record<string, string>,
+    // The Tags page (/loja/tags/). The tags themselves are in src/config/store.ts.
+    // {plan} is a plan's name, {count} a number of tags.
+    tags: {
+      meta: {
+        title: 'Tags | Loja | GeoAnarchy',
+        description: 'As tags do GeoAnarchy, como CRIA, AURA e SIGMA: as que vêm com cada plano VIP e, em breve, para comprar separadas e ter para sempre.',
+      },
+      lead: 'Cada plano traz as suas tags, que aparecem no lugar da tag do plano: no chat, no TAB e acima da cabeça.',
+      intro: {
+        title: 'Tags para sempre',
+        body: [
+          'Hoje as tags vêm com os planos: cada plano libera as suas e as dos planos abaixo dele.',
+          'Em breve, cada tag também poderá ser comprada separada. Uma tag comprada fica sua para sempre, mesmo sem plano, e dá para pintá-la com as cores que você quiser usando /tagcor.',
+        ],
+      },
+      group: 'Com o {plan}',
+      groupMore: 'Com o {plan}, além das de cima',
+      count: '{count} tags',
+      included: 'Vem com o {plan}',
+      price: 'Comprar separada',
     },
   },
 

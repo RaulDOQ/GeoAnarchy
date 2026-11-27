@@ -1,7 +1,25 @@
 // Run with `npm test`: the store's prices.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { goalProgress, periodPrice, reais, store } from './store.ts';
+import { goalProgress, periodPrice, reais, store, tags } from './store.ts';
+
+test('the store has a VIP and a Tags category, each a page under /loja/', () => {
+  assert.deepEqual(store.categories.map((category) => category.id), ['vip', 'tags']);
+  assert.ok(store.categories.every((category) => category.path.startsWith('/loja/') && category.path.endsWith('/')));
+});
+
+test('the tags are the 30 of the game: 9 with Geo+, 6 more with Geo Ultra, 15 more with Geo Ultra+', () => {
+  const count = (plan: string) => tags.filter((tag) => tag.plan === plan).length;
+  assert.deepEqual([count('geo-plus'), count('geo-ultra'), count('geo-ultra-plus')], [9, 6, 15]);
+  assert.equal(new Set(tags.map((tag) => tag.word)).size, tags.length, 'no tag twice');
+  for (const tag of tags) {
+    assert.equal(tag.word, tag.word.toUpperCase(), tag.word + ' is written in capitals');
+    assert.ok(tag.colors.every((color) => /^#[0-9a-f]{6}$/.test(color)), tag.word);
+    // Geo+ one colour, Geo Ultra bold, Geo Ultra+ a bold gradient: the same as in the game.
+    assert.equal(tag.colors.length, tag.plan === 'geo-ultra-plus' ? 2 : 1, tag.word);
+    assert.equal(tag.bold === true, tag.plan !== 'geo-plus', tag.word);
+  }
+});
 
 test('the three plans and what a month costs', () => {
   assert.deepEqual(

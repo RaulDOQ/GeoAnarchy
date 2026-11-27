@@ -1,7 +1,18 @@
-// The store's plans and prices. Change a value here and the "Loja" page follows.
-// The texts around them are in src/content/pt.ts, under `store`.
+// The store: its categories, the plans and their prices, and the tags. Change a value
+// here and the "Loja" pages follow. The texts around them are in src/content/pt.ts,
+// under `store`.
 
 export const store = {
+  /**
+   * The store's categories, in the order of their tabs. Each one is a page under /loja/.
+   * To add one: an entry here, its tab name in pt.store.categories, and its page in
+   * src/pages/loja/ drawn inside the StoreShell component (src/components/store/).
+   */
+  categories: [
+    { id: 'vip', path: '/loja/' },
+    { id: 'tags', path: '/loja/tags/' },
+  ],
+
   /** The monthly goal, in centavos. */
   goal: {
     /** What it takes to keep the server running for a month. */
@@ -30,6 +41,55 @@ export const store = {
 } as const;
 
 export type Plan = (typeof store.plans)[number];
+export type PlanId = Plan['id'];
+
+/**
+ * One tag, as GeoUltra has it in plugins/GeoUltra/presets.yml: the word, the plan that
+ * includes it, and its colours (one colour, or two for a gradient from the first to the
+ * second). Keep this list in step with presets.yml.
+ */
+export interface StoreTag {
+  word: string;
+  plan: PlanId;
+  colors: readonly string[];
+  bold?: boolean;
+  /** The price to buy the tag on its own, for good, in centavos. Missing: "Em breve". */
+  price?: number;
+}
+
+/** Every tag, cheapest plan first. Geo+ one colour, Geo Ultra bold, Geo Ultra+ bold gradients. */
+export const tags: readonly StoreTag[] = [
+  { word: 'CRIA', plan: 'geo-plus', colors: ['#55ff55'] },
+  { word: 'MITO', plan: 'geo-plus', colors: ['#ffaa00'] },
+  { word: 'TRYHARD', plan: 'geo-plus', colors: ['#ff5555'] },
+  { word: 'NÔMADE', plan: 'geo-plus', colors: ['#d2b48c'] },
+  { word: 'REBELDE', plan: 'geo-plus', colors: ['#ff7043'] },
+  { word: 'PIRATA', plan: 'geo-plus', colors: ['#5aa9ff'] },
+  { word: 'SABONETE', plan: 'geo-plus', colors: ['#7fe3ff'] },
+  { word: 'CALABRESO', plan: 'geo-plus', colors: ['#ff8a65'] },
+  { word: '67', plan: 'geo-plus', colors: ['#ffd54f'] },
+  { word: 'AURA', plan: 'geo-ultra', colors: ['#c77dff'], bold: true },
+  { word: 'EGO', plan: 'geo-ultra', colors: ['#ff4fa3'], bold: true },
+  { word: 'RESENHA', plan: 'geo-ultra', colors: ['#ffd23f'], bold: true },
+  { word: 'GOTH', plan: 'geo-ultra', colors: ['#d94f70'], bold: true },
+  { word: 'CHEFE', plan: 'geo-ultra', colors: ['#ffb300'], bold: true },
+  { word: 'MONSTRO', plan: 'geo-ultra', colors: ['#76ff03'], bold: true },
+  { word: 'SIGMA', plan: 'geo-ultra-plus', colors: ['#e0e0e0', '#8ab4ff'], bold: true },
+  { word: 'ALPHA', plan: 'geo-ultra-plus', colors: ['#ff512f', '#dd2476'], bold: true },
+  { word: 'ÍCONE', plan: 'geo-ultra-plus', colors: ['#c77dff', '#ff4fa3'], bold: true },
+  { word: 'MOGGER', plan: 'geo-ultra-plus', colors: ['#00f5a0', '#00d9f5'], bold: true },
+  { word: 'RIZZ', plan: 'geo-ultra-plus', colors: ['#ff6a88', '#ffc371'], bold: true },
+  { word: 'GOAT', plan: 'geo-ultra-plus', colors: ['#f7971e', '#ffd200'], bold: true },
+  { word: 'PRESIDENTE', plan: 'geo-ultra-plus', colors: ['#3ddc84', '#ffd23f'], bold: true },
+  { word: 'MONARCA', plan: 'geo-ultra-plus', colors: ['#f5c542', '#a855f7'], bold: true },
+  { word: 'GENERAL', plan: 'geo-ultra-plus', colors: ['#9acd32', '#c2b280'], bold: true },
+  { word: 'MAGNATA', plan: 'geo-ultra-plus', colors: ['#ffd700', '#fff6c2'], bold: true },
+  { word: 'LENDA', plan: 'geo-ultra-plus', colors: ['#a6c1ee', '#fbc2eb'], bold: true },
+  { word: 'FENÔMENO', plan: 'geo-ultra-plus', colors: ['#f953c6', '#b91d73'], bold: true },
+  { word: 'IMBATÍVEL', plan: 'geo-ultra-plus', colors: ['#ff416c', '#ff4b2b'], bold: true },
+  { word: 'INTOCÁVEL', plan: 'geo-ultra-plus', colors: ['#43e97b', '#38f9d7'], bold: true },
+  { word: 'BOSS', plan: 'geo-ultra-plus', colors: ['#f12711', '#f5af19'], bold: true },
+];
 export type Period = (typeof store.periods)[number];
 
 /** What one payment of a plan comes to, in centavos. */

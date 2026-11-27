@@ -32,6 +32,25 @@ Quanto melhor o plano, mais cor: as do Geo+ têm uma cor, as do Geo Ultra uma co
 | Geo Ultra (mais 6, 15 no total) | AURA, EGO, RESENHA, GOTH, CHEFE, MONSTRO |
 | Geo Ultra+ (mais 15, 30 no total) | SIGMA, ALPHA, ÍCONE, MOGGER, RIZZ, GOAT, PRESIDENTE, MONARCA, GENERAL, MAGNATA, LENDA, FENÔMENO, IMBATÍVEL, INTOCÁVEL, BOSS |
 
+### Estilo da tag
+
+Ao clicar numa tag, abre a tela de estilo dela. Escolha como a tag é pintada, e ela já fica em uso:
+
+| Estilo | Quem pode |
+|---|---|
+| **Original**: a tag como ela é na lista | Todos os planos |
+| **Uma cor**: vermelho, laranja, amarelo, verde, ciano, azul, roxo, rosa ou branco | Todos os planos |
+| **Negrito** nas cores e degradês | Geo Ultra e Geo Ultra+ |
+| **Degradê**: Fogo, Oceano, Floresta, Pôr do sol, Galáxia, Aurora, Brasil, Gelo ou Arco-íris | Só Geo Ultra+ |
+
+Por exemplo, um jogador Geo+ pode usar [CRIA] em vermelho, e um Geo Ultra+ pode usar [SIGMA] no degradê Fogo. Se você passar para um plano que não tem aquele estilo, a tag volta ao estilo Original.
+
+### Tags suas e cores à sua escolha
+
+As tags que o seu plano não inclui aparecem na lista com *"Você não tem esta tag"* e o plano que a inclui. Uma tag que você ganhou ou comprou separada fica **sua para sempre**, mesmo sem plano (sem plano, ela aparece no estilo Original).
+
+Com **/tagcor** você pinta uma tag sua com as cores que quiser, letra por letra, como no /nome: por exemplo `/tagcor &cB&6OSS` ou `/tagcor <gradient:gold:red>BOSS`. As letras precisam ser exatamente as da tag, em maiúsculas (`BOSs` não vale), e só vale para tags que você tem. **/tagcor limpar** volta ao estilo Original. Para montar as cores, use o [Gerador de cores](/wiki/ferramentas/).
+
 A equipe do servidor continua com a tag da equipe, e a tag escolhida vem depois dela: [Brasil] [Admin] [EGO] Astrum.
 
 ## Mensagens de kill

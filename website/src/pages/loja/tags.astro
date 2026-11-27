@@ -1,0 +1,198 @@
+---
+// "Loja", the Tags category: every tag of the game, grouped by the plan that includes it,
+// each drawn in its own colours the way it shows in chat. Tags will also be sold on their
+// own, for good; until a tag has a price it says "Em breve". The tags and their prices:
+// src/config/store.ts (kept in step with GeoUltra's presets.yml).
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import StoreShell from '../../components/store/StoreShell.astro';
+import Closing from '../../components/home/Closing.astro';
+import { reais, store, tags } from '../../config/store';
+import { pt } from '../../content/pt';
+
+const c = pt.store;
+const t = c.tags;
+const groups = store.plans.map((plan) => ({ plan, tags: tags.filter((tag) => tag.plan === plan.id) }));
+
+/** A tag's word in its colours: one colour, or a gradient from the first to the second. */
+function paint(colors: readonly string[]): string {
+  return colors.length > 1 ? `--paint: linear-gradient(90deg, ${colors.join(', ')})` : `--ink: ${colors[0]}`;
+}
+---
+
+<Base title={t.meta.title} description={t.meta.description} page="store">
+  <PageHead chapter={c.chapter} title={c.title} lead={t.lead} />
+
+  <StoreShell active="tags">
+    <div class="intro card" data-in="settle" style="--d: 60ms">
+      <h2>{t.intro.title}</h2>
+      {t.intro.body.map((line) => <p>{line}</p>)}
+    </div>
+
+    {
+      groups.map((group, i) => (
+        <section class={`group group-${group.plan.id}`} data-in="settle" style={`--d: ${100 + i * 60}ms`}>
+          <div class="group-head">
+            <h2>
+              {(i === 0 ? t.group : t.groupMore).split('{plan}')[0]}
+              <span class="plan-name">{group.plan.name}</span>
+              {(i === 0 ? t.group : t.groupMore).split('{plan}')[1]}
+            </h2>
+            <span class="count">{t.count.replace('{count}', String(group.tags.length))}</span>
+          </div>
+          <ul class="tags">
+            {group.tags.map((tag) => (
+              <li class="tag card">
+                <p class="look" aria-label={tag.word}>
+                  <span class="bracket" aria-hidden="true">[</span>
+                  <span class:list={['word', { bold: tag.bold, gradient: tag.colors.length > 1 }]} style={paint(tag.colors)}>
+                    {tag.word}
+                  </span>
+                  <span class="bracket" aria-hidden="true">]</span>
+                </p>
+                <p class="included">{t.included.replace('{plan}', group.plan.name)}</p>
+                <p class="buy">
+                  <span>{t.price}</span>
+                  <span class="soon">{tag.price ? `R$ ${reais(tag.price)}` : pt.common.soon}</span>
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </StoreShell>
+
+  <Closing />
+</Base>
+
+<style>
+  .intro {
+    gap: .55rem;
+    margin-bottom: 1.75rem;
+    padding: 1.5rem 1.6rem;
+    display: grid;
+  }
+  .intro h2 {
+    letter-spacing: -.025em;
+    font-size: 1.25rem;
+  }
+  .intro p {
+    color: var(--color-text-muted);
+    font-size: .9375rem;
+    line-height: 1.6;
+  }
+
+  .group + .group {
+    margin-top: 2rem;
+  }
+  .group-head {
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: .9rem;
+    display: flex;
+  }
+  .group-head h2 {
+    letter-spacing: -.025em;
+    font-size: 1.1875rem;
+  }
+  .count {
+    color: var(--color-text-faint);
+    font-size: .875rem;
+    font-weight: 600;
+  }
+  /* Each plan's name in its colour, as on the plan cards. */
+  .plan-name {
+    font-weight: 700;
+  }
+  .group-geo-plus .plan-name {
+    color: var(--color-green-strong);
+  }
+  .group-geo-ultra .plan-name,
+  .group-geo-ultra-plus .plan-name {
+    color: #0000;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-image: linear-gradient(100deg, #38bfe0, var(--color-blue-bright));
+  }
+  .group-geo-ultra-plus .plan-name {
+    background-image: linear-gradient(100deg, #38bfe0, var(--color-blue-bright) 45%, #a08bff);
+  }
+
+  .tags {
+    grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
+    gap: .75rem;
+    list-style: none;
+    display: grid;
+  }
+  .tag {
+    align-content: start;
+    gap: .45rem;
+    padding: 1.1rem 1.15rem 1rem;
+    display: grid;
+  }
+  /* The tag as it shows in chat: white brackets, the word in its colours, on the chat's dark grey. */
+  .look {
+    font-family: var(--font-mono);
+    letter-spacing: .02em;
+    background: #16181b;
+    border-radius: .55rem;
+    justify-self: start;
+    padding: .45rem .7rem;
+    font-size: 1.0625rem;
+    line-height: 1.2;
+  }
+  .bracket {
+    color: #fff;
+  }
+  .word {
+    color: var(--ink, #fff);
+    font-weight: 500;
+  }
+  .word.bold {
+    font-weight: 800;
+  }
+  .word.gradient {
+    color: #0000;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-image: var(--paint);
+  }
+  .included {
+    color: var(--color-text-muted);
+    font-size: .8125rem;
+  }
+  .buy {
+    border-top: 1px solid var(--color-hairline);
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    margin-top: .2rem;
+    padding-top: .6rem;
+    font-size: .8125rem;
+    display: flex;
+  }
+  .buy > span:first-child {
+    color: var(--color-text-soft);
+    font-weight: 600;
+  }
+  .soon {
+    white-space: nowrap;
+    flex: none;
+    box-shadow: inset 0 0 0 1px var(--color-green-ring);
+    color: var(--color-green-strong);
+    background: var(--color-green-soft);
+    border-radius: 999px;
+    padding: .3rem .6rem;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  @media (width <= 560px) {
+    .tags {
+      grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    }
+  }
+</style>

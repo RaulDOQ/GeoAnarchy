@@ -57,6 +57,7 @@ Letras embaralhadas (&k) não são aceitas: ninguém conseguiria ler o seu nome.
 | Skins em uso ao mesmo tempo | 5 | 10 | 18 |
 | Pacotes de skins | Silvestre, Glacial | + Dracônico, Abissal | + Celestial |
 | Tags para escolher | 9 | 15 | 30 |
+| Estilo da tag | 9 cores | 9 cores e negrito | + 9 degradês |
 | Mensagens de kill para escolher | 6 | 10 | 20 (10 coloridas) |
 | Mensagens de entrada para escolher | Não | 6 | 6 |
 

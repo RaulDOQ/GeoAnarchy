@@ -10,7 +10,8 @@ JavaScript that any static host can serve.
 |---|---|---|
 | `/` | `src/pages/index.astro` | Home: the pitch, the live map, the server's ideas, how to join, questions |
 | `/sobre/` | `src/pages/sobre/index.astro` | Sobre nós: the three ideas of the home page, then the server's story (2024 to 2026) as a timeline. Texts in `pt.about`. |
-| `/loja/` | `src/pages/loja/index.astro` | Loja. The monthly goal (what keeps the server running, and how much is missing), then the three plans with a switch for paying every month, every 3 months or every 6 months. They cannot be bought yet; the page says so. |
+| `/loja/` | `src/pages/loja/index.astro` | Loja, category VIP: the three plans with a switch for paying every month, every 3 months or every 6 months. They cannot be bought yet; the page says so. Every store page has the category tabs on top and, at the side, the monthly goal (what keeps the server running, and how much is missing) and where to hear when the store opens (`src/components/store/StoreShell.astro`). |
+| `/loja/tags/` | `src/pages/loja/tags.astro` | Loja, category Tags: the 30 tags of the game, grouped by the plan that includes them, each in its own colours. Each will also be sold on its own, for good; until it has a price it says "Em breve". |
 | `/wiki/` | `src/pages/wiki/index.astro` | GeoWiki, the players' wiki: how to join, the world, how the server works, and the lists of its sections' articles |
 | `/wiki/pais/` | `src/pages/wiki/pais/index.astro` | The country founders' wiki: who it is for, and its lists of country and economy articles |
 | `/wiki/ferramentas/` | `src/pages/wiki/ferramentas/index.astro` | The wiki's tools tab: the colour tool (`src/components/wiki/ColorTool.astro`, with its formatting in `src/scripts/mc-text.ts`), which writes coloured text as MiniMessage for country names, `&` and `&#RRGGBB` codes for chat and /nick, or `&x` codes for other plugins |
@@ -38,7 +39,7 @@ Run these inside `website/` (Node 22.12 or newer):
 | Path | Contents |
 |---|---|
 | `src/config/site.ts` | Server addresses, the map address and its parameters, the Discord invite, world size. Change a value here and every page follows. |
-| `src/config/store.ts` | The store: the monthly goal and how much has come in (kept by hand until payments are connected), the plans, their monthly prices, and the discounts for paying 3 or 6 months at once. The "Loja" page works everything out from these. |
+| `src/config/store.ts` | The store: its categories (one page each), the monthly goal and how much has come in (kept by hand until payments are connected), the plans, their monthly prices, the discounts for paying 3 or 6 months at once, and the tags with their colours and (later) prices, kept in step with GeoUltra's presets.yml. The "Loja" pages work everything out from these. To add a category: an entry in `categories`, its tab name in `pt.store.categories`, and a page in `src/pages/loja/` inside `StoreShell`. |
 | `src/content/pt.ts` | Every text on the site, except the wiki's long articles. |
 | `src/content/wiki/` | The GeoWiki's articles, as Markdown files (see "The GeoWiki" below). |
 | `src/config/wiki.ts`, `src/content.config.ts` | How the articles become addresses, the side menu and the "previous / next" links. |
