@@ -1,7 +1,10 @@
 ---
 // Hero: the pitch and the two ways in on the left, the logo (the block Earth with the
 // name) large on the right. The live map comes right under it, as the first section.
+// Behind it all, a picture of the server (src/assets/home-background.webp) that fades
+// away as the page scrolls down.
 import Icon from '../Icon.astro';
+import photo from '../../assets/home-background.webp';
 import Logo from '../Logo.astro';
 import { site } from '../../config/site';
 import { pt } from '../../content/pt';
@@ -10,7 +13,7 @@ const c = pt.hero;
 ---
 
 <section class="hero-wrap" id="inicio" aria-labelledby="hero-title">
-  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="home-photo" aria-hidden="true" data-home-photo style={`--photo: url(${photo.src})`}></div>
   <div class="hero container">
     <div class="hero-copy">
     <a class="announce" href="#mapa" data-in="settle">
@@ -45,6 +48,30 @@ const c = pt.hero;
   </div>
 </section>
 
+<script>
+  // The picture behind the hero fades out over the first screen of scrolling, and is
+  // hidden once it is gone so the browser stops drawing it.
+  const photo = document.querySelector<HTMLElement>('[data-home-photo]');
+  if (photo) {
+    let queued = false;
+    const update = () => {
+      queued = false;
+      const left = Math.max(0, 1 - window.scrollY / (window.innerHeight * 0.85));
+      photo.style.opacity = left.toFixed(3);
+      photo.style.visibility = left === 0 ? 'hidden' : '';
+    };
+    const later = () => {
+      if (!queued) {
+        queued = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', later, { passive: true });
+    window.addEventListener('resize', later);
+    update();
+  }
+</script>
+
 <style>
   .hero-wrap {
     position: relative;
@@ -59,16 +86,23 @@ const c = pt.hero;
     display: grid;
     position: relative;
   }
-  /* A faint chart grid behind the hero, fading out towards the edges. */
-  .hero-bg {
+  /* The server's landscape behind the first screen. It stays put while the page moves
+     and fades out as you scroll (the script below). It is darkened, most on the left
+     where the text is, and melts into the page colour at the bottom. It sits under the
+     page itself (z-index -1), which works because the page colour is on <html>. */
+  .home-photo {
     pointer-events: none;
-    background-image: radial-gradient(#0a1b2e1f 1px, #0000 1.2px);
-    background-position: 50% 0;
-    background-size: 26px 26px;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, #1d1f23d1 0%, #1d1f2385 42%, #1d1f2326 100%),
+      linear-gradient(180deg, #1d1f2380 0%, #1d1f2314 30%, #1d1f2359 72%, var(--color-bg) 100%),
+      var(--photo) 50% 40% / cover no-repeat;
+    position: fixed;
+    inset: 0;
+  }
+  /* Without the script it would stay behind the whole page, so it only covers the hero. */
+  :global(html:not(.js)) .home-photo {
     position: absolute;
-    inset: -6rem 0 0;
-    -webkit-mask-image: radial-gradient(60rem 34rem at 62% 38%, #000, #0000 78%);
-    mask-image: radial-gradient(60rem 34rem at 62% 38%, #000, #0000 78%);
   }
   .hero-copy {
     z-index: 2;
@@ -89,7 +123,7 @@ const c = pt.hero;
     inset: -18% -26%;
   }
   .hero-logo-float {
-    filter: drop-shadow(0 26px 30px #0a2a5c40);
+    filter: drop-shadow(0 26px 30px #00000073);
     position: relative;
   }
   .hero-logo-float :global(img) {
@@ -100,11 +134,19 @@ const c = pt.hero;
   .hero-logo-shadow {
     filter: blur(22px);
     opacity: .55;
-    background: radial-gradient(closest-side, #0a2a5c59, #0a2a5c00);
+    background: radial-gradient(closest-side, #00000080, #0000);
     width: 62%;
     height: 2.6rem;
     position: absolute;
     bottom: -1.9rem;
+  }
+  /* On a phone the text runs over the whole picture, so it is darkened evenly. */
+  @media (width <= 760px) {
+    .home-photo {
+      background:
+        linear-gradient(180deg, #1d1f23b3 0%, #1d1f2380 45%, #1d1f23a6 75%, var(--color-bg) 100%),
+        var(--photo) 50% 40% / cover no-repeat;
+    }
   }
   @media (prefers-reduced-motion: no-preference) {
     .hero-logo-float {
@@ -127,7 +169,7 @@ const c = pt.hero;
   }
   .announce {
     height: 2rem;
-    box-shadow: var(--edge), 0 2px 6px -3px #0a1b2e2e;
+    box-shadow: var(--edge), 0 2px 6px -3px #00000066;
     color: var(--color-text-soft);
     background: var(--color-surface);
     border-radius: 999px;
@@ -141,7 +183,7 @@ const c = pt.hero;
   }
   .announce:hover {
     background: var(--color-surface-2);
-    box-shadow: var(--edge-strong), 0 2px 6px -3px #0a1b2e2e;
+    box-shadow: var(--edge-strong), 0 2px 6px -3px #00000066;
   }
   .announce > span {
     color: var(--color-green-strong);
@@ -261,7 +303,7 @@ const c = pt.hero;
   }
   .hero-next:hover {
     color: var(--color-text);
-    background: #0a1b2e0a;
+    background: #ffffff0f;
   }
   .hero-next .num {
     min-width: 1.6rem;

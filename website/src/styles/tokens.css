@@ -1,49 +1,53 @@
 /*
-  Design tokens for the GeoAnarchy site: white surfaces, hairline edges, ocean blue and
-  land green accents, Inter headings and IBM Plex Mono labels. Every colour, size,
+  Design tokens for the GeoAnarchy site: smooth dark-grey surfaces, light hairline edges,
+  ocean blue and land green accents, Inter headings and IBM Plex Mono labels. Every colour, size,
   radius and motion value lives here.
 */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  --color-bg: #ffffff;
-  --color-bg-tint: #f4f8fc;
-  --color-surface: #ffffff;
-  --color-surface-2: #f1f6fb;
-  --color-surface-hover: #eaf1f9;
+  /* Smooth dark grey, never black: the page, a slightly lighter band, and the cards. */
+  --color-bg: #1d1f23;
+  --color-bg-tint: #212429;
+  --color-surface: #272a30;
+  --color-surface-2: #2d3037;
+  --color-surface-hover: #353941;
 
-  --color-text: #0a1b2e;
-  --color-text-soft: #2b3d54;
-  --color-text-muted: #4d5f78;
-  --color-text-faint: #66758b;
+  --color-text: #eef0f3;
+  --color-text-soft: #d2d7de;
+  --color-text-muted: #a8b0bb;
+  --color-text-faint: #8a939f;
 
-  --color-blue: #1766e0;
-  --color-blue-strong: #0f55c4;
-  --color-blue-bright: #3b86f5;
-  --color-blue-soft: #1766e012;
-  --color-blue-ring: #1766e038;
+  /* The accents, lighter than on a white page so they read on grey. "strong" is the
+     one used for text on a soft accent background. */
+  --color-blue: #4a8cf7;
+  --color-blue-strong: #8ab4ff;
+  --color-blue-bright: #6aa2ff;
+  --color-blue-soft: #4a8cf71f;
+  --color-blue-ring: #4a8cf75c;
 
-  --color-green: #12a05c;
-  --color-green-strong: #0b7f47;
-  --color-green-bright: #2bbf77;
-  --color-green-soft: #12a05c17;
-  --color-green-ring: #12a05c40;
+  --color-green: #2fbf78;
+  --color-green-strong: #63d99d;
+  --color-green-bright: #4fd08f;
+  --color-green-soft: #2fbf781f;
+  --color-green-ring: #2fbf7859;
 
   --color-on-accent: #ffffff;
   /* Land drawn on dark panels. */
   --color-land-bright: #46d08a;
-  --color-ink: #0a1b2e;
-  --color-hairline: #0a1b2e14;
-  --color-hairline-strong: #0a1b2e24;
-  --color-focus: #1766e0;
-  --color-warning: #8a5a00;
-  --color-warning-soft: #fff6e0;
+  /* Panels darker than the page (the anarchy pictures, map labels). */
+  --color-ink: #141619;
+  --color-hairline: #ffffff14;
+  --color-hairline-strong: #ffffff24;
+  --color-focus: #6aa2ff;
+  --color-warning: #f0b54a;
+  --color-warning-soft: #3a301b;
 
-  --edge: inset 0 0 0 1px #0a1b2e14;
-  --edge-strong: inset 0 0 0 1px #0a1b2e21;
-  --grad-surface: linear-gradient(180deg, #ffffff, #f6f9fd);
-  --grad-heading: linear-gradient(180deg, #0a1b2e 30%, #0a1b2ec2);
-  --grad-earth: linear-gradient(96deg, #1766e0 2%, #0e8fb4 46%, #12a05c 96%);
+  --edge: inset 0 0 0 1px #ffffff12;
+  --edge-strong: inset 0 0 0 1px #ffffff1f;
+  --grad-surface: linear-gradient(180deg, #2a2d33, #26292e);
+  --grad-heading: linear-gradient(180deg, #f4f6f9 30%, #f4f6f9c4);
+  --grad-earth: linear-gradient(96deg, #5b97fa 2%, #2bb5d8 46%, #34c97f 96%);
 
   --font-sans: "Inter Variable", "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
   /* Only for what a player types: the server address, the port, commands. */
@@ -73,9 +77,9 @@
   --radius-lg: 1rem;
   --radius-xl: 1.25rem;
 
-  --shadow-card: 0 1px 2px #0a1b2e0a, 0 24px 48px -32px #0a1b2e38;
-  --shadow-lift: 0 1px 2px #0a1b2e0f, 0 30px 60px -30px #0a1b2e52;
-  --shadow-window: 0 0 0 1px #0a1b2e1f, 0 40px 80px -36px #0a2a5c66, 0 18px 36px -22px #0a1b2e47;
+  --shadow-card: 0 1px 2px #0000004d, 0 24px 48px -32px #000000b3;
+  --shadow-lift: 0 1px 2px #00000059, 0 30px 60px -30px #000000bf;
+  --shadow-window: 0 0 0 1px #ffffff14, 0 40px 80px -36px #000000bf, 0 18px 36px -22px #00000080;
 
   --ease-out: cubic-bezier(.16, 1, .3, 1);
   --ease-in-out: cubic-bezier(.65, 0, .35, 1);

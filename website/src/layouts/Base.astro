@@ -32,7 +32,7 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <link rel="canonical" href={canonical} />
     {/* While the site is in development it stays out of search engines (config/site.ts). */}
     {site.inDevelopment && <meta name="robots" content="noindex, nofollow" />}
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#1d1f23" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />

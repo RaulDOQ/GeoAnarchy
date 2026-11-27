@@ -43,13 +43,14 @@ Run these inside `website/` (Node 22.12 or newer):
 | `src/content/wiki/` | The GeoWiki's articles, as Markdown files (see "The GeoWiki" below). |
 | `src/config/wiki.ts`, `src/content.config.ts` | How the articles become addresses, the side menu and the "previous / next" links. |
 | `src/components/wiki/`, `src/styles/wiki.css` | The wiki's frame (the switch between the two wikis, the side menu, the lists of articles) and the look of an article's text. |
-| `src/styles/tokens.css` | Colours, type, spacing and motion values (white, blue and green theme). |
+| `src/styles/tokens.css` | Colours, type, spacing and motion values (smooth dark-grey theme with blue and green accents). A few colours that only make sense in one place are written in that component; they are dark-theme colours too. |
 | `src/components/Logo.astro`, `Wordmark.astro` | The logo with the block Earth (header) and the name on its own (hero, closing section, footer, 404 page). |
 | `src/components/PageHead.astro`, `Editions.astro` | The top of every page other than the home page, and the Java and Bedrock join cards (home page and GeoWiki). |
 | `src/components/home/` | The home page's sections: hero, the live map, anarchy, realism and its journey map, vanilla (no tanks, planes or guns), how to join, questions. `Closing.astro` ends every page. |
 | `src/scripts/` | Browser scripts: the live map (zoom and move), the tile painter it shares with the still map picture, the site's copy of the map as the pages read it, scroll entrances, copy buttons. |
 | `worker/` | The Worker: every 30 minutes a map snapshot and a few sheets of the site's own copy of the map, the journey picture once a day, and the addresses that serve them. |
 | `scripts/detect-map.mjs` | Finds and checks the live map's tiles before each build. |
+| `src/assets/home-background.webp` | The server picture behind the home page's first screen. It is darkened, stays put while the page scrolls and fades out over the first screen (`Hero.astro`). Replace the file to change it. |
 | `src/assets/anarchy-chaos.webp`, `anarchy-order.webp` | The pictures in the two "Anarquia" panels. Replace a file to change a picture; without a file the panel shows blocks. |
 | `src/assets/logo.webp`, `logo-small.webp`, `wordmark.webp` | The logo artwork, trimmed: the full logo in two sizes and the name alone. `public/favicon.png`, `public/apple-touch-icon.png` and `public/og.png` (the picture shown when the site's link is shared) come from the same artwork. |
 
