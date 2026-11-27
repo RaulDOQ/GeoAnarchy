@@ -1,7 +1,25 @@
 // Run with `npm test`: the store's prices.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { goalProgress, periodPrice, reais, skinItems, skinOptions, skinPacks, skinPrice, store, tagPriceOf, tags } from './store.ts';
+import {
+  checkout,
+  choiceValue,
+  goalProgress,
+  onSale,
+  periodPrice,
+  reais,
+  skinBuy,
+  skinItems,
+  skinItemValue,
+  skinOptions,
+  skinPacks,
+  skinPrice,
+  store,
+  tagBuy,
+  tagPriceOf,
+  tags,
+  vipBuy,
+} from './store.ts';
 
 test('the store has VIP, Skins and Tags categories, each a page under /loja/', () => {
   assert.deepEqual(store.categories.map((category) => category.id), ['vip', 'skins', 'tags']);
@@ -93,4 +111,56 @@ test('money is written the Brazilian way', () => {
   assert.equal(reais(799), '7,99');
   assert.equal(reais(10076), '100,76');
   assert.equal(reais(123456), '1.234,56');
+});
+
+test('the store at CentralCart is named by its domain, and every product id is a whole number or not there yet', () => {
+  assert.equal(checkout.storeDomain, 'geoanarchy.centralcart.ai');
+  assert.ok(checkout.api.startsWith('https://'));
+  const { vip, skins, tag } = checkout.products;
+  assert.deepEqual(Object.keys(vip).sort(), store.plans.map((plan) => plan.id).sort());
+  for (const plan of store.plans) {
+    assert.deepEqual(Object.keys(vip[plan.id]).map(Number), store.periods.map((period) => period.months), plan.id);
+  }
+  assert.deepEqual(Object.keys(skins), skinOptions.map((option) => option.id));
+  const ids = [...Object.values(vip).flatMap((months) => Object.values(months)), ...Object.values(skins), tag];
+  assert.ok(ids.every((id) => id === null || (Number.isInteger(id) && id > 0)));
+  assert.equal(new Set(ids.filter((id) => id !== null)).size, ids.filter((id) => id !== null).length, 'no product used twice');
+});
+
+test('a choice is the word without accents in small letters, and every tag has its own', () => {
+  assert.equal(choiceValue('NÔMADE'), 'nomade');
+  assert.equal(choiceValue('ÍCONE'), 'icone');
+  assert.equal(choiceValue('IMBATÍVEL'), 'imbativel');
+  assert.equal(choiceValue('67'), '67');
+  const values = tags.map((tag) => choiceValue(tag.word));
+  assert.ok(values.every((value) => /^[a-z0-9]+$/.test(value)), values.join(' '));
+  assert.equal(new Set(values).size, values.length);
+});
+
+test('the skin items go by the names GeoUltra\'s /geoultra skin dar takes', () => {
+  assert.deepEqual(
+    [...skinItems.tools, ...skinItems.armour].map((item) => skinItemValue[item]),
+    ['espada', 'picareta', 'machado', 'pa', 'enxada', 'capacete', 'peitoral', 'calca', 'botas'],
+  );
+});
+
+test('a button sells what is on sale at CentralCart, at the page\'s price, and nothing else', () => {
+  const ultra = store.plans[1];
+  const sixMonths = store.periods[2];
+  const plan = vipBuy(ultra, sixMonths, 'Geo Ultra, 6 meses');
+  assert.equal(plan === null, checkout.products.vip[ultra.id][6] === null);
+  if (plan) assert.equal(plan.price, periodPrice(ultra.monthly, sixMonths).total);
+
+  const sigma = tags.find((tag) => tag.word === 'SIGMA');
+  assert.ok(sigma);
+  const tag = tagBuy(sigma, 'Tag SIGMA');
+  assert.equal(tag === null, checkout.products.tag === null);
+  if (tag) assert.deepEqual([tag.kind, tag.choices, tag.price], ['tag', ['sigma'], 790]);
+
+  const single = skinBuy(skinPacks[0], 'single', 'Skin avulsa');
+  if (single) assert.deepEqual([single.choices, single.pickItemOf], [['silvestre'], 'silvestre']);
+  const whole = skinBuy(skinPacks[4], 'pack', 'Pacote inteiro');
+  if (whole) assert.deepEqual([whole.choices, whole.pickItemOf, whole.price], [['celestial'], undefined, 7599]);
+
+  assert.equal(onSale('tags'), checkout.products.tag !== null);
 });

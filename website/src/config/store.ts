@@ -1,6 +1,6 @@
-// The store: its categories, the plans and their prices, and the tags. Change a value
-// here and the "Loja" pages follow. The texts around them are in src/content/pt.ts,
-// under `store`.
+// The store: its categories, the plans and their prices, the tags, and where each thing
+// is sold at CentralCart (`checkout`, at the end). Change a value here and the "Loja"
+// pages follow. The texts around them are in src/content/pt.ts, under `store`.
 
 export const store = {
   /**
@@ -194,4 +194,108 @@ export function goalProgress(goal: { amount: number; raised: number }): GoalProg
 /** Centavos as Brazilians write money, without the currency sign: 799 is "7,99". */
 export function reais(centavos: number): string {
   return (centavos / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// ------------------------------------------------------------------ Buying
+
+/**
+ * Each thing on sale and its product's id at CentralCart (in its panel, or from
+ * GET /webstore/package). null: not created there yet, and the page says "Em breve"
+ * instead of "Comprar". VIP plans by the months paid at once.
+ */
+export interface CheckoutProducts {
+  vip: Record<PlanId, Record<number, number | null>>;
+  skins: Record<SkinOptionId, number | null>;
+  tag: number | null;
+}
+
+/**
+ * Where purchases happen: the GeoAnarchy store at CentralCart. The pages call its public
+ * Storefront API from the visitor's browser (src/scripts/buy.ts). There is no key: the
+ * store is named by its domain. The buyer pays by Pix on the page itself, and CentralCart's
+ * plugin on the server runs the product's command once the payment is approved (or when
+ * the player next joins, if they were offline).
+ *
+ * The choices inside a product (which pack, which item, which tag) are found by their
+ * "Valor" at CentralCart, which must be what these pages use: the pack's id (silvestre),
+ * the item's name in GeoUltra (espada, see skinItemValue) and the tag's word without
+ * accents, in small letters (nomade, see choiceValue).
+ */
+export const checkout = {
+  api: 'https://api.centralcart.io/v1',
+  /** The store's own address at CentralCart: it names the store to the API. */
+  storeDomain: 'geoanarchy.centralcart.ai',
+  /** The store's terms, which the buyer accepts before paying. */
+  termsUrl: 'https://geoanarchy.centralcart.ai/terms',
+  products: {
+    vip: {
+      'geo-plus': { 1: null, 3: null, 6: null },
+      'geo-ultra': { 1: null, 3: null, 6: null },
+      'geo-ultra-plus': { 1: null, 3: null, 6: null },
+    },
+    skins: { single: null, tools: null, armour: null, pack: null },
+    tag: 1148089,
+  } as CheckoutProducts,
+};
+
+/** A word as CentralCart's choices name it: without accents, in small letters ("NÔMADE" is "nomade"). */
+export function choiceValue(text: string): string {
+  return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim();
+}
+
+/** Each skin item's name in GeoUltra's commands (/geoultra skin dar), which is also its Valor at CentralCart. */
+export const skinItemValue: Record<SkinItem, string> = {
+  sword: 'espada',
+  pickaxe: 'picareta',
+  axe: 'machado',
+  shovel: 'pa',
+  hoe: 'enxada',
+  helmet: 'capacete',
+  chestplate: 'peitoral',
+  leggings: 'calca',
+  boots: 'botas',
+};
+
+/** One "Comprar" button: what it buys, and how the buy dialog shows it. */
+export interface BuySpec {
+  /** The product's id at CentralCart. */
+  product: number;
+  kind: 'vip' | 'skin' | 'tag';
+  /** What the dialog calls it: "Geo Ultra, 3 meses", "Tag SIGMA". */
+  title: string;
+  /** The choices inside the product, by their Valor at CentralCart. */
+  choices: string[];
+  /** A single skin of this pack: the buyer picks the item in the dialog. */
+  pickItemOf?: string;
+  /** The page's price, in centavos, shown until CentralCart's own arrives. */
+  price: number;
+}
+
+/** The button for paying a plan for some months at once, or null while that product isn't on sale. */
+export function vipBuy(plan: Plan, period: Period, title: string): BuySpec | null {
+  const product = checkout.products.vip[plan.id]?.[period.months] ?? null;
+  return product === null ? null : { product, kind: 'vip', title, choices: [], price: periodPrice(plan.monthly, period).total };
+}
+
+/** The button for one way of buying a pack's skins, or null while that product isn't on sale. */
+export function skinBuy(pack: SkinPack, option: SkinOptionId, title: string): BuySpec | null {
+  const product = checkout.products.skins[option];
+  if (product === null) return null;
+  const spec: BuySpec = { product, kind: 'skin', title, choices: [pack.id], price: skinPrice(pack, option) };
+  if (option === 'single') spec.pickItemOf = pack.id;
+  return spec;
+}
+
+/** The button for buying one tag for good, or null while tags aren't on sale. */
+export function tagBuy(tag: StoreTag, title: string): BuySpec | null {
+  const product = checkout.products.tag;
+  return product === null ? null : { product, kind: 'tag', title, choices: [choiceValue(tag.word)], price: tagPriceOf(tag) };
+}
+
+/** True once something in a category can be bought. */
+export function onSale(category: 'vip' | 'skins' | 'tags'): boolean {
+  const { vip, skins, tag } = checkout.products;
+  if (category === 'tags') return tag !== null;
+  const ids = category === 'vip' ? Object.values(vip).flatMap((months) => Object.values(months)) : Object.values(skins);
+  return ids.some((id) => id !== null);
 }

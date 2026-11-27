@@ -1,17 +1,19 @@
 ---
 // "Loja", the Tags category: every tag of the game, grouped by the plan that includes it,
 // each drawn in its own colours the way it shows in chat, with its price on its own (for
-// good). The tags and their prices: src/config/store.ts (kept in step with GeoUltra's
-// presets.yml).
+// good) and its "Comprar" button. The tags, their prices and the CentralCart product:
+// src/config/store.ts (the tags kept in step with GeoUltra's presets.yml).
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import StoreShell from '../../components/store/StoreShell.astro';
+import BuyButton from '../../components/store/BuyButton.astro';
 import Closing from '../../components/home/Closing.astro';
-import { reais, store, tagPriceOf, tags } from '../../config/store';
+import { reais, store, tagBuy, tagPriceOf, tags } from '../../config/store';
 import { pt } from '../../content/pt';
 
 const c = pt.store;
 const t = c.tags;
+const b = c.buy;
 const groups = store.plans.map((plan) => ({ plan, tags: tags.filter((tag) => tag.plan === plan.id) }));
 
 /** A tag's word in its colours: one colour, or a gradient from the first to the second. */
@@ -51,10 +53,13 @@ function paint(colors: readonly string[]): string {
                   <span class="bracket" aria-hidden="true">]</span>
                 </p>
                 <p class="included">{t.included.replace('{plan}', group.plan.name)}</p>
-                <p class="buy">
-                  <span>{t.price}</span>
-                  <span class="price">R$ {reais(tagPriceOf(tag))}</span>
-                </p>
+                <div class="buy">
+                  <p>
+                    <span class="buy-label">{t.price}</span>
+                    <span class="price">R$ {reais(tagPriceOf(tag))}</span>
+                  </p>
+                  <BuyButton buy={tagBuy(tag, b.tagTitle.replace('{tag}', tag.word))} label={b.button} variant="line" wide />
+                </div>
               </li>
             ))}
           </ul>
@@ -163,17 +168,23 @@ function paint(colors: readonly string[]): string {
     color: var(--color-text-muted);
     font-size: .8125rem;
   }
+  /* The price on its own, then the button across the card, so it fits the narrowest. */
   .buy {
     border-top: 1px solid var(--color-hairline);
-    justify-content: space-between;
-    align-items: center;
-    gap: .5rem;
+    gap: .6rem;
     margin-top: .2rem;
     padding-top: .6rem;
     font-size: .8125rem;
+    display: grid;
+  }
+  .buy p {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: .2rem .5rem;
     display: flex;
   }
-  .buy > span:first-child {
+  .buy-label {
     color: var(--color-text-soft);
     font-weight: 600;
   }
@@ -188,6 +199,15 @@ function paint(colors: readonly string[]): string {
   @media (width <= 560px) {
     .tags {
       grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    }
+    /* Two cards side by side on a phone: the longest tags (PRESIDENTE) still fit. */
+    .tag {
+      grid-template-columns: minmax(0, 1fr);
+      padding-inline: 1rem;
+    }
+    .look {
+      padding: .4rem .55rem;
+      font-size: .9375rem;
     }
   }
 </style>

@@ -1,0 +1,557 @@
+---
+// The buy window, opened by any "Comprar" button on a store page (BuyButton.astro). First it
+// asks for the nick, name and e-mail (and, for a single skin, which item), then it shows the
+// Pix to pay right here, and once CentralCart says the payment is approved it says so. The
+// logic is src/scripts/buy.ts; where it buys is src/config/store.ts (checkout).
+import Icon from '../Icon.astro';
+import { checkout, skinItems, skinItemValue } from '../../config/store';
+import { pt } from '../../content/pt';
+
+const b = pt.store.buy;
+const items = [...skinItems.tools, ...skinItems.armour];
+const [termsBefore, termsAfter] = b.terms.split('{terms}');
+// What the script writes itself; everything else is in the markup below.
+const texts = {
+  notes: b.notes,
+  deliverTo: b.deliverTo,
+  done: b.done,
+  doneNoNick: b.doneNoNick,
+  pay: b.pay,
+  paying: b.paying,
+  error: b.error,
+  unavailable: b.unavailable,
+  pixCopied: b.pixCopied,
+  pixCopyFailed: b.pixCopyFailed,
+};
+---
+
+<dialog class="buy" data-buy-dialog data-api={checkout.api} data-store={checkout.storeDomain} data-texts={JSON.stringify(texts)} aria-labelledby="buy-title">
+  <div class="head">
+    <h2 id="buy-title" data-buy-title></h2>
+    <button class="close" type="button" data-buy-close aria-label={b.close}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+
+  <form class="step" data-step="form" novalidate>
+    <p class="total"><span>{b.total}</span><strong data-buy-price></strong></p>
+
+    <fieldset class="items" data-buy-items hidden>
+      <legend>{b.item}</legend>
+      <div class="item-grid">
+        {
+          items.map((item) => (
+            <label class="item">
+              <input class="visually-hidden" type="radio" name="item" value={skinItemValue[item]} />
+              <img data-icon={item} alt="" width="16" height="16" />
+              <span>{pt.store.skins.items[item]}</span>
+            </label>
+          ))
+        }
+      </div>
+      <p class="field-error" data-error="item" hidden>{b.itemMissing}</p>
+    </fieldset>
+
+    <div class="field">
+      <label for="buy-nick">{b.nick}</label>
+      <input id="buy-nick" name="nick" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="16" aria-describedby="buy-nick-hint" />
+      <p class="hint" id="buy-nick-hint">{b.nickHint}</p>
+      <p class="field-error" data-error="nick" hidden>{b.nickInvalid}</p>
+    </div>
+    <div class="field">
+      <label for="buy-name">{b.name}</label>
+      <input id="buy-name" name="name" autocomplete="name" maxlength="80" aria-describedby="buy-name-hint" />
+      <p class="hint" id="buy-name-hint">{b.nameHint}</p>
+      <p class="field-error" data-error="name" hidden>{b.nameInvalid}</p>
+    </div>
+    <div class="field">
+      <label for="buy-email">{b.email}</label>
+      <input id="buy-email" name="email" type="email" autocomplete="email" maxlength="120" aria-describedby="buy-email-hint" />
+      <p class="hint" id="buy-email-hint">{b.emailHint}</p>
+      <p class="field-error" data-error="email" hidden>{b.emailInvalid}</p>
+    </div>
+    <div class="field" data-buy-document hidden>
+      <label for="buy-document">{b.document}</label>
+      <input id="buy-document" name="document" inputmode="numeric" autocomplete="off" maxlength="14" />
+      <p class="field-error" data-error="document" hidden>{b.documentInvalid}</p>
+    </div>
+
+    <details class="coupon">
+      <summary>{b.coupon}</summary>
+      <div class="field">
+        <label for="buy-coupon">{b.couponLabel}</label>
+        <input id="buy-coupon" name="coupon" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40" />
+      </div>
+    </details>
+
+    <label class="terms">
+      <input type="checkbox" name="terms" />
+      <span>{termsBefore}<a href={checkout.termsUrl} target="_blank" rel="noopener">{b.termsLink}</a>{termsAfter}</span>
+    </label>
+    <p class="field-error" data-error="terms" hidden>{b.termsMissing}</p>
+
+    <p class="note" data-buy-note></p>
+    <p class="form-error" data-buy-error role="alert" hidden></p>
+    <button class="btn-solid pay" type="submit" data-buy-pay>{b.pay}</button>
+    <p class="secure">{pt.store.help.payment}</p>
+  </form>
+
+  <div class="step pix" data-step="pix" hidden>
+    <p class="label">{b.pixTitle}</p>
+    <div class="qr" data-pix-qr-wrap>
+      <img data-pix-qr alt={b.qrAlt} width="220" height="220" />
+    </div>
+    <iframe class="pay-page" data-pix-frame title={b.pixTitle} hidden></iframe>
+    <div class="code" data-pix-code-wrap>
+      <span class="label">{b.pixCode}</span>
+      <code data-pix-code></code>
+      <button class="btn-line" type="button" data-pix-copy><Icon name="copy" />{b.pixCopy}</button>
+    </div>
+    <ol class="steps" data-pix-steps>
+      {b.pixSteps.map((step) => <li>{step}</li>)}
+    </ol>
+    <p class="waiting" role="status"><span class="spinner" aria-hidden="true"></span>{b.waiting}</p>
+    <p class="deliver" data-pix-deliver></p>
+    <p class="hint">{b.canClose}</p>
+  </div>
+
+  <div class="step result" data-step="done" hidden>
+    <span class="result-icon"><Icon name="check" /></span>
+    <h3>{b.doneTitle}</h3>
+    <p data-done-text></p>
+    <button class="btn-solid" type="button" data-buy-close>{b.close}</button>
+  </div>
+
+  <div class="step result" data-step="failed" hidden>
+    <h3>{b.failedTitle}</h3>
+    <p>{b.failed}</p>
+    <button class="btn-solid" type="button" data-buy-retry>{b.retry}</button>
+  </div>
+
+  <div class="step result" data-step="message" hidden>
+    <p data-message-text></p>
+    <button class="btn-line" type="button" data-buy-close>{b.close}</button>
+  </div>
+</dialog>
+
+<script>
+  import { initBuy } from '../../scripts/buy';
+  initBuy();
+</script>
+
+<style>
+  /* The page behind the window stays still while it is open. */
+  :global(html:has(dialog.buy[open])) {
+    overflow: hidden;
+  }
+
+  .buy {
+    color: var(--color-text);
+    background: var(--color-surface);
+    box-shadow: var(--edge), 0 30px 80px -24px #000000d9;
+    border: 0;
+    border-radius: var(--radius-xl);
+    width: min(29rem, 100vw - 2rem);
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    padding: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  .buy::backdrop {
+    background: #0b0c0ec7;
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+  }
+  .buy[open] {
+    animation: rise .28s var(--ease-out);
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(.98);
+    }
+  }
+
+  /* The title and the close button stay in view while a long form scrolls. */
+  .head {
+    z-index: 1;
+    background: var(--color-surface);
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+    padding: 1.35rem 1.4rem .35rem;
+    display: flex;
+    position: sticky;
+    top: 0;
+  }
+  h2 {
+    letter-spacing: -.025em;
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  .close {
+    cursor: pointer;
+    color: var(--color-text-muted);
+    background: var(--color-surface-2);
+    box-shadow: var(--edge);
+    border: 0;
+    border-radius: .6rem;
+    flex: none;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    display: grid;
+  }
+  .close:hover {
+    color: var(--color-text);
+  }
+  .close svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    width: 1rem;
+    height: 1rem;
+  }
+  .close:focus-visible,
+  .buy input:focus-visible,
+  .buy summary:focus-visible,
+  .item:has(input:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .step {
+    gap: 1rem;
+    padding: 1.1rem 1.4rem 1.4rem;
+    display: grid;
+  }
+  .step[hidden] {
+    display: none;
+  }
+
+  .total {
+    border-bottom: 1px solid var(--color-hairline);
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: .9rem;
+    display: flex;
+  }
+  .total span {
+    color: var(--color-text-muted);
+    font-size: .9375rem;
+    font-weight: 600;
+  }
+  .total strong {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.03em;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  /* Which item, for a single skin: the pack's nine icons. */
+  .items {
+    border: 0;
+    gap: .55rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+  .items[hidden] {
+    display: none;
+  }
+  legend,
+  .field label {
+    color: var(--color-text-soft);
+    margin-bottom: .1rem;
+    font-size: .875rem;
+    font-weight: 600;
+  }
+  .item-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: .4rem;
+    display: grid;
+  }
+  .item {
+    cursor: pointer;
+    box-shadow: var(--edge);
+    background: var(--color-bg-tint);
+    border-radius: .6rem;
+    justify-items: center;
+    gap: .25rem;
+    padding: .5rem .15rem .4rem;
+    transition: box-shadow .15s, background-color .15s;
+    display: grid;
+  }
+  .item:hover {
+    background: var(--color-surface-2);
+  }
+  .item:has(input:checked) {
+    background: var(--color-blue-soft);
+    box-shadow: inset 0 0 0 1.5px var(--color-blue);
+  }
+  .item img {
+    image-rendering: pixelated;
+    width: 2rem;
+    height: 2rem;
+  }
+  .item span {
+    color: var(--color-text-muted);
+    text-align: center;
+    font-size: .6875rem;
+    line-height: 1.2;
+  }
+
+  .field {
+    gap: .3rem;
+    display: grid;
+  }
+  .field[hidden] {
+    display: none;
+  }
+  .buy input:not([type="checkbox"], [type="radio"]) {
+    font: inherit;
+    color: var(--color-text);
+    background: var(--color-bg-tint);
+    box-shadow: inset 0 0 0 1px var(--color-hairline-strong);
+    border: 0;
+    border-radius: .65rem;
+    width: 100%;
+    height: 2.75rem;
+    padding: 0 .85rem;
+    font-size: 1rem;
+  }
+  .buy input[aria-invalid="true"],
+  .items[aria-invalid="true"] .item {
+    box-shadow: inset 0 0 0 1.5px var(--color-warning);
+  }
+  .hint {
+    color: var(--color-text-faint);
+    font-size: .8125rem;
+    line-height: 1.45;
+  }
+  .field-error,
+  .form-error {
+    color: var(--color-warning);
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+  .form-error {
+    background: var(--color-warning-soft);
+    border-radius: .6rem;
+    padding: .6rem .75rem;
+    font-size: .875rem;
+  }
+  .field-error[hidden],
+  .form-error[hidden] {
+    display: none;
+  }
+
+  .coupon summary {
+    cursor: pointer;
+    color: var(--color-text-muted);
+    border-radius: .3rem;
+    font-size: .875rem;
+    font-weight: 600;
+  }
+  .coupon[open] summary {
+    margin-bottom: .6rem;
+  }
+  .terms {
+    cursor: pointer;
+    color: var(--color-text-soft);
+    align-items: start;
+    gap: .6rem;
+    font-size: .875rem;
+    line-height: 1.45;
+    display: flex;
+  }
+  .terms input {
+    accent-color: var(--color-blue);
+    flex: none;
+    width: 1.05rem;
+    height: 1.05rem;
+    margin-top: .1rem;
+  }
+  .terms a {
+    color: var(--color-blue-strong);
+  }
+  .note {
+    color: var(--color-text-muted);
+    background: var(--color-bg-tint);
+    box-shadow: var(--edge);
+    border-radius: .7rem;
+    padding: .7rem .8rem;
+    font-size: .8125rem;
+    line-height: 1.5;
+  }
+  .note:empty {
+    display: none;
+  }
+  .pay {
+    width: 100%;
+    min-height: 2.9rem;
+    font-size: .9375rem;
+  }
+  .pay:disabled {
+    cursor: progress;
+    opacity: .75;
+  }
+  .secure {
+    color: var(--color-text-faint);
+    text-align: center;
+    margin-top: -.35rem;
+    font-size: .75rem;
+  }
+
+  /* The Pix: the QR code on white, the code to copy, and the waiting. */
+  .pix {
+    justify-items: center;
+    text-align: center;
+  }
+  .qr {
+    background: #fff;
+    border-radius: .9rem;
+    padding: .7rem;
+    line-height: 0;
+  }
+  .qr[hidden],
+  .code[hidden],
+  .steps[hidden],
+  .pay-page[hidden] {
+    display: none;
+  }
+  .qr img {
+    image-rendering: pixelated;
+    width: 13rem;
+    height: 13rem;
+  }
+  .pay-page {
+    background: #fff;
+    border: 0;
+    border-radius: .9rem;
+    width: 100%;
+    height: min(34rem, 70dvh);
+  }
+  .code {
+    text-align: left;
+    box-shadow: var(--edge);
+    background: var(--color-bg-tint);
+    border-radius: .8rem;
+    gap: .5rem;
+    width: 100%;
+    padding: .75rem .8rem;
+    display: grid;
+  }
+  .code code {
+    font: 500 .75rem/1.45 var(--font-mono);
+    color: var(--color-text-soft);
+    overflow-wrap: anywhere;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+  }
+  .code .btn-line {
+    justify-self: start;
+    min-height: 2.25rem;
+    font-size: .8125rem;
+  }
+  .steps {
+    text-align: left;
+    color: var(--color-text-muted);
+    gap: .3rem;
+    width: 100%;
+    padding-left: 1.2rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    display: grid;
+  }
+  .waiting {
+    color: var(--color-text-soft);
+    align-items: center;
+    gap: .55rem;
+    font-size: .9375rem;
+    font-weight: 600;
+    display: inline-flex;
+  }
+  .spinner {
+    border: 2px solid var(--color-hairline-strong);
+    border-top-color: var(--color-blue);
+    border-radius: 50%;
+    width: 1rem;
+    height: 1rem;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .deliver {
+    color: var(--color-text);
+    font-size: .875rem;
+    font-weight: 600;
+  }
+  .deliver:empty {
+    display: none;
+  }
+  .pix .hint {
+    max-width: 22rem;
+  }
+
+  .result {
+    justify-items: center;
+    text-align: center;
+    padding-top: .5rem;
+  }
+  .result h3 {
+    letter-spacing: -.02em;
+    font-size: 1.25rem;
+  }
+  .result p {
+    color: var(--color-text-muted);
+    font-size: .9375rem;
+    line-height: 1.55;
+  }
+  .result-icon {
+    color: var(--color-green-strong);
+    background: var(--color-green-soft);
+    box-shadow: inset 0 0 0 1px var(--color-green-ring);
+    border-radius: 50%;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    display: grid;
+  }
+  .result-icon :global(svg) {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .buy[open] {
+      animation: none;
+    }
+    .spinner {
+      animation-duration: 2.4s;
+    }
+  }
+  @media (width <= 420px) {
+    .item-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .head,
+    .step {
+      padding-inline: 1.1rem;
+    }
+  }
+</style>

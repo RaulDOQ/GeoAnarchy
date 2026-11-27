@@ -360,11 +360,80 @@ export const pt = {
         'Tags: escolha entre 30, com {accent|degradês} e arco-íris',
       ],
     } as Record<string, readonly string[]>,
+    // The card under the goal: "not open yet" while nothing is on sale, then where to get
+    // help with a purchase.
     status: {
       title: 'A loja ainda não está aberta',
       body: 'Avisaremos no Discord quando os planos e as tags estiverem à venda.',
     },
+    help: {
+      title: 'Ajuda com uma compra',
+      body: 'Pagou e não recebeu? Fale com a gente no Discord, com o nick usado na compra.',
+      payment: 'Pagamento por Pix, processado pela CentralCart.',
+    },
     cta: 'Entrar no Discord',
+    // The "Comprar" buttons and the window that opens from them (src/components/store/
+    // BuyDialog.astro). {price} is a price, {months} a number of months, {nick} the
+    // buyer's nick, {terms} the link to the store's terms.
+    buy: {
+      button: 'Comprar',
+      total: 'Total',
+      vip: 'Comprar por {price}',
+      vipMonths: 'Comprar {months} meses por {price}',
+      vipTitle: '{plan}, {period}',
+      vipPeriods: ['1 mês', '3 meses', '6 meses'],
+      skinTitle: '{option}: {pack}',
+      tagTitle: 'Tag {tag}',
+      close: 'Fechar',
+      loading: 'Carregando…',
+      item: 'Qual item?',
+      itemMissing: 'Escolha o item.',
+      nick: 'Seu nick no jogo',
+      nickHint: 'A compra vai para quem tiver este nick. No Bedrock, com o ponto na frente: .Drew',
+      nickInvalid: 'Use o nick exato do jogo: de 3 a 16 letras, números ou _ (no Bedrock, com o ponto na frente).',
+      name: 'Nome completo',
+      nameHint: 'De quem vai pagar o Pix.',
+      nameInvalid: 'Escreva o nome completo, só com letras e espaços.',
+      email: 'E-mail',
+      emailHint: 'Para o recibo da compra.',
+      emailInvalid: 'Confira o e-mail.',
+      document: 'CPF',
+      documentInvalid: 'Confira o CPF: 11 números.',
+      coupon: 'Tenho um cupom',
+      couponLabel: 'Cupom',
+      terms: 'Li e aceito os {terms} da loja.',
+      termsLink: 'termos e condições',
+      termsMissing: 'Para continuar, aceite os termos.',
+      pay: 'Gerar Pix',
+      paying: 'Gerando o Pix…',
+      notes: {
+        vip: 'Se você já tem este plano, os dias se somam aos que faltam.',
+        skin: 'A skin comprada fica no item para sempre. Para aplicar: /geomenu, Skins, Skins compradas, com o item de netherite na mão.',
+        tag: 'A tag comprada fica sua para sempre. Se você já tem esta tag para sempre, não precisa comprar de novo: veja em /geomenu, Tags.',
+      } as Record<string, string>,
+      pixTitle: 'Pague com Pix',
+      pixSteps: [
+        'Abra o app do seu banco e escolha pagar com Pix.',
+        'Escaneie o QR code ou use o Pix copia e cola.',
+        'Pronto: a confirmação aparece aqui.',
+      ],
+      pixCode: 'Pix copia e cola',
+      pixCopy: 'Copiar código',
+      pixCopied: 'Código Pix copiado',
+      pixCopyFailed: 'Não deu para copiar: selecione o código e copie.',
+      qrAlt: 'QR code do Pix',
+      waiting: 'Aguardando o pagamento…',
+      deliverTo: 'Entrega para {nick}',
+      canClose: 'Pode fechar esta janela: assim que o pagamento for aprovado, você recebe no jogo.',
+      doneTitle: 'Pagamento aprovado!',
+      done: 'Entre no servidor com o nick {nick}: você recebe na hora. Se já estiver online, já chegou.',
+      doneNoNick: 'Entre no servidor: você recebe na hora. Se já estiver online, já chegou.',
+      failedTitle: 'O pagamento não foi concluído',
+      failed: 'O Pix expirou ou foi cancelado, e nada foi cobrado. Dá para gerar outro.',
+      retry: 'Tentar de novo',
+      unavailable: 'Isto ainda não está à venda. Volte em breve.',
+      error: 'Não deu para falar com a loja. Tente de novo em instantes.',
+    },
     note: {
       title: 'E dentro do jogo?',
       body: 'No GeoAnarchy, toda a economia é controlada por jogadores, sem loja do servidor.',
@@ -382,6 +451,8 @@ export const pt = {
       meta: {
         title: 'Skins | Loja | GeoAnarchy',
         description: 'As skins de itens do GeoAnarchy: os pacotes Silvestre, Glacial, Dracônico, Abissal e Celestial, que vêm com os planos VIP e, em breve, à venda separados.',
+        // Once skins can be bought (src/config/store.ts, checkout).
+        descriptionOpen: 'As skins de itens do GeoAnarchy: os pacotes Silvestre, Glacial, Dracônico, Abissal e Celestial, que vêm com os planos VIP ou podem ser comprados separados, por Pix.',
       },
       lead: 'Skins mudam a aparência das suas espadas, ferramentas e armaduras de netherite. Só o visual: o item continua igual em tudo o resto.',
       intro: {
@@ -389,6 +460,11 @@ export const pt = {
         body: [
           'Hoje as skins vêm com os planos: cada plano libera os seus pacotes e os dos planos abaixo dele.',
           'Em breve, as skins também poderão ser compradas separadas, de quatro jeitos:',
+        ],
+        // Once skins can be bought.
+        bodyOpen: [
+          'Cada plano libera os seus pacotes e os dos planos abaixo dele.',
+          'As skins também podem ser compradas separadas, por Pix, de quatro jeitos:',
         ],
       },
       // The four ways to buy, by the ids in src/config/store.ts (skinOptions).
@@ -404,7 +480,8 @@ export const pt = {
       rulesLabel: 'Bom saber',
       rules: [
         'As skins só podem ser aplicadas em itens de netherite.',
-        'Se você morrer, perde a skin: ela fica no item, e quem pegar o item de você poderá usá-la.',
+        'A skin do plano vale enquanto o plano durar. Se outra pessoa pegar o item, a skin sai dele.',
+        'A skin comprada fica no item para sempre, mesmo sem plano. Se você morrer, quem pegar o item fica com a skin.',
       ],
       // What each item is called, by the names GeoUltra uses.
       items: {
@@ -430,14 +507,14 @@ export const pt = {
     tags: {
       meta: {
         title: 'Tags | Loja | GeoAnarchy',
-        description: 'As tags do GeoAnarchy, como CRIA, AURA e SIGMA: as que vêm com cada plano VIP e, em breve, para comprar separadas e ter para sempre.',
+        description: 'As tags do GeoAnarchy, como CRIA, AURA e SIGMA: as que vêm com cada plano VIP e as que dá para comprar separadas, por Pix, e ter para sempre.',
       },
       lead: 'Cada plano traz as suas tags, que aparecem no lugar da tag do plano: no chat, no TAB e acima da cabeça.',
       intro: {
         title: 'Tags para sempre',
         body: [
           'Hoje as tags vêm com os planos: cada plano libera as suas e as dos planos abaixo dele.',
-          'Em breve, cada tag também poderá ser comprada separada. Uma tag comprada fica sua para sempre, mesmo sem plano, e dá para pintá-la com /tagcor: uma cor no Geo+, negrito no Geo Ultra, degradês no Geo Ultra+.',
+          'Cada tag também pode ser comprada separada, por Pix. Uma tag comprada fica sua para sempre, mesmo sem plano, e dá para pintá-la com /tagcor: uma cor no Geo+, negrito no Geo Ultra, degradês no Geo Ultra+.',
         ],
       },
       group: 'Com o {plan}',

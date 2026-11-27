@@ -3,7 +3,8 @@
 
 let toastTimer = 0;
 
-function showToast(text: string): void {
+/** Shows a short message in the page's toast (Base.astro) for a moment. */
+export function showToast(text: string): void {
   const toast = document.querySelector<HTMLElement>('[data-site-toast]');
   if (!toast) return;
   toast.textContent = text;
@@ -12,7 +13,8 @@ function showToast(text: string): void {
   toastTimer = window.setTimeout(() => toast.classList.remove('visible'), 2600);
 }
 
-async function copyText(value: string): Promise<boolean> {
+/** Copies a text, also where the clipboard API is missing. True when it worked. */
+export async function copyText(value: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(value);
     return true;

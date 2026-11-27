@@ -1,0 +1,62 @@
+---
+// A "Comprar" button: it opens the buy window (BuyDialog.astro) for what `buy` sells. While
+// that product isn't on sale yet (`buy` is null) it is an "Em breve" tag instead. Without
+// JavaScript the button is a plain link to the store at CentralCart.
+import { checkout, type BuySpec } from '../../config/store';
+import { pt } from '../../content/pt';
+
+interface Props {
+  buy: BuySpec | null;
+  label: string;
+  /** solid: the blue button; line: the quieter one, for small cards. */
+  variant?: 'solid' | 'line';
+  /** Full width of its card. */
+  wide?: boolean;
+}
+
+const { buy, label, variant = 'solid', wide = false } = Astro.props;
+---
+
+{
+  buy ? (
+    <a
+      class:list={[variant === 'line' ? 'btn-line' : 'btn-solid', 'buy-btn', { wide }]}
+      href={`https://${checkout.storeDomain}/`}
+      data-buy={JSON.stringify(buy)}
+    >
+      {label}
+    </a>
+  ) : (
+    <span class:list={['soon', { wide }]}>{pt.common.soon}</span>
+  )
+}
+
+<style>
+  .buy-btn {
+    text-decoration: none;
+  }
+  .wide {
+    width: 100%;
+  }
+  .btn-line.buy-btn {
+    min-height: 2.15rem;
+    padding: 0 .85rem;
+    font-size: .8125rem;
+  }
+  .soon {
+    white-space: nowrap;
+    box-shadow: inset 0 0 0 1px var(--color-green-ring);
+    color: var(--color-green-strong);
+    background: var(--color-green-soft);
+    border-radius: 999px;
+    justify-self: start;
+    padding: .4rem .75rem;
+    font-size: .8125rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .soon.wide {
+    text-align: center;
+    width: auto;
+  }
+</style>

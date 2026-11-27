@@ -1,17 +1,20 @@
 ---
 // "Loja", the VIP category: the three plans. A switch chooses how often to pay (every
-// month, every 3 months, every 6 months) and every card shows the price for that choice;
-// it works without JavaScript. The plans cannot be bought yet, so the cards say "Em
-// breve". The category tabs and the side column with the monthly goal come from
-// StoreShell. The plans and the prices: src/config/store.ts.
+// month, every 3 months, every 6 months) and every card shows the price and the
+// "Comprar" button for that choice; it works without JavaScript. A plan and period not
+// on sale at CentralCart yet says "Em breve" instead. The category tabs, the side column
+// with the monthly goal and the buy window come from StoreShell. The plans, the prices
+// and the CentralCart products: src/config/store.ts.
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import StoreShell from '../../components/store/StoreShell.astro';
+import BuyButton from '../../components/store/BuyButton.astro';
 import Closing from '../../components/home/Closing.astro';
-import { periodPrice, reais, store } from '../../config/store';
+import { periodPrice, reais, store, vipBuy } from '../../config/store';
 import { pt } from '../../content/pt';
 
 const c = pt.store;
+const b = c.buy;
 const money = (centavos: number) => `R$ ${reais(centavos)}`;
 
 // Painted words in a benefit: "{style|words}" becomes words in that style (see
@@ -125,7 +128,18 @@ function painted(text: string): Piece[] {
               )}
             </div>
 
-            <p class="soon-tag">{pt.common.soon}</p>
+            <div class="buy-at">
+              {store.periods.map((period, n) => {
+                const total = money(periodPrice(plan.monthly, period).total);
+                const label = (period.months === 1 ? b.vip : b.vipMonths).replace('{months}', String(period.months)).replace('{price}', total);
+                const title = b.vipTitle.replace('{plan}', plan.name).replace('{period}', b.vipPeriods[n] ?? c.periods[n]);
+                return (
+                  <div class={`buy-p buy-p${n}`}>
+                    <BuyButton buy={vipBuy(plan, period, title)} label={label} wide />
+                  </div>
+                );
+              })}
+            </div>
           </li>
         ))
       }
@@ -425,16 +439,14 @@ function painted(text: string): Piece[] {
     font-size: .9375rem;
     line-height: 1.5;
   }
-  .soon-tag {
-    box-shadow: inset 0 0 0 1px var(--color-green-ring);
-    color: var(--color-green-strong);
-    background: var(--color-green-soft);
-    border-radius: 999px;
-    justify-self: start;
-    padding: .4rem .75rem;
-    font-size: .8125rem;
-    font-weight: 600;
-    line-height: 1;
+  /* The button for the chosen way of paying; the others wait hidden, like the prices. */
+  .buy-p {
+    display: none;
+  }
+  .vip:has(#period-0:checked) .buy-p0,
+  .vip:has(#period-1:checked) .buy-p1,
+  .vip:has(#period-2:checked) .buy-p2 {
+    display: grid;
   }
 
   .note {
@@ -460,6 +472,13 @@ function painted(text: string): Piece[] {
       display: none;
     }
     .price {
+      display: grid;
+    }
+    .buy-at {
+      gap: .5rem;
+      display: grid;
+    }
+    .buy-p {
       display: grid;
     }
   }

@@ -1,11 +1,14 @@
 ---
 // The frame of every store page (/loja/ and the pages under it): the category tabs over
-// the page's own content, and a column at the side with the monthly goal and where to
-// hear when the store opens. On narrow screens the side column comes after the content.
+// the page's own content, and a column at the side with the monthly goal and, while
+// nothing is on sale, where to hear when the store opens (then, where to get help with a
+// purchase). On narrow screens the side column comes after the content. It also holds
+// the buy window that every "Comprar" button opens (BuyDialog.astro).
 // The categories are in src/config/store.ts; their names in pt.store.categories.
 import Icon from '../Icon.astro';
+import BuyDialog from './BuyDialog.astro';
 import { site } from '../../config/site';
-import { goalProgress, reais, store } from '../../config/store';
+import { goalProgress, onSale, reais, store } from '../../config/store';
 import { pt } from '../../content/pt';
 
 interface Props {
@@ -22,6 +25,7 @@ const progress = goalProgress(goal);
 const goalOf = g.of.replace('{goal}', money(goal.amount));
 // Under the bar: what is missing, or that the goal is reached (and by how much it was passed).
 const goalStatus = progress.left > 0 ? g.left.replace('{left}', money(progress.left)) : progress.over > 0 ? `${g.reached} · ${g.over.replace('{over}', money(progress.over))}` : g.reached;
+const open = onSale('vip') || onSale('skins') || onSale('tags');
 ---
 
 <section class="container store">
@@ -64,11 +68,14 @@ const goalStatus = progress.left > 0 ? g.left.replace('{left}', money(progress.l
     </div>
 
     <div class="status card" data-in="settle" style="--d: 100ms">
-      <h2>{c.status.title}</h2>
-      <p>{c.status.body}</p>
+      <h2>{open ? c.help.title : c.status.title}</h2>
+      <p>{open ? c.help.body : c.status.body}</p>
       <a class="btn-solid" href={site.discordUrl} target="_blank" rel="noopener">{c.cta}<Icon name="arrowUpRight" class="arrow" /></a>
+      {open && <p class="pay-note">{c.help.payment}</p>}
     </div>
   </aside>
+
+  <BuyDialog />
 </section>
 
 <style>
@@ -217,6 +224,10 @@ const goalStatus = progress.left > 0 ? g.left.replace('{left}', money(progress.l
   .status .btn-solid {
     justify-self: start;
     margin-top: .35rem;
+  }
+  .status .pay-note {
+    color: var(--color-text-faint);
+    font-size: .8125rem;
   }
 
   @media (width <= 1000px) {
