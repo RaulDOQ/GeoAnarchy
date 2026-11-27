@@ -397,7 +397,7 @@ export const pt = {
     vip: {
       id: 'vip',
       title: 'VIP e skins',
-      intro: 'Os planos Geo+, Geo Ultra e Geo Ultra+, o menu /geomenu e as skins de itens.',
+      intro: 'Os planos Geo+, Geo Ultra e Geo Ultra+, o GeoMenu (/geomenu), o nome colorido e as skins de itens.',
     },
     // The founders' wiki.
     // The tools tab (src/pages/wiki/ferramentas). Each tool is a page of its own.
@@ -433,12 +433,12 @@ export const pt = {
         countryOver: 'Passou de 32 caracteres: o nome do país não vai caber. Use menos partes, cores ou estilos.',
         formats: [
           { id: 'mini', label: 'Nome de país', note: 'Para /pais create e /pais rename (formato MiniMessage)' },
-          { id: 'amp', label: 'Chat e apelido', note: 'Para o chat e o /nick (códigos & e &#RRGGBB)' },
+          { id: 'amp', label: 'Chat e apelido', note: 'Para o /nome dos VIP e o chat (códigos & e &#RRGGBB)' },
           { id: 'bukkit', label: 'Outros plugins', note: 'Para plugins que só aceitam &x&R&R&G&G&B&B' },
         ],
         tips: [
           'Renomear um país custa 10.000 Geos e só pode ser feito uma vez por dia: confira a prévia antes.',
-          'Cores no chat e no apelido dependem de permissão no servidor.',
+          'O /nome é dos planos VIP e só aceita o seu próprio nome: as cores mudam, as letras (e as maiúsculas) não.',
           'Quem joga pelo Bedrock (celular e console) vê as cores RGB um pouco diferentes.',
         ],
       },
