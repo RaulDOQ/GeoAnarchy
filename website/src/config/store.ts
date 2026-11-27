@@ -229,11 +229,11 @@ export const checkout = {
   termsUrl: 'https://geoanarchy.centralcart.ai/terms',
   products: {
     vip: {
-      'geo-plus': { 1: null, 3: null, 6: null },
-      'geo-ultra': { 1: null, 3: null, 6: null },
-      'geo-ultra-plus': { 1: null, 3: null, 6: null },
+      'geo-plus': { 1: 1148243, 3: 1148246, 6: 1148251 },
+      'geo-ultra': { 1: 1148253, 3: 1148258, 6: 1148260 },
+      'geo-ultra-plus': { 1: 1148262, 3: 1148265, 6: 1148266 },
     },
-    skins: { single: null, tools: null, armour: null, pack: null },
+    skins: { single: 1148269, tools: 1148271, armour: 1148274, pack: 1148278 },
     tag: 1148089,
   } as CheckoutProducts,
 };
