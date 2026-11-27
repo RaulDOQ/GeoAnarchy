@@ -6,7 +6,7 @@
 
     <groupId>me.rauldoq</groupId>
     <artifactId>geoanarchy</artifactId>
-    <version>3.2.0</version>
+    <version>3.3.0</version>
     <packaging>jar</packaging>
 
     <name>GeoAnarchy</name>
@@ -26,6 +26,11 @@
         <repository>
             <id>jitpack</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <!-- PlaceholderAPI, for the chat placeholders -->
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/releases/</url>
         </repository>
     </repositories>
 
@@ -73,6 +78,13 @@
             <groupId>com.github.angeschossen</groupId>
             <artifactId>LandsAPI</artifactId>
             <version>7.25.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Chat placeholders (%geoanarchy_country% and the rest). Optional at runtime. -->
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.12.3</version>
             <scope>provided</scope>
         </dependency>
         <!-- Our own economy plugin. Install it first with "mvnw install" in the GeoEconomy project. -->

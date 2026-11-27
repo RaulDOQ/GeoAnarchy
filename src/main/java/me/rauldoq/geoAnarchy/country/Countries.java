@@ -33,6 +33,9 @@ public interface Countries {
     /** Adds Geos to the country's bank. @return false if the country is gone or Lands refused */
     boolean addToBank(String countryId, double amount);
 
+    /** The name of the country a player founded or lives in (founded first), with its colors as Lands keeps them. */
+    Optional<String> coloredName(UUID player);
+
     Countries NONE = new Countries() {
         @Override
         public boolean available() {
@@ -57,6 +60,11 @@ public interface Countries {
         @Override
         public boolean addToBank(String countryId, double amount) {
             return false;
+        }
+
+        @Override
+        public Optional<String> coloredName(UUID player) {
+            return Optional.empty();
         }
     };
 }

@@ -132,6 +132,24 @@ public final class LandsHook implements Countries, Listener {
     }
 
     @Override
+    public Optional<String> coloredName(UUID player) {
+        Land citizenOf = null;
+        for (Land land : lands.getLands()) {
+            if (player.equals(land.getOwnerUID())) {
+                return Optional.of(colored(land));
+            }
+            if (citizenOf == null && land.isTrusted(player)) {
+                citizenOf = land;
+            }
+        }
+        return Optional.ofNullable(citizenOf).map(LandsHook::colored);
+    }
+
+    private static String colored(Land land) {
+        return quietly(land::getColorName, land.getName());
+    }
+
+    @Override
     public Optional<Status> status(String countryId) {
         Land land = find(countryId);
         if (land == null) {

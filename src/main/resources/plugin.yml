@@ -5,7 +5,7 @@ api-version: '1.21'
 author: RaulDOQ
 description: Discord, alertas e utilidades do servidor GeoAnarchy.
 # None of these is required. Each part of the plugin switches itself on when its plugin is present.
-softdepend: [Vault, Lands, GeoEconomy, LuckPerms, Essentials]
+softdepend: [Vault, Lands, GeoEconomy, LuckPerms, Essentials, PlaceholderAPI]
 
 commands:
   vincular:

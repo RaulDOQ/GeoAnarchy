@@ -16,6 +16,8 @@ import me.rauldoq.geoAnarchy.country.Countries;
 import me.rauldoq.geoAnarchy.country.LandsHook;
 import me.rauldoq.geoAnarchy.economy.Economy;
 import me.rauldoq.geoAnarchy.economy.GeoEconomyBridge;
+import me.rauldoq.geoAnarchy.chat.ChatTags;
+import me.rauldoq.geoAnarchy.chat.GeoPlaceholders;
 import me.rauldoq.geoAnarchy.game.Coffee;
 import me.rauldoq.geoAnarchy.game.GameCommands;
 import me.rauldoq.geoAnarchy.game.JoinListener;
@@ -110,6 +112,19 @@ public final class GeoAnarchy extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
         coffee = new Coffee(this);
         getServer().getPluginManager().registerEvents(coffee, this);
+
+        // Chat placeholders (%geoanarchy_country% and the rest), read by VentureChat.
+        ChatTags chatTags = new ChatTags(this, () -> countries);
+        chatTags.start();
+        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            try {
+                if (GeoPlaceholders.register(this, chatTags)) {
+                    getLogger().info("Chat placeholders ready: %geoanarchy_country%, %geoanarchy_name%, %geoanarchy_prefix%.");
+                }
+            } catch (Throwable error) {
+                getLogger().log(Level.WARNING, "Could not register the chat placeholders.", error);
+            }
+        }
 
         // run-once.txt: console commands prepared as a file. Scheduled tasks start once the server has finished
         // starting, so LuckPerms and the rest are ready by then.
