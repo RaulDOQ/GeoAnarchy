@@ -105,7 +105,7 @@ Um show de um a dois segundos, com partículas, sons, raio de verdade e fogos de
 | Efeitos de morte | Onde **você** morre | Almas, Cinzas, Pétalas, Fantasma | + Meteoro, Anjo, Vazio, Gelo, Coração partido, Encanto |
 | Efeitos de kill | Onde quem **você matou** caiu | Não | Raio, Fogos de artifício, Coroa, Explosão, Tornado, Chamas da alma, Chuva de ouro, Sangue, Corações, Musiquinha |
 
-Numa kill, os dois podem aparecer juntos: o efeito de kill de quem matou e o efeito de morte de quem morreu.
+Numa kill, aparece um efeito só: o efeito de kill de quem matou, se ele escolheu um. Se não escolheu, aparece o efeito de morte de quem morreu.
 
 ## Quando o plano acaba
 
