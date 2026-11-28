@@ -1,19 +1,19 @@
 ---
 title: Tags e mensagens
-summary: As tags que trocam a tag do plano, as mensagens de kill e as mensagens de entrada, e o que cada plano pode escolher.
+summary: As tags que trocam a tag do plano, as mensagens de kill, de entrada e de morte, os efeitos de kill e de morte, e o que cada plano pode escolher.
 order: 3
 ---
 
 ## Como escolher
 
-Abra o **/geomenu** e clique em **Tags**, **Mensagens de kill** ou **Mensagens de entrada**. Cada botão mostra o texto com o seu nome, do jeito que os outros vão ler. Clique em um para usar. O que você está usando brilha.
+Abra o **/geomenu** e clique em **Tags**, **Mensagens de kill**, **Mensagens de entrada**, **Mensagens de morte**, **Efeitos de kill** ou **Efeitos de morte**. Cada botão mostra o texto com o seu nome, do jeito que os outros vão ler. Clique em um para usar. O que você está usando brilha.
 
 As opções de um plano que você não tem continuam aparecendo, com o plano que elas precisam. Quem tem um plano pode escolher também tudo o que os planos de baixo dão.
 
 Nas mensagens, dois botões embaixo:
 
-- **Aleatória**: a cada kill (ou a cada entrada), uma das suas mensagens é sorteada.
-- **Desligar**: volta à mensagem normal do jogo.
+- **Aleatória**: a cada kill (ou entrada, ou morte), uma das suas mensagens ou efeitos é sorteada.
+- **Desligar**: volta à mensagem normal do jogo, ou a nenhum efeito.
 
 ## Tags
 
@@ -86,6 +86,27 @@ Trocam o “entrou no jogo” que todos leem quando você entra. São do **Geo U
 
 Para não encher o chat, a sua mensagem aparece **no máximo uma vez a cada 10 minutos**. Se você sair e entrar de novo antes disso, aparece a mensagem normal.
 
+## Mensagens de morte
+
+Do **Geo Ultra+**: trocam a mensagem que todos leem quando **você morre**, de qualquer jeito (queda, lava, monstro ou outro jogador). Se quem te matou tem uma mensagem de kill escolhida, **a dele vence**. Todas coloridas:
+
+- Astrum morreu, mas foi lag
+- Astrum tava AFK, juro
+- Astrum tropeçou no cabo da internet
+- Astrum foi pro beleléu
+- Astrum deu um rolê no além e já volta
+
+## Efeitos de kill e de morte
+
+Um show de um a dois segundos, com partículas, sons, raio de verdade e fogos de artifício. É só para ver: o raio não queima nem machuca, os fogos não dão dano e nada pega fogo. Quando você escolhe um, ele aparece em volta de você para você ver como é.
+
+| | Onde aparece | Geo Ultra | Geo Ultra+ |
+|---|---|---|---|
+| Efeitos de morte | Onde **você** morre | Almas, Cinzas, Pétalas, Fantasma | + Meteoro, Anjo, Vazio, Gelo, Coração partido, Encanto |
+| Efeitos de kill | Onde quem **você matou** caiu | Não | Raio, Fogos de artifício, Coroa, Explosão, Tornado, Chamas da alma, Chuva de ouro, Sangue, Corações, Musiquinha |
+
+Numa kill, os dois podem aparecer juntos: o efeito de kill de quem matou e o efeito de morte de quem morreu.
+
 ## Quando o plano acaba
 
-A tag, a mensagem de kill e a mensagem de entrada param de aparecer, mas ficam guardadas: voltam sozinhas se você voltar a ter um plano. Se você passar para um plano mais simples, o que for só do plano mais caro para de aparecer até você escolher outra coisa.
+A tag, as mensagens e os efeitos param de aparecer, mas ficam guardadas: voltam sozinhas se você voltar a ter um plano. Se você passar para um plano mais simples, o que for só do plano mais caro para de aparecer até você escolher outra coisa.

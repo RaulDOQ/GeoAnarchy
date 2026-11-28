@@ -54,6 +54,7 @@ Letras embaralhadas (&k) não são aceitas: ninguém conseguiria ler o seu nome.
 | | Geo+ | Geo Ultra | Geo Ultra+ |
 |---|---|---|---|
 | Sentar, deitar e rastejar (/sit, /lay, /crawl) | Sim | Sim | Sim |
+| Brilho colorido em volta do personagem (/glow) | Sim | Sim | Sim |
 | Nome colorido (/nome) | Não | Sim | Sim |
 | Partículas (/pp) | Não | Sim | Sim |
 | Skins em uso ao mesmo tempo | 5 | 10 | 18 |
@@ -62,8 +63,31 @@ Letras embaralhadas (&k) não são aceitas: ninguém conseguiria ler o seu nome.
 | Estilo da tag | 9 cores | 9 cores e negrito | + 9 degradês |
 | Mensagens de kill para escolher | 6 | 10 | 20 (10 coloridas) |
 | Mensagens de entrada para escolher | Não | 6 | 6 |
+| Mensagens de morte para escolher | Não | Não | 5 |
+| Efeitos de morte para escolher | Não | 4 | 10 |
+| Efeitos de kill para escolher | Não | Não | 10 |
+| Nome colorido em itens (/nomeitem) | Não | Não | Sim |
+| XP a mais | Não | Não | +20% |
+| XP de habilidades a mais | Não | Não | +20% |
+| Impulso de XP do mês (/impulso) | Não | Não | 1 por mês |
 
-Novos benefícios vão aparecer no mesmo menu.
+## Nome de item
+
+Com o **Geo Ultra+**, segure um item e use **/nomeitem** para dar a ele um nome colorido, com as mesmas cores do /nome e até 32 letras: `/nomeitem &6Excalibur` ou `/nomeitem <gradient:gold:yellow>Excalibur`. Aqui as letras podem ser quaisquer.
+
+O nome fica **no item**, para sempre, com quem estiver com ele: se outra pessoa pegar o item, o nome vai junto. **/nomeitem limpar** tira o nome.
+
+## XP a mais
+
+O **Geo Ultra+** ganha **20% a mais de XP** das bolinhas de experiência e **20% a mais de XP de habilidades** (as do /frpg). Funciona sozinho: não precisa ativar nada.
+
+## Impulso de XP
+
+Uma vez por mês, quem tem o **Geo Ultra+** pode dar **30% a mais de XP para todo mundo online, por 30 minutos**. Use **/impulso** (ou o botão no /geomenu) para ver se o seu está disponível, e clique em **Ativar agora**. Todos veem o aviso no chat e uma barra no topo da tela com o tempo que falta.
+
+- Só um impulso por vez no servidor: se já tem um rodando, o seu fica guardado para depois.
+- O mês é o do calendário (horário de Brasília): o impulso de novembro libera de novo no dia 1º de dezembro.
+- Soma com o bônus do plano: um Geo Ultra+ durante um impulso ganha 50% a mais de XP.
 
 ## Quando o plano acaba
 
@@ -71,4 +95,4 @@ As skins dos seus itens são removidas quando você entra no servidor depois que
 
 O nome colorido volta ao normal, mas fica guardado: se você voltar a ter o Geo Ultra ou o Geo Ultra+, as cores voltam sozinhas.
 
-A tag, a mensagem de kill e a mensagem de entrada que você escolheu param de aparecer e também ficam guardadas. Se você passar para um plano mais simples, o que for só do plano mais caro para de aparecer até você escolher outra coisa.
+A tag, as mensagens e os efeitos que você escolheu param de aparecer e também ficam guardados. O impulso de XP e o XP a mais param na hora. Um item que já ganhou nome com /nomeitem continua com ele. Se você passar para um plano mais simples, o que for só do plano mais caro para de aparecer até você escolher outra coisa.
