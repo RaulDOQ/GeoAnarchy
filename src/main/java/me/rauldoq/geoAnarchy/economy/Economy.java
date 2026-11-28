@@ -43,8 +43,11 @@ public interface Economy {
     /** Takes Geos out of a player's wallet. @return false if they don't have that much */
     boolean take(UUID player, long cents, String reason);
 
-    /** Puts Geos into a player's wallet. Used to give money back when something else failed. */
-    void give(UUID player, long cents, String reason);
+    /**
+     * Puts Geos into a player's wallet. Used to give money back when something else failed.
+     * @return false if it could not be saved (then the caller keeps it owed, see {@link OwedRefunds})
+     */
+    boolean give(UUID player, long cents, String reason);
 
     /** The account's exact name, if a player with that name has ever joined. */
     Optional<String> accountName(String typedName);
@@ -95,7 +98,8 @@ public interface Economy {
         }
 
         @Override
-        public void give(UUID player, long cents, String reason) {
+        public boolean give(UUID player, long cents, String reason) {
+            return false;
         }
 
         @Override

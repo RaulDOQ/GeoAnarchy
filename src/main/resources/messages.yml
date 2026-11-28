@@ -128,11 +128,12 @@ discord:
     confirm-button: "Confirmar"
     expired: "Esse pedido venceu. Use o comando de novo."
     not-yours: "Esse botão é de outra pessoa."
+    already: "Esse pedido já está sendo feito."
   deposit:
     no-country: "Você não tem um país onde possa depositar. É preciso ser o fundador, ou ter no país a permissão de depositar no banco."
     confirm: "Depositar **{amount}** no banco de **{country}**?\nSua carteira tem {balance}."
     done: "✅ Depositado: **{amount}** no banco de **{country}**.\nSua carteira agora tem {balance}."
-    failed: "O depósito não foi concluído. Nada foi cobrado."
+    failed: "O depósito não foi concluído. O valor volta para a sua carteira."
   pay:
     no-player: "Não existe jogador chamado `{player}` no servidor."
     self: "Você não pode pagar a si mesmo."

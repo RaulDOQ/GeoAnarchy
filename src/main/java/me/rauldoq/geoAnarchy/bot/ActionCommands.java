@@ -244,7 +244,12 @@ public final class ActionCommands {
             event.reply(texts.text("action.not-yours")).setEphemeral(true).queue();
             return;
         }
-        pending.remove(event.getComponentId());
+        // Only one click gets the deposit: two clicks at the same moment (a double click, Discord trying again)
+        // both find it above, but only the first one can take it out.
+        if (!pending.remove(event.getComponentId(), action)) {
+            event.reply(texts.text("action.already")).setEphemeral(true).queue();
+            return;
+        }
         event.deferEdit().queue(hook -> plugin.onMain(() -> perform(action)).whenComplete((text, error) -> {
             if (error != null) {
                 bot.failed(error);
@@ -315,8 +320,16 @@ public final class ActionCommands {
             if (!economy.take(action.player(), action.cents(), "discord:/depositar " + action.targetName())) {
                 return texts.text("action.not-enough", "balance", economy.geos(economy.geoBalance(action.player())));
             }
-            if (!plugin.countries().addToBank(action.target(), action.cents() / 100.0)) {
-                economy.give(action.player(), action.cents(), "discord:/depositar devolvido");
+            // The money has left the wallet: from here on, anything that goes wrong gives it back.
+            boolean banked;
+            try {
+                banked = plugin.countries().addToBank(action.target(), action.cents() / 100.0);
+            } catch (RuntimeException | LinkageError lands) {
+                plugin.getLogger().warning("/depositar: the bank of " + action.targetName() + " refused a deposit: " + lands);
+                banked = false;
+            }
+            if (!banked) {
+                plugin.owedRefunds().refund(action.player(), action.cents(), "discord:/depositar devolvido");
                 return texts.text("deposit.failed");
             }
             plugin.rememberAction(action.player(), texts.text("log.deposit", "amount", amount, "country", action.targetName()));

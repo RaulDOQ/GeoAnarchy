@@ -16,6 +16,7 @@ import me.rauldoq.geoAnarchy.country.Countries;
 import me.rauldoq.geoAnarchy.country.LandsHook;
 import me.rauldoq.geoAnarchy.economy.Economy;
 import me.rauldoq.geoAnarchy.economy.GeoEconomyBridge;
+import me.rauldoq.geoAnarchy.economy.OwedRefunds;
 import me.rauldoq.geoAnarchy.economy.Payments;
 import me.rauldoq.geoAnarchy.chat.ChatTags;
 import me.rauldoq.geoAnarchy.chat.GeoPlaceholders;
@@ -59,6 +60,7 @@ public final class GeoAnarchy extends JavaPlugin {
     private volatile Settings settings;
     private volatile Messages messages;
     private Database database;
+    private OwedRefunds owedRefunds;
     private LinkService links;
     private Prefs prefs;
     private AlertService alerts;
@@ -90,6 +92,7 @@ public final class GeoAnarchy extends JavaPlugin {
         vips = new VipService(command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command));
         payments = new Payments(database, this::economy, this::messages, System::currentTimeMillis,
                 () -> Math.round(settings.payDailyLimit() * 100), getLogger());
+        owedRefunds = new OwedRefunds(database, this::economy, getLogger());
 
         bot = new Bot(this);
         alerts.setSender(bot);
@@ -139,6 +142,8 @@ public final class GeoAnarchy extends JavaPlugin {
         // Discord payments a failure or a restart left half done are booked without waiting for a click. First once the
         // server has started (GeoEconomy is ready by then), then every five minutes.
         Bukkit.getScheduler().runTaskTimer(this, payments::reconcile, 40L, 20L * 300);
+        // Money whose refund failed (a /depositar the bank refused) is given back as soon as the economy can save.
+        Bukkit.getScheduler().runTaskTimer(this, owedRefunds, 60L, 20L * 300);
         // Every tick: read a few players for /ranks, so the command itself never has to read anyone.
         Bukkit.getScheduler().runTaskTimer(this, ranks::tick, 1L, 1L);
         // Once an hour: use up VIP time. Every five minutes: forget link codes that ran out.
@@ -285,6 +290,10 @@ public final class GeoAnarchy extends JavaPlugin {
 
     public Payments payments() {
         return payments;
+    }
+
+    public OwedRefunds owedRefunds() {
+        return owedRefunds;
     }
 
     public Economy economy() {

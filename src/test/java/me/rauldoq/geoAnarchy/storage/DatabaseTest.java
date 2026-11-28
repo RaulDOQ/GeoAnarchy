@@ -36,6 +36,19 @@ class DatabaseTest {
         database = new Database(folder.resolve("test.db"));
     }
 
+    @Test
+    void moneyOwedStaysUntilItIsGivenBackEvenAcrossARestart() throws Exception {
+        database.addOwed(STEVE, 2500, "discord:/depositar devolvido", 1000);
+        database.addOwed(STEVE, 100, "discord:/depositar devolvido", 2000);
+        database.close();
+        database = new Database(folder.resolve("test.db"));
+        List<Database.Owed> owed = database.owed();
+        assertEquals(List.of(2500L, 100L), owed.stream().map(Database.Owed::cents).toList());
+        assertEquals(STEVE, owed.get(0).player());
+        database.deleteOwed(owed.get(0).id());
+        assertEquals(List.of(100L), database.owed().stream().map(Database.Owed::cents).toList());
+    }
+
     @AfterEach
     void close() {
         database.close();

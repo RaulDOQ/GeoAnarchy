@@ -9,8 +9,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
+import java.text.Normalizer;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -23,6 +26,9 @@ public final class ChatTags implements Listener {
 
     /** Country names without colors of their own get this one: the dark green the tab list uses. */
     static final String DEFAULT_COLOR = "&2";
+    /** What a player without a country sorts as: after every letter and number, so they come last. */
+    static final String NO_COUNTRY_SORT = "~";
+    private static final Pattern CODES = Pattern.compile("(?i)&x(&[0-9a-f]){6}|&#[0-9a-f]{6}|&[0-9a-fk-or]");
 
     private final Plugin plugin;
     private final Supplier<Countries> countries;
@@ -52,6 +58,23 @@ public final class ChatTags implements Listener {
 
     static String tagOf(String coloredName) {
         return coloredName == null || coloredName.isBlank() ? "" : "&f[" + coloredName + "&f] ";
+    }
+
+    /**
+     * The country's name for sorting, e.g. the tab list (TAB's PLACEHOLDER_A_TO_Z): no colors, no accents,
+     * small letters, so "&2Ásia" sorts as "asia". "~" without a country, which sorts after every name.
+     */
+    public String sortKey(UUID player) {
+        return sortKeyOf(names.get(player));
+    }
+
+    static String sortKeyOf(String coloredName) {
+        if (coloredName == null) {
+            return NO_COUNTRY_SORT;
+        }
+        String plain = Normalizer.normalize(CODES.matcher(coloredName).replaceAll(""), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "").strip().toLowerCase(Locale.ROOT);
+        return plain.isEmpty() ? NO_COUNTRY_SORT : plain;
     }
 
     /** A Lands name as chat shows it: "&" codes, and dark green when it has no color of its own. */

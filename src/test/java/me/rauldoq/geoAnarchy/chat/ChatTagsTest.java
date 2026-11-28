@@ -30,6 +30,16 @@ class ChatTagsTest {
     }
 
     @Test
+    void theTabListSortsByThePlainCountryNameAndPlayersWithoutOneComeLast() {
+        assertEquals("asia", ChatTags.sortKeyOf("&2Ásia"));
+        assertEquals("brasil", ChatTags.sortKeyOf("&x&f&f&0&0&a&aBr&x&0&0&f&f&a&aasil"));
+        assertEquals("portugal", ChatTags.sortKeyOf("&c&lPortugal"));
+        assertEquals("~", ChatTags.sortKeyOf(null));
+        assertEquals("~", ChatTags.sortKeyOf("&2"));
+        assertTrue(ChatTags.sortKeyOf("&2Zâmbia").compareTo(ChatTags.sortKeyOf(null)) < 0, "a country before no country");
+    }
+
+    @Test
     void aNameWithoutColorsGetsTheTabListsGreen() {
         assertEquals("&2Portugal", ChatTags.display("Portugal"));
         assertEquals("&cEspanha", ChatTags.display("&cEspanha"));

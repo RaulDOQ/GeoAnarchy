@@ -66,6 +66,7 @@ public final class GeoPlaceholders extends PlaceholderExpansion {
         return switch (params.toLowerCase(Locale.ROOT)) {
             case "country" -> tags.tag(player.getUniqueId());
             case "country_name" -> tags.name(player.getUniqueId());
+            case "country_sort" -> tags.sortKey(player.getUniqueId());
             case "name" -> player instanceof Player online ? LegacyColors.ofComponent(online.displayName())
                     : player.getName() == null ? "" : player.getName();
             case "name_color" -> player instanceof Player online ? LegacyColors.nearestCode(online.displayName()) : "";

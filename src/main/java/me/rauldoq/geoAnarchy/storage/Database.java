@@ -50,7 +50,38 @@ public final class Database implements AutoCloseable {
                     + "minecraft TEXT NOT NULL, name TEXT NOT NULL, target TEXT NOT NULL, cents INTEGER NOT NULL, "
                     + "created INTEGER NOT NULL, expires INTEGER NOT NULL, day TEXT, receiver TEXT, "
                     + "state TEXT NOT NULL, result TEXT)");
+            // Money to give back because a refund failed (see OwedRefunds). Deleted once given back.
+            statement.execute("CREATE TABLE IF NOT EXISTS owed (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "minecraft TEXT NOT NULL, cents INTEGER NOT NULL, reason TEXT NOT NULL, at INTEGER NOT NULL)");
         }
+    }
+
+    // ---- Money owed because a refund failed ----
+
+    /** One amount still to give back to a player. */
+    public record Owed(long id, UUID player, long cents, String reason, long at) {
+    }
+
+    public synchronized void addOwed(UUID player, long cents, String reason, long at) {
+        update("INSERT INTO owed (minecraft, cents, reason, at) VALUES (?, ?, ?, ?)", player.toString(), cents, reason, at);
+    }
+
+    /** Everything still owed, oldest first. */
+    public synchronized List<Owed> owed() {
+        List<Owed> result = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement("SELECT id, minecraft, cents, reason, at FROM owed ORDER BY id");
+             ResultSet rows = statement.executeQuery()) {
+            while (rows.next()) {
+                result.add(new Owed(rows.getLong(1), UUID.fromString(rows.getString(2)), rows.getLong(3), rows.getString(4), rows.getLong(5)));
+            }
+        } catch (SQLException error) {
+            throw new IllegalStateException(error);
+        }
+        return result;
+    }
+
+    public synchronized void deleteOwed(long id) {
+        update("DELETE FROM owed WHERE id = ?", id);
     }
 
     // ---- Links ----

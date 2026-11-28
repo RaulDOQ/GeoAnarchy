@@ -231,7 +231,8 @@ class PaymentsTest {
         }
 
         @Override
-        public void give(UUID player, long cents, String reason) {
+        public boolean give(UUID player, long cents, String reason) {
+            return true;
         }
 
         @Override

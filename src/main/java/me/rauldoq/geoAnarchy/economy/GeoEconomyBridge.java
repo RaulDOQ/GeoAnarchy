@@ -84,9 +84,10 @@ public final class GeoEconomyBridge implements Economy {
     }
 
     @Override
-    public void give(UUID player, long cents, String reason) {
-        geo.accounts().get(player).ifPresent(account ->
-                geo.ledger().deposit(account.wallet(), geo.currencies().geo().code(), cents, reason));
+    public boolean give(UUID player, long cents, String reason) {
+        Optional<Account> account = geo.accounts().get(player);
+        return account.isPresent()
+                && geo.ledger().deposit(account.get().wallet(), geo.currencies().geo().code(), cents, reason).success();
     }
 
     @Override
