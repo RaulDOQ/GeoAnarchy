@@ -70,6 +70,7 @@ public final class GeoAnarchy extends JavaPlugin {
     private Coffee coffee;
     private Payments payments;
     private volatile Countries countries = Countries.NONE;
+    private me.rauldoq.geoAnarchy.onboarding.Onboarding onboarding;
     private volatile Economy economy = Economy.NONE;
 
     @Override
@@ -117,6 +118,16 @@ public final class GeoAnarchy extends JavaPlugin {
             }
         }
         getServer().getPluginManager().registerEvents(new JoinListener(this), this);
+        // a new player's first minutes: the continent they start on, then the guide book
+        onboarding = me.rauldoq.geoAnarchy.onboarding.Onboarding.create(this);
+        if (onboarding != null) {
+            getServer().getPluginManager().registerEvents(onboarding, this);
+            PluginCommand start = getCommand("comecar");
+            if (start != null) {
+                start.setExecutor(onboarding);
+                start.setTabCompleter(onboarding);
+            }
+        }
         getServer().getPluginManager().registerEvents(ranks, this);
         coffee = new Coffee(this);
         getServer().getPluginManager().registerEvents(coffee, this);

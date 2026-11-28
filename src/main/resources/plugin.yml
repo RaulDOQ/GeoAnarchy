@@ -32,6 +32,9 @@ commands:
     usage: /<command>
     aliases: [vaura]
     permission: geoanarchy.vanishcomaura
+  comecar:
+    description: Escolhe o continente onde você começa (só para quem acabou de chegar).
+    usage: /<command>
   geoanarchy:
     description: Administração do plugin GeoAnarchy.
     usage: /<command> <reload|status|cafe>
@@ -46,4 +49,7 @@ permissions:
     default: op
   geoanarchy.admin:
     description: Recarregar o plugin e ver o estado do bot.
+    default: op
+  geoanarchy.comecar.admin:
+    description: "Zerar a escolha de continente de um jogador (/comecar reiniciar <jogador>), para testar."
     default: op

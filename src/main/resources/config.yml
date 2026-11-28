@@ -84,3 +84,19 @@ coffee:
   best-seconds: 1200
   # Quão rápido a fome cai enquanto dura: 0.5 = metade da velocidade normal.
   hunger-multiplier: 0.5
+
+# A primeira entrada de um jogador: logo depois do login, ele escolhe o continente onde começa, chega num
+# lugar seguro de lá e ganha o livro "Guia do GeoAnarchy". É o único teleporte do servidor, uma vez só.
+onboarding:
+  enabled: true
+  # O mundo da Terra.
+  world: earth
+  # A escolha só aparece (e o /comecar só funciona) nestes primeiros minutos de jogo, e só até ser feita.
+  first-minutes: 30
+  # O lugar de chegada fica pelo menos a esta distância (em chunks) de qualquer país.
+  distance-from-countries-chunks: 8
+  # Quantos lugares tentar antes de desistir (água, país perto...).
+  tries: 40
+  # Segundos de proteção (Resistência V) logo depois de chegar, para um creeper ou uma queda não matar na hora.
+  protection-seconds: 15
+  guide-book: true

@@ -78,6 +78,20 @@ public final class LandsHook implements Countries, Listener {
         this.announce = announce;
     }
 
+    @Override
+    public boolean claimedNear(org.bukkit.World world, int x, int z, int radiusChunks) {
+        int cx = x >> 4;
+        int cz = z >> 4;
+        for (int dx = -radiusChunks; dx <= radiusChunks; dx++) {
+            for (int dz = -radiusChunks; dz <= radiusChunks; dz++) {
+                if (lands.getLandByUnloadedChunk(world, cx + dx, cz + dz) != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /** Starts listening to Lands. Call once, from onEnable. */
     public void listen() {
         Bukkit.getPluginManager().registerEvents(this, plugin);

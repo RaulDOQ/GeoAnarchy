@@ -36,6 +36,14 @@ public interface Countries {
     /** The name of the country a player founded or lives in (founded first), with its colors as Lands keeps them. */
     Optional<String> coloredName(UUID player);
 
+    /**
+     * True when a country owns a chunk within this many chunks of the block (x, z). Used to land new players away
+     * from countries. Without Lands there are no countries, so never.
+     */
+    default boolean claimedNear(org.bukkit.World world, int x, int z, int radiusChunks) {
+        return false;
+    }
+
     Countries NONE = new Countries() {
         @Override
         public boolean available() {

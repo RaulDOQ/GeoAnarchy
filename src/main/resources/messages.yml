@@ -64,6 +64,36 @@ game:
   reloaded: "<prefix><green>config.yml e messages.yml recarregados.</green> <gray>Trocar o token ou os canais do Discord pede um restart."
   status: "<prefix><gold>GeoAnarchy</gold><newline><gray>Bot do Discord: <white><bot></white><newline>Contas vinculadas: <white><links></white><newline>Lands: <white><lands></white><newline>GeoEconomy: <white><economy></white>"
 
+  # ---- Primeira entrada: onde começar ----
+  start-title: "Onde você quer começar?"
+  # As duas linhas embaixo do mapa (curtas: cabem ao lado do dado).
+  start-line-1: "Escolha um continente."
+  start-line-2: "Longe dos países, em paz."
+  start-lore-players: "<gray>Jogadores aqui agora: <white><players></white>"
+  start-lore-click: "<yellow>Clique para começar aqui."
+  start-random: "<white>Aleatório"
+  start-random-lore: "<gray>Um continente qualquer."
+  start-searching: "<prefix><gray>Procurando um lugar seguro em <white><continent></white>..."
+  start-failed: "<prefix><red>Não achei um lugar seguro agora.</red> <gray>Tente de novo com <white>/comecar</white>."
+  start-busy: "<prefix><gray>Calma, ainda procurando o lugar..."
+  start-landed: "<prefix><gray>Você chegou: <white><continent></white>. Se morrer, você renasce aqui (até dormir numa cama). Abra o <white>Guia do GeoAnarchy</white> no seu inventário para os primeiros passos."
+  start-title-sub: "<gray>Boa sorte, <white><player></white>!"
+  start-closed: "<prefix><gray>Você ainda não escolheu onde começar. Use <white>/comecar</white> quando quiser (só nos seus primeiros <minutes> minutos)."
+  start-already: "<prefix><gray>Você já escolheu onde começar."
+  start-too-late: "<prefix><gray>A escolha de onde começar é só para quem acabou de chegar."
+  start-reset: "<prefix><gray>A escolha de <white><player></white> foi zerada. O menu aparece de novo com <white>/comecar</white>."
+  start-not-online: "<prefix><red><player> não está online."
+
+  # ---- O livro "Guia do GeoAnarchy" (uma página por linha; aparecem na ordem dos números) ----
+  guide-title: "Guia do GeoAnarchy"
+  guide-author: "GeoAnarchy"
+  guide-page-1: "<bold><dark_green>GEO</dark_green><dark_aqua>ANARCHY</dark_aqua></bold><newline><newline>O mundo é a Terra, em escala.<newline><newline>Aqui vale tudo: <bold>fora dos países nada é protegido</bold>.<newline><newline><dark_gray>Vire a página para os primeiros passos."
+  guide-page-2: "<bold>Países</bold><newline><newline>Um país protege as suas terras e tem banco e moeda própria.<newline><newline>Entre num com <dark_aqua>/pais</dark_aqua>, ou funde o seu.<newline><newline>Um país pode declarar guerra a outro a qualquer hora."
+  guide-page-3: "<bold>Sem teleporte</bold><newline><newline>Não existe /tpa nem /home: aqui você anda, navega ou cavalga.<newline><newline>O Nether e o End estão fechados por enquanto."
+  guide-page-4: "<bold>Dinheiro</bold><newline><newline>Venda o que tiver na mão com <dark_aqua>/vender</dark_aqua>.<newline><newline>Veja quanto cada coisa vale com <dark_aqua>/mercado lista</dark_aqua>.<newline><newline>A economia é dos jogadores: não há loja do servidor."
+  guide-page-5: "<bold>Discord</bold><newline><newline>Vincule a sua conta com <dark_aqua>/vincular</dark_aqua> e receba os avisos do seu país.<newline><newline><click:open_url:'https://discord.gg/nXdhtMD8Cx'><blue><underlined>discord.gg/nXdhtMD8Cx</underlined></blue></click>"
+  guide-page-6: "<bold>Mais</bold><newline><newline><dark_aqua>/geomenu</dark_aqua>: tags, skins e mais.<newline><newline>A wiki explica tudo:<newline><click:open_url:'https://geoanarchy.net/wiki'><blue><underlined>geoanarchy.net/wiki</underlined></blue></click><newline><newline>Mapa ao vivo:<newline><click:open_url:'https://mapa.geoanarchy.net'><blue><underlined>mapa.geoanarchy.net</underlined></blue></click>"
+
 discord:
   error: "Algo deu errado. Tente de novo em instantes."
   economy-off: "A economia do servidor não está disponível agora."
