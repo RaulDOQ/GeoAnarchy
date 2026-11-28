@@ -1,14 +1,14 @@
 ---
 title: Planos e o GeoMenu
-summary: Os três planos VIP, o GeoMenu (/geomenu), o nome colorido, as tags e mensagens e o que cada plano libera hoje.
+summary: Os três planos VIP, o GeoMenu (/geomenu), o nome colorido, o nome de item, o XP a mais, o impulso de XP e o que cada plano libera.
 order: 1
 ---
 
 ## Os planos
 
-Existem três planos VIP, do mais simples ao mais completo: **Geo+**, **Geo Ultra** e **Geo Ultra+**. Quem tem um plano tem tudo o que os de baixo dão. Os preços estão na [Loja](/loja/).
+Existem três planos VIP, do mais simples ao mais completo: **Geo+**, **Geo Ultra** e **Geo Ultra+**. Quem tem um plano tem tudo o que os de baixo dão. Os preços estão na [Loja](/loja/), e o passo a passo para comprar em [Como comprar](/wiki/vip/como-comprar/).
 
-Quase tudo o que os planos liberam é visual e de conforto. A lista completa de cada plano, com o que ainda vai chegar, está na [Loja](/loja/).
+Quase tudo o que os planos liberam é visual e de conforto; o Geo Ultra+ também ganha XP a mais. A lista completa de cada plano está na [Loja](/loja/).
 
 ## O GeoMenu
 
@@ -19,8 +19,12 @@ No menu:
 - **Skins**: mude a aparência das suas espadas, ferramentas e armaduras (veja [Skins](/wiki/vip/skins/)).
 - **Nome colorido**: a sua cabeça, com o seu nome do jeito que ele aparece hoje. Clique para ver como pintar o nome.
 - **Tags**: troque a tag do seu plano por outra, como [EGO] ou [SIGMA] (veja [Tags e mensagens](/wiki/vip/tags-e-mensagens/)).
+- **Nome de item**: explica o /nomeitem, para dar um nome colorido ao item da sua mão.
 - **Mensagens de kill**: o que todos leem no chat quando você mata alguém.
+- **Mensagens de morte**: o que todos leem quando você morre.
 - **Mensagens de entrada**: o que todos leem quando você entra no servidor.
+- **Impulso de XP**: o seu impulso do mês, e se tem um rodando agora.
+- **Efeitos de kill** e **Efeitos de morte**: o show onde alguém cai (veja [Tags e mensagens](/wiki/vip/tags-e-mensagens/)).
 - **Seu plano**: qual é, e quantos dias faltam. Sem plano, o botão mostra onde ver os planos.
 
 Um botão que é de um plano que você não tem continua aparecendo, com a indicação do plano que ele precisa. Clicar nele avisa: *“Essa funcionalidade é apenas para Geo+.”*

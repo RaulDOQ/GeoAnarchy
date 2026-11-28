@@ -1,7 +1,7 @@
 ---
 title: Itens proibidos
 summary: Cristais do End e âncoras de renascimento não existem neste servidor. Por quê, e o que acontece se você tentar usar um.
-order: 2
+order: 3
 ---
 
 ## Quais são

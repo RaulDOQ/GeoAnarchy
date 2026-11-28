@@ -1,7 +1,7 @@
 ---
 title: O Nether e o End
 summary: As duas dimensões estão fechadas. Como conseguir os itens que só existiam nelas, e quais não existem mais.
-order: 1
+order: 2
 ---
 
 ## Fechados de vez

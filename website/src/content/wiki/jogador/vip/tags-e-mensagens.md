@@ -61,11 +61,26 @@ Com **/tagcor** você pinta uma tag sua com as suas cores, como no /nome: por ex
 
 A equipe do servidor continua com a tag da equipe, e a tag escolhida vem depois dela: [Brasil] [Admin] [EGO] Astrum.
 
+### Tags exclusivas
+
+Algumas tags não vêm com nenhum plano e não estão à venda: só a equipe pode dar. Elas aparecem no fim da lista de tags, marcadas como **Tag exclusiva**, e não mudam de estilo (nem com a /tagcor).
+
+| Tag | Para quem |
+|---|---|
+| **[TESTER]** prateada | Quem testou o servidor no beta |
+| **[TESTER]** dourada | Os caçadores de bugs que acharam mais de 5 bugs no beta |
+
+Quem ganha uma fica com ela para sempre, com ou sem plano.
+
 ## Mensagens de kill
 
 Trocam a mensagem de morte que todos leem quando **você mata alguém**. Por exemplo, se Astrum escolheu “jantou” e mata Drew, o chat mostra **Astrum jantou Drew**.
 
 Só vale quando quem mata é um jogador. Se você bate em alguém e ele cai de um penhasco ou na lava logo depois, a kill é sua e a mensagem aparece. Quem morre sozinho, de queda ou para um monstro, mostra a mensagem normal.
+
+No fim, a mensagem diz **como foi**, como a mensagem normal do jogo: a arma, do jeito que um item aparece no chat (com o nome que ela tiver, inclusive o do /nomeitem, e os detalhes ao passar o mouse); "no soco", sem arma; ou a causa, se a vítima morreu de outro jeito depois do seu ataque.
+
+> **Exemplo:** Astrum jantou Drew · **[Excalibur]** · ou · Astrum jantou Drew · na lava
 
 | Plano | Mensagens (Astrum matou Drew) |
 |---|---|
@@ -95,6 +110,10 @@ Do **Geo Ultra+**: trocam a mensagem que todos leem quando **você morre**, de q
 - Astrum tropeçou no cabo da internet
 - Astrum foi pro beleléu
 - Astrum deu um rolê no além e já volta
+
+No fim, a mensagem diz **quem matou e com o quê**, ou do que você morreu:
+
+> **Exemplo:** Astrum tava AFK, juro · morto por Drew com **[Excalibur]** · ou · morto por Zumbi · ou · caiu de muito alto
 
 ## Efeitos de kill e de morte
 

@@ -9,7 +9,7 @@ export const site = {
   inDevelopment: false,
 
   java: {
-    address: 'geoanarchy.net',
+    address: 'jogar.geoanarchy.net',
     /** Oldest Java client the server is meant to accept (ViaBackwards). */
     minVersion: '1.12',
     /** The version the server itself runs. */
@@ -17,7 +17,7 @@ export const site = {
   },
 
   bedrock: {
-    address: 'geoanarchy.net',
+    address: 'jogar.geoanarchy.net',
     port: 10109,
   },
 
