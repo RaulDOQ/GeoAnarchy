@@ -6,7 +6,7 @@
 
     <groupId>me.rauldoq</groupId>
     <artifactId>geoanarchy</artifactId>
-    <version>3.6.0</version>
+    <version>3.7.1</version>
     <packaging>jar</packaging>
 
     <name>GeoAnarchy</name>

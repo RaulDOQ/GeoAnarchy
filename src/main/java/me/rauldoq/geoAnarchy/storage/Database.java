@@ -53,7 +53,87 @@ public final class Database implements AutoCloseable {
             // Money to give back because a refund failed (see OwedRefunds). Deleted once given back.
             statement.execute("CREATE TABLE IF NOT EXISTS owed (id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + "minecraft TEXT NOT NULL, cents INTEGER NOT NULL, reason TEXT NOT NULL, at INTEGER NOT NULL)");
+            // Countries on the /recrutando list, with their leader's message.
+            statement.execute("CREATE TABLE IF NOT EXISTS recruiting (country TEXT PRIMARY KEY, message TEXT NOT NULL, "
+                    + "set_by TEXT NOT NULL, at INTEGER NOT NULL)");
+            // "I want to join": kept until the player joins a country, a leader dismisses it, or it gets old.
+            statement.execute("CREATE TABLE IF NOT EXISTS join_requests (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "player TEXT NOT NULL, name TEXT NOT NULL, country TEXT NOT NULL, at INTEGER NOT NULL)");
         }
+    }
+
+    // ---- Recruiting: the countries looking for people, and the requests to join them ----
+
+    /** Country id to its recruiting message. */
+    public synchronized java.util.Map<String, String> recruiting() {
+        java.util.Map<String, String> out = new java.util.LinkedHashMap<>();
+        try (PreparedStatement statement = connection.prepareStatement("SELECT country, message FROM recruiting ORDER BY at");
+             ResultSet rows = statement.executeQuery()) {
+            while (rows.next()) {
+                out.put(rows.getString(1), rows.getString(2));
+            }
+        } catch (SQLException error) {
+            throw new IllegalStateException(error);
+        }
+        return out;
+    }
+
+    public synchronized void setRecruiting(String country, String message, UUID by, long at) {
+        update("INSERT OR REPLACE INTO recruiting (country, message, set_by, at) VALUES (?, ?, ?, ?)", country, message, by.toString(), at);
+    }
+
+    public synchronized void stopRecruiting(String country) {
+        update("DELETE FROM recruiting WHERE country = ?", country);
+    }
+
+    public record JoinRequest(long id, UUID player, String name, String country, long at) {
+    }
+
+    public synchronized void addRequest(UUID player, String name, String country, long at) {
+        update("INSERT INTO join_requests (player, name, country, at) VALUES (?, ?, ?, ?)", player.toString(), name, country, at);
+    }
+
+    /** Requests to join this country made after {@code since}, oldest first. */
+    public synchronized List<JoinRequest> requests(String country, long since) {
+        return readRequests("SELECT id, player, name, country, at FROM join_requests WHERE country = ? AND at >= ? ORDER BY at",
+                country, since);
+    }
+
+    /** This player's requests made after {@code since}. */
+    public synchronized List<JoinRequest> requestsBy(UUID player, long since) {
+        return readRequests("SELECT id, player, name, country, at FROM join_requests WHERE player = ? AND at >= ? ORDER BY at",
+                player.toString(), since);
+    }
+
+    private List<JoinRequest> readRequests(String sql, Object... values) {
+        List<JoinRequest> out = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            for (int i = 0; i < values.length; i++) {
+                statement.setObject(i + 1, values[i]);
+            }
+            try (ResultSet rows = statement.executeQuery()) {
+                while (rows.next()) {
+                    out.add(new JoinRequest(rows.getLong(1), UUID.fromString(rows.getString(2)), rows.getString(3),
+                            rows.getString(4), rows.getLong(5)));
+                }
+            }
+        } catch (SQLException error) {
+            throw new IllegalStateException(error);
+        }
+        return out;
+    }
+
+    public synchronized void deleteRequest(String country, UUID player) {
+        update("DELETE FROM join_requests WHERE country = ? AND player = ?", country, player.toString());
+    }
+
+    /** A player who joined a country needs no more introductions. */
+    public synchronized void deleteRequestsBy(UUID player) {
+        update("DELETE FROM join_requests WHERE player = ?", player.toString());
+    }
+
+    public synchronized void forgetRequests(long before) {
+        update("DELETE FROM join_requests WHERE at < ?", before);
     }
 
     // ---- Money owed because a refund failed ----

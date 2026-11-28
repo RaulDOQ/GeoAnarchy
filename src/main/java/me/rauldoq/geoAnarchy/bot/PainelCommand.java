@@ -114,8 +114,8 @@ public final class PainelCommand implements ICommand {
                         + "🌍 **Mapa-múndi** — veja o território das nações em tempo real.\n"
                         + "📢 **Avisos** — acompanhe eventos e manutenções.\n"
                         + "📖 **Guias** — descubra como começar a jogar.", false)
-                .addField("🎮・Minecraft Java", "`geoanarchy.net`\nServidor 1.21.11", true)
-                .addField("📱・Minecraft Bedrock", "`geoanarchy.net`\nPorta `10109`", true)
+                .addField("🎮・Minecraft Java", "`jogar.geoanarchy.net`\nServidor 1.21.11", true)
+                .addField("📱・Minecraft Bedrock", "`jogar.geoanarchy.net`\nPorta `10109`", true)
                 .setFooter("GeoAnarchy • Precisa de ajuda? Fale com a moderação.")
                 .build();
 

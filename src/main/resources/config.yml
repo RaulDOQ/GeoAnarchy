@@ -100,3 +100,33 @@ onboarding:
   # Segundos de proteção (Resistência V) logo depois de chegar, para um creeper ou uma queda não matar na hora.
   protection-seconds: 15
   guide-book: true
+
+# Quem chegou pelo seletor de continente: primeiros passos, proteção e dicas.
+newcomers:
+  # Minutos de proteção contra outros jogadores depois de chegar (só contam enquanto o jogador está online).
+  # Ninguém pode machucar o novato, e ele também não pode atacar jogadores. Acaba antes se ele entrar num país.
+  protection-minutes: 20
+  # Geos de cada primeiro passo (1.000 no total). 0 = o passo não paga nada.
+  steps:
+    guia: 50
+    cama: 150
+    noite: 150
+    recrutando: 50
+    mercado: 200
+    pais: 400
+  # Depois de tantas horas de jogo os passos saem do painel da direita (o /passos continua funcionando).
+  steps-sidebar-hours: 5
+  # Segundos entre uma dica e a próxima.
+  tip-gap-seconds: 90
+
+# /recrutar e /recrutando: países procurando gente. Nada é automático: o líder responde e convida pelo Lands.
+recruiting:
+  # Além do fundador, quem tem estes cargos do Lands conta como líder (pode usar /recrutar e recebe os pedidos).
+  leader-roles:
+    - Admin
+  # Por quantos dias um pedido para entrar fica guardado.
+  request-days: 3
+  # Um jogador pode pedir para entrar no mesmo país uma vez a cada tantas horas.
+  request-cooldown-hours: 24
+  # Tamanho máximo da mensagem do /recrutar ligar.
+  message-max: 80

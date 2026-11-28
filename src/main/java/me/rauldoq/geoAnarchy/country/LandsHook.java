@@ -92,6 +92,85 @@ public final class LandsHook implements Countries, Listener {
         return false;
     }
 
+    @Override
+    public List<Country> all() {
+        List<Country> out = new ArrayList<>();
+        for (Land land : lands.getLands()) {
+            if (quietly(land::exists, true) && isCountry(land)) {
+                out.add(country(land));
+            }
+        }
+        return out;
+    }
+
+    @Override
+    public List<Country> led(UUID player, java.util.Collection<String> leaderRoles) {
+        List<Country> out = new ArrayList<>();
+        for (Land land : lands.getLands()) {
+            if (isCountry(land) && (player.equals(land.getOwnerUID())
+                    || (land.isTrusted(player) && hasLeaderRole(land, player, leaderRoles)))) {
+                out.add(country(land));
+            }
+        }
+        // founded ones first, like of()
+        out.sort(java.util.Comparator.comparing(c -> !player.equals(c.founder())));
+        return out;
+    }
+
+    @Override
+    public List<UUID> leaders(String countryId, java.util.Collection<String> leaderRoles) {
+        Land land = find(countryId);
+        if (land == null) {
+            return List.of();
+        }
+        List<UUID> out = new ArrayList<>();
+        if (land.getOwnerUID() != null) {
+            out.add(land.getOwnerUID());
+        }
+        for (UUID member : land.getTrustedPlayers()) {
+            if (!member.equals(land.getOwnerUID()) && hasLeaderRole(land, member, leaderRoles)) {
+                out.add(member);
+            }
+        }
+        return out;
+    }
+
+    private static boolean hasLeaderRole(Land land, UUID player, java.util.Collection<String> leaderRoles) {
+        String role = quietly(() -> stripColors(land.getDefaultArea().getRole(player).getName()), "");
+        for (String wanted : leaderRoles) {
+            if (!role.isEmpty() && role.equalsIgnoreCase(stripColors(wanted))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Optional<Country> at(org.bukkit.Location where) {
+        if (where.getWorld() == null) {
+            return Optional.empty();
+        }
+        Land land = quietly(() -> lands.getLandByChunk(where.getWorld(), where.getBlockX() >> 4, where.getBlockZ() >> 4), null);
+        return land == null || !isCountry(land) ? Optional.empty() : Optional.of(country(land));
+    }
+
+    @Override
+    public Optional<int[]> home(String countryId, org.bukkit.World world) {
+        Land land = find(countryId);
+        if (land == null) {
+            return Optional.empty();
+        }
+        org.bukkit.Location spawn = quietly(land::getSpawn, null);
+        if (spawn != null && world.equals(spawn.getWorld())) {
+            return Optional.of(new int[]{spawn.getBlockX(), spawn.getBlockZ()});
+        }
+        var chunks = quietly(() -> land.getChunks(world), List.<me.angeschossen.lands.api.land.ChunkCoordinate>of());
+        for (var chunk : chunks) {
+            return Optional.of(new int[]{(chunk.getX() << 4) + 8, (chunk.getZ() << 4) + 8});
+        }
+        return Optional.empty();
+    }
+
     /** Starts listening to Lands. Call once, from onEnable. */
     public void listen() {
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -125,6 +204,14 @@ public final class LandsHook implements Countries, Listener {
 
     // ---- Countries ----
 
+    /**
+     * Only real countries count. Lands also keeps camps (the free one-day camp a new player can place) and admin
+     * areas as lands; joining or owning one of those is not having a country.
+     */
+    private static boolean isCountry(Land land) {
+        return quietly(() -> land.getLandType() == me.angeschossen.lands.api.land.enums.LandType.LAND, true);
+    }
+
     @Override
     public boolean available() {
         return true;
@@ -135,6 +222,9 @@ public final class LandsHook implements Countries, Listener {
         List<Country> founded = new ArrayList<>();
         List<Country> citizen = new ArrayList<>();
         for (Land land : lands.getLands()) {
+            if (!isCountry(land)) {
+                continue;
+            }
             if (player.equals(land.getOwnerUID())) {
                 founded.add(country(land));
             } else if (land.isTrusted(player)) {
@@ -149,6 +239,9 @@ public final class LandsHook implements Countries, Listener {
     public Optional<String> coloredName(UUID player) {
         Land citizenOf = null;
         for (Land land : lands.getLands()) {
+            if (!isCountry(land)) {
+                continue;
+            }
             if (player.equals(land.getOwnerUID())) {
                 return Optional.of(colored(land));
             }
@@ -239,7 +332,7 @@ public final class LandsHook implements Countries, Listener {
     private Land find(String countryId) {
         try {
             Land land = lands.getLandByULID(ULID.fromString(countryId));
-            return land != null && land.exists() ? land : null;
+            return land != null && land.exists() && isCountry(land) ? land : null;
         } catch (RuntimeException notAnId) {
             return null;
         }

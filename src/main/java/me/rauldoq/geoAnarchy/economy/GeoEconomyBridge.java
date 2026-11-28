@@ -142,6 +142,13 @@ public final class GeoEconomyBridge implements Economy {
     }
 
     @Override
+    public java.util.concurrent.CompletableFuture<Boolean> soldAtMarket(UUID player) {
+        // GeoEconomy names a player's wallet "player:<uuid>"; a sale to a market is a MARKET_SELL row on it
+        return geo.database().history("player:" + player, 200)
+                .thenApply(rows -> rows.stream().anyMatch(row -> row.type() == TransactionType.MARKET_SELL));
+    }
+
+    @Override
     public List<Price> prices(String item) {
         Optional<MarketItem> found = geo.markets().catalog().find(item.trim().replace(' ', '_'));
         if (found.isEmpty()) {

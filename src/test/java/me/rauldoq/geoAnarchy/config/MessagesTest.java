@@ -128,4 +128,25 @@ class MessagesTest {
             assertTrue(file.isString("discord.alert.relation." + kind), kind);
         }
     }
+
+    /** Steps and tips build their text names from their ids, and the protection's endings are passed by name. */
+    @Test
+    void everyStepTipAndProtectionEndingHasItsTexts() {
+        for (String step : new String[]{"guia", "cama", "noite", "recrutando", "mercado", "pais"}) {
+            assertTrue(file.isString("game.step-" + step + "-name"), step);
+            assertTrue(file.isString("game.step-" + step + "-how"), step);
+        }
+        for (String tip : new String[]{"noite", "morte", "pais", "teleporte", "minerio", "chat", "recrutar"}) {
+            assertTrue(file.isString("game.tip-" + tip), tip);
+        }
+        for (String ending : new String[]{"protection-ended-country", "protection-turned-off"}) {
+            assertTrue(file.isString("game." + ending), ending);
+        }
+        // the guide's pages follow each other with no gap, or the book would stop early
+        int pages = 0;
+        while (file.isString("game.guide-page-" + (pages + 1))) {
+            pages++;
+        }
+        assertEquals(7, pages);
+    }
 }

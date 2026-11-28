@@ -66,6 +66,14 @@ public interface Economy {
     /** Every market's price for an item, or empty if no market trades it. The item is its Minecraft name. */
     List<Price> prices(String item);
 
+    /**
+     * True once this player has sold anything to a market. Read from the economy's history in the background:
+     * the answer arrives on another thread.
+     */
+    default java.util.concurrent.CompletableFuture<Boolean> soldAtMarket(UUID player) {
+        return java.util.concurrent.CompletableFuture.completedFuture(false);
+    }
+
     Economy NONE = new Economy() {
         @Override
         public boolean available() {

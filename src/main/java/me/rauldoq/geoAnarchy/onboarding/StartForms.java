@@ -43,11 +43,14 @@ final class StartForms {
     void show(Onboarding onboarding, Player player) {
         List<Continent> continents = onboarding.ui().continents();
         var here = onboarding.playersPerContinent();
+        var countries = onboarding.countriesPerContinent();
         SimpleForm.Builder form = SimpleForm.builder()
                 .title(LEGACY.serialize(onboarding.game("start-title")))
                 .content(LEGACY.serialize(onboarding.game("start-line-1")) + " " + LEGACY.serialize(onboarding.game("start-line-2")));
         for (Continent c : continents) {
-            String second = LEGACY.serialize(onboarding.game("start-lore-players", "players", String.valueOf(here.getOrDefault(c.id(), 0))));
+            int[] there = countries.getOrDefault(c.id(), new int[2]);
+            String second = LEGACY.serialize(onboarding.game("start-lore-countries", "countries", String.valueOf(there[0]),
+                    "recruiting", String.valueOf(there[1])));
             form.button(LEGACY.serialize(net.kyori.adventure.text.Component.text(c.name(), c.colour())) + "\n" + second,
                     FormImage.Type.PATH, "textures/geoanarchy/continents/" + c.id());
         }

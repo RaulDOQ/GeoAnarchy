@@ -118,6 +118,44 @@ public final class StartUi {
     }
 
     /**
+     * The frame of a list screen with this many rows (1 to 6) and its title, the same picture the GeoMenu's lists
+     * use. Without that frame in the pack, just the title.
+     */
+    Component listTitle(int rows, Component title) {
+        return listTitle(rows, title, List.of());
+    }
+
+    /** The same, with the GeoMenu's green "chosen" frame around each of these slots (things already done). */
+    Component listTitle(int rows, Component title, java.util.Collection<Integer> chosen) {
+        String frame = glyphs.get("list_" + rows);
+        if (frame == null) {
+            return title;
+        }
+        TextComponent.Builder out = Component.text();
+        // the game starts a chest title 8 px in
+        int pen = 0;
+        out.append(space(-8));
+        out.append(Component.text(frame, NamedTextColor.WHITE).font(FONT));
+        pen += advances.get("list_" + rows);
+        out.append(space(22 - pen));
+        pen = 22;
+        out.append(Component.text().color(TEXT).append(title).build());
+        pen += width(title);
+        for (int slot : chosen) {
+            String glyph = glyphs.get("chosen_r" + slot / 9);
+            if (glyph == null || slot < 0 || slot >= rows * 9) {
+                continue;
+            }
+            // slots start 8 px in; the frame starts 1 px before its slot (as in the GeoMenu)
+            int x = 8 + (slot % 9) * 18 - 1;
+            out.append(space(x - pen));
+            out.append(Component.text(glyph, NamedTextColor.WHITE).font(FONT));
+            pen = x + advances.get("chosen_r" + slot / 9);
+        }
+        return out.build();
+    }
+
+    /**
      * The menu title that draws the whole selector: the frame, the title, the map (two halves, drawn at double
      * resolution) and the explanation under it. The game writes a chest title 8 px in, so the pen starts there.
      */

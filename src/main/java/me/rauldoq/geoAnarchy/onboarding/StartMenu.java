@@ -46,10 +46,13 @@ final class StartMenu implements InventoryHolder {
             }
         }
         Map<String, Integer> here = onboarding.playersPerContinent();
+        Map<String, int[]> countries = onboarding.countriesPerContinent();
         for (Continent c : ui.continents()) {
             ItemStack item = new ItemStack(art ? Material.PAPER : PLAIN.getOrDefault(c.id(), Material.WHITE_WOOL));
+            int[] there = countries.getOrDefault(c.id(), new int[2]);
             dress(item, art, "start_" + c.id(), Component.text(c.name(), c.colour()), List.of(
                     onboarding.game("start-lore-players", "players", String.valueOf(here.getOrDefault(c.id(), 0))),
+                    onboarding.game("start-lore-countries", "countries", String.valueOf(there[0]), "recruiting", String.valueOf(there[1])),
                     Component.empty(),
                     onboarding.game("start-lore-click")));
             inventory.setItem(c.slot(), item);

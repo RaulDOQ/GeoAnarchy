@@ -35,6 +35,24 @@ commands:
   comecar:
     description: Escolhe o continente onde você começa (só para quem acabou de chegar).
     usage: /<command>
+  guia:
+    description: Abre o Guia do GeoAnarchy.
+    usage: /<command>
+  passos:
+    description: Os seus primeiros passos no servidor, cada um vale Geos.
+    usage: /<command> [esconder|mostrar]
+  dicas:
+    description: Liga ou desliga as dicas para quem acabou de chegar.
+    usage: /<command>
+  protecao:
+    description: Quanto falta da sua proteção de novato contra jogadores.
+    usage: /<command> [desligar]
+  recrutar:
+    description: Põe o seu país na lista de países recrutando (fundador ou Admin).
+    usage: /<command> [ligar <mensagem>|desligar|avisos|pedidos|dispensar <jogador>]
+  recrutando:
+    description: Os países que procuram gente, para pedir para entrar.
+    usage: /<command>
   geoanarchy:
     description: Administração do plugin GeoAnarchy.
     usage: /<command> <reload|status|cafe>

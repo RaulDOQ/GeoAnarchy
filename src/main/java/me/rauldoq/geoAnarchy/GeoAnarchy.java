@@ -71,6 +71,7 @@ public final class GeoAnarchy extends JavaPlugin {
     private Payments payments;
     private volatile Countries countries = Countries.NONE;
     private me.rauldoq.geoAnarchy.onboarding.Onboarding onboarding;
+    private me.rauldoq.geoAnarchy.onboarding.Newcomers newcomers;
     private volatile Economy economy = Economy.NONE;
 
     @Override
@@ -127,6 +128,8 @@ public final class GeoAnarchy extends JavaPlugin {
                 start.setExecutor(onboarding);
                 start.setTabCompleter(onboarding);
             }
+            // after landing: the first steps, protection, tips, and recruiting (/guia, /passos, /recrutar...)
+            newcomers = me.rauldoq.geoAnarchy.onboarding.Onboarding.startNewcomers(this, onboarding);
         }
         getServer().getPluginManager().registerEvents(ranks, this);
         coffee = new Coffee(this);
@@ -191,6 +194,9 @@ public final class GeoAnarchy extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (newcomers != null) {
+            me.rauldoq.geoAnarchy.onboarding.Onboarding.stopNewcomers(newcomers);
+        }
         if (bot != null) {
             bot.stop();
         }

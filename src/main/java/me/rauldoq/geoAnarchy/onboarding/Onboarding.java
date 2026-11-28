@@ -55,6 +55,10 @@ public final class Onboarding implements Listener, TabExecutor {
     private final StartForms forms;
     private final NamespacedKey chosenKey;
     private final NamespacedKey bookKey;
+    /** On the guide book item, so opening it can count as reading it. */
+    private final NamespacedKey guideItemKey;
+    private Newcomers newcomers;
+    private Recruiting recruiting;
     /** Players whose landing spot is being searched (one search at a time each). */
     private final Set<UUID> searching = ConcurrentHashMap.newKeySet();
     /** Players who pressed a button: their menu closing is not "closed without choosing". */
@@ -70,6 +74,13 @@ public final class Onboarding implements Listener, TabExecutor {
         this.forms = StartForms.create();
         this.chosenKey = new NamespacedKey(plugin, "start");
         this.bookKey = new NamespacedKey(plugin, "guide");
+        this.guideItemKey = new NamespacedKey(plugin, "guide_book");
+    }
+
+    /** The first hours after landing (steps, protection, tips) and recruiting. */
+    void connect(Newcomers newcomers, Recruiting recruiting) {
+        this.newcomers = newcomers;
+        this.recruiting = recruiting;
     }
 
     /** Null when ui.json is missing from the jar (then there is no selector). */
@@ -84,6 +95,43 @@ public final class Onboarding implements Listener, TabExecutor {
             plugin.getLogger().warning("ui.json could not be read (" + error + "): no continent selector.");
             return null;
         }
+    }
+
+    /**
+     * Builds and registers everything that follows the landing: the first steps, protection, tips, recruiting and
+     * their commands. Returns what onDisable hands back to {@link #stopNewcomers}.
+     */
+    public static Newcomers startNewcomers(GeoAnarchy plugin, Onboarding onboarding) {
+        Recruiting recruiting = new Recruiting(plugin, onboarding.ui);
+        Newcomers newcomers = new Newcomers(plugin, onboarding, recruiting);
+        recruiting.setNewcomers(newcomers);
+        onboarding.connect(newcomers, recruiting);
+        var events = plugin.getServer().getPluginManager();
+        events.registerEvents(newcomers, plugin);
+        events.registerEvents(new Protection(newcomers), plugin);
+        events.registerEvents(new Tips(plugin, newcomers), plugin);
+        events.registerEvents(recruiting, plugin);
+        for (String name : List.of("guia", "passos", "dicas", "protecao")) {
+            org.bukkit.command.PluginCommand command = plugin.getCommand(name);
+            if (command != null) {
+                command.setExecutor(newcomers);
+                command.setTabCompleter(newcomers);
+            }
+        }
+        for (String name : List.of("recrutar", "recrutando")) {
+            org.bukkit.command.PluginCommand command = plugin.getCommand(name);
+            if (command != null) {
+                command.setExecutor(recruiting);
+                command.setTabCompleter(recruiting);
+            }
+        }
+        newcomers.start();
+        recruiting.start();
+        return newcomers;
+    }
+
+    public static void stopNewcomers(Newcomers newcomers) {
+        newcomers.stop();
     }
 
     GeoAnarchy plugin() {
@@ -201,6 +249,15 @@ public final class Onboarding implements Listener, TabExecutor {
         return counts;
     }
 
+    /** Continent id to {countries there, of which recruiting} (shown on the buttons). */
+    Map<String, int[]> countriesPerContinent() {
+        try {
+            return recruiting == null ? Map.of() : recruiting.perContinent();
+        } catch (RuntimeException | LinkageError error) {
+            return Map.of();
+        }
+    }
+
     private World world() {
         return Bukkit.getWorld(config().getString("world", "earth"));
     }
@@ -295,6 +352,9 @@ public final class Onboarding implements Listener, TabExecutor {
                         seconds * 20, 4, false, false, true));
             }
             welcome(player, continent);
+            if (newcomers != null) {
+                newcomers.landed(player, continent);
+            }
         }));
     }
 
@@ -323,8 +383,14 @@ public final class Onboarding implements Listener, TabExecutor {
         }
         meta.pages(pages);
         meta.displayName(game("guide-title").decoration(TextDecoration.ITALIC, false));
+        meta.getPersistentDataContainer().set(guideItemKey, PersistentDataType.BYTE, (byte) 1);
         book.setItemMeta(meta);
         return book;
+    }
+
+    boolean isGuideBook(ItemStack item) {
+        return item != null && item.getType() == Material.WRITTEN_BOOK && item.hasItemMeta()
+                && item.getItemMeta().getPersistentDataContainer().has(guideItemKey);
     }
 
     // ---- /comecar ------------------------------------------------------------------------------------------------
@@ -339,6 +405,9 @@ public final class Onboarding implements Listener, TabExecutor {
             }
             target.getPersistentDataContainer().remove(chosenKey);
             target.getPersistentDataContainer().remove(bookKey);
+            if (newcomers != null) {
+                newcomers.reset(target);
+            }
             sender.sendMessage(game("start-reset", "player", target.getName()));
             return true;
         }

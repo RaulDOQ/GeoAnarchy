@@ -44,6 +44,37 @@ public interface Countries {
         return false;
     }
 
+    /** Every country. */
+    default List<Country> all() {
+        return List.of();
+    }
+
+    /**
+     * The countries this player leads: the ones they founded, and the ones where their role (in Lands) is one of
+     * {@code leaderRoles}, compared without colours or case.
+     */
+    default List<Country> led(UUID player, java.util.Collection<String> leaderRoles) {
+        return List.of();
+    }
+
+    /** A country's founder and every citizen whose role is one of {@code leaderRoles}. */
+    default List<UUID> leaders(String countryId, java.util.Collection<String> leaderRoles) {
+        return List.of();
+    }
+
+    /** The country that owns the chunk at this spot (a loaded chunk, such as where a player stands). */
+    default Optional<Country> at(org.bukkit.Location where) {
+        return Optional.empty();
+    }
+
+    /**
+     * Roughly where a country is, as block {x, z} in this world: its spawn, or else one of its chunks.
+     * Empty if it has no land in this world.
+     */
+    default Optional<int[]> home(String countryId, org.bukkit.World world) {
+        return Optional.empty();
+    }
+
     Countries NONE = new Countries() {
         @Override
         public boolean available() {
